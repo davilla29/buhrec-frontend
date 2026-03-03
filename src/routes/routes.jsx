@@ -6,11 +6,13 @@ import { Route, createRoutesFromElements } from "react-router-dom";
 const RootLayout = lazy(() => import("../layouts/RootLayout"));
 
 const HomePage = lazy(() => import("../pages/Home"));
+const UnifiedLoginPage = lazy(() => import("../pages/UnifiedLoginPage"));
 
 export const routes = createRoutesFromElements(
   <>
     <Route path="/" element={<RootLayout />}>
       <Route index element={<HomePage />} />
+      <Route path="/login/:role" element={<UnifiedLoginPage />} />
       {/* <Route
         path="/auth/signup"
         element={
