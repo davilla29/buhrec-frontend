@@ -3,6 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import axios from "../../utils/axios";
 import { login } from "../../redux/auth/authSlice";
+import toast from "react-hot-toast";
 
 const ROLE_SETTINGS = {
   admin: {
@@ -78,10 +79,10 @@ const UnifiedLoginPage = () => {
         if (needVerification) {
           navigate("/verify-email");
         } else {
-          setError(message || "Login failed");
+          toast.error(message || "Login failed");
         }
       } else {
-        setError("Network error. Please try again.");
+        toast.error("Network error. Please try again.");
       }
     } finally {
       setIsLoading(false);
