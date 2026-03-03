@@ -1,4 +1,6 @@
-import React from "react";
+import Objective from "../assets/images/objective.jpg";
+import Clearance from "../assets/images/clearance.jpg";
+import nhrec from "../assets/images/nhrec.jpg";
 
 function Home() {
   return (
@@ -18,7 +20,7 @@ function Home() {
       {/* Our Objective Section */}
       <section className="py-16 px-10 md:px-20 grid md:grid-cols-2 gap-12 items-center bg-white">
         <img
-          src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80"
+          src={Objective}
           alt="Objective"
           className="rounded-lg shadow-md w-full h-64 object-cover"
         />
@@ -52,16 +54,18 @@ function Home() {
         </div>
         <div className="order-1 md:order-2 flex justify-center">
           {/* Replace with actual NHREC logo */}
-          <div className="bg-white p-6 rounded-lg w-48 h-48 flex items-center justify-center text-[#003399] font-bold text-center">
-            NHREC LOGO
-          </div>
+          <img
+            src={nhrec}
+            alt="nhrec_logo"
+            className="rounded-lg shadow-md w-58 h-58 object-cover"
+          />
         </div>
       </section>
 
       {/* Ethical Clearance Section */}
       <section className="py-16 px-10 md:px-20 grid md:grid-cols-2 gap-12 items-center bg-white">
         <img
-          src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&q=80"
+          src={Clearance}
           alt="Ethical Clearance"
           className="rounded-lg shadow-md w-full h-64 object-cover"
         />
