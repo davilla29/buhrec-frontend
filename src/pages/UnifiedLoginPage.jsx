@@ -51,7 +51,7 @@ const UnifiedLoginPage = () => {
       dispatch(setLoading(true));
 
       // Dynamic login endpoint based on role
-      const res = await axios.post(`/login/${currentRole}`, {
+      const res = await axios.post(`/auth/login/${currentRole}`, {
         email: formData.email,
         password: formData.password,
       });

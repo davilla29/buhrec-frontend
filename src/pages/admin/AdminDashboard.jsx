@@ -1,83 +1,99 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "../../utils/axios";
+import toast from "react-hot-toast";
 
-const FILTER_DAYS_MAP = {
-  "This Week": 7,
-  "This Month": 30,
-  "Last 3 Months": 90,
-  "Last 6 Months": 180,
-};
+const FILTER_OPTIONS = [
+  { label: "This Week", value: "this_week" },
+  { label: "This Month", value: "this_month" },
+  { label: "Last 3 Months", value: "last_3_months" },
+  { label: "Last 6 Months", value: "last_6_months" },
+];
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const assignments = useSelector((s) => s.assignments.items);
-  const [activeFilter, setActiveFilter] = React.useState("This Week");
+  const [activeFilter, setActiveFilter] = useState("this_week");
+  const [stats, setStats] = useState({
+    topStats: {
+      unassignedAssignments: 0,
+      assignedAssignments: 0,
+      completedAssignments: 0,
+      incompleteAssignments: 0,
+    },
+    applicationStats: {
+      ugSubmissions: 0,
+      pgSubmissions: 0,
+      newApplications: 0,
+    },
+    unassignedBannerCount: 0,
+  });
+  const [loading, setLoading] = useState(false);
 
-  const filterOptions = [
-    "This Week",
-    "This Month",
-    "Last 3 Months",
-    "Last 6 Months",
-  ];
+  const fetchStats = async (filterValue) => {
+    try {
+      setLoading(true);
+      const res = await axios.get("/admin/dashboard", {
+        params: { timeframe: filterValue },
+        withCredentials: true,
+      });
+      if (res.data.success) {
+        setStats(res.data.data);
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to fetch dashboard stats");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const filteredAssignments = React.useMemo(() => {
-    const days = FILTER_DAYS_MAP[activeFilter] ?? 7;
-    const now = new Date();
-    const cutoff = now.getTime() - days * 24 * 60 * 60 * 1000;
-    return assignments.filter((a) => {
-      if (!a.date) return false;
-      const t = new Date(a.date).getTime();
-      return Number.isFinite(t) && t >= cutoff;
-    });
-  }, [assignments, activeFilter]);
+  useEffect(() => {
+    fetchStats(activeFilter);
+  }, [activeFilter]);
 
-  const stats = React.useMemo(() => {
-    const unassigned = filteredAssignments.filter(
-      (a) => a.status === "Unaccepted",
-    ).length;
-    const assigned = filteredAssignments.filter(
-      (a) => a.status === "Not Reviewed",
-    ).length;
-    const completed = filteredAssignments.filter(
-      (a) => a.status === "Completed",
-    ).length;
-    const incomplete = filteredAssignments.filter(
-      (a) => a.status === "Ongoing",
-    ).length;
-    const ugSubmissions = Math.ceil(filteredAssignments.length * 0.6);
-    const pgSubmissions = filteredAssignments.length - ugSubmissions;
-    const newApps = filteredAssignments.length;
+  const statCardsTop = useMemo(() => {
+    return [
+      {
+        label: "Unassigned Assignments",
+        value: stats.topStats.unassignedAssignments,
+      },
+      {
+        label: "Assigned Assignments",
+        value: stats.topStats.assignedAssignments,
+      },
+      {
+        label: "Completed Assignments",
+        value: stats.topStats.completedAssignments,
+      },
+      {
+        label: "Incomplete Assignments",
+        value: stats.topStats.incompleteAssignments,
+      },
+    ];
+  }, [stats]);
 
-    return {
-      unassigned,
-      assigned,
-      completed,
-      incomplete,
-      ugSubmissions,
-      pgSubmissions,
-      newApps,
-    };
-  }, [filteredAssignments]);
-
-  // Map the stats object to an array for easy rendering
-  const statCards = [
-    { label: "Unassigned Assignments", value: stats.unassigned },
-    { label: "Assigned Assignments", value: stats.assigned },
-    { label: "Completed Assignments", value: stats.completed },
-    { label: "Incomplete Assignments", value: stats.incomplete },
-    { label: "UG Application Submissions", value: stats.ugSubmissions },
-    { label: "PG Application Submissions", value: stats.pgSubmissions },
-    { label: "New Applications", value: stats.newApps },
-  ];
+  const statCardsBottom = useMemo(() => {
+    return [
+      {
+        label: "UG Application Submissions",
+        value: stats.applicationStats.ugSubmissions,
+      },
+      {
+        label: "PG Application Submissions",
+        value: stats.applicationStats.pgSubmissions,
+      },
+      {
+        label: "New Applications",
+        value: stats.applicationStats.newApplications,
+      },
+    ];
+  }, [stats]);
 
   return (
-    <div className="p-8 bg-white min-h-screen">
+    <div className="p-4 min-h-screen">
       <header className="mb-8 flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">
-            Welcome, Afolayan
-          </h1>
+          <h1 className="text-3xl font-bold text-gray-900">Welcome, Admin</h1>
           <p className="text-gray-500">Here are your stats!</p>
         </div>
         <button className="p-2 bg-gray-100 rounded-full hover:bg-gray-200">
@@ -88,48 +104,56 @@ const AdminDashboard = () => {
         </button>
       </header>
 
-      {/* Row 1: 4 Cards */}
+      {/* Top Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        {statCards.slice(0, 4).map((stat, i) => (
+        {statCardsTop.map((stat, i) => (
           <div key={i} className="bg-[#F3F4F6] p-6 rounded-2xl">
             <p className="text-[10px] font-black text-gray-800 uppercase mb-2 tracking-wider">
               {stat.label}
             </p>
-            <p className="text-4xl font-bold text-gray-900">{stat.value}</p>
+            {loading ? (
+              <div className="h-10 w-10 border-4 border-gray-300 border-t-[#003B95] rounded-full animate-spin mx-auto" />
+            ) : (
+              <p className="text-4xl font-bold text-gray-900">{stat.value}</p>
+            )}
           </div>
         ))}
       </div>
 
-      {/* Dynamic Filter Row */}
+      {/* Filter Buttons */}
       <div className="flex space-x-3 mb-8">
-        {filterOptions.map((option) => (
+        {FILTER_OPTIONS.map((option) => (
           <button
-            key={option}
-            onClick={() => setActiveFilter(option)}
+            key={option.value}
+            onClick={() => setActiveFilter(option.value)}
             className={`px-6 py-2 rounded-full text-sm font-semibold transition-all ${
-              activeFilter === option
+              activeFilter === option.value
                 ? "bg-[#003B95] text-white shadow-md"
                 : "bg-[#F3F4F6] text-gray-500 hover:bg-gray-200"
             }`}
           >
-            {option}
+            {option.label}
           </button>
         ))}
       </div>
 
-      {/* Row 2: 3 Cards */}
+      {/* Bottom Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
-        {statCards.slice(4).map((stat, i) => (
+        {statCardsBottom.map((stat, i) => (
           <div key={i} className="bg-[#F3F4F6] p-6 rounded-2xl">
             <p className="text-[10px] font-black text-gray-800 uppercase mb-2 tracking-wider">
               {stat.label}
             </p>
-            <p className="text-4xl font-bold text-gray-900">{stat.value}</p>
+            {loading ? (
+              <div className="h-10 w-10 border-4 border-gray-300 border-t-[#003B95] rounded-full animate-spin mx-auto" />
+            ) : (
+              <p className="text-4xl font-bold text-gray-900">{stat.value}</p>
+            )}
           </div>
         ))}
       </div>
 
-      {/* Clickable Action Bar */}
+      {/* Clickable Banner */}
       <h2 className="text-xl font-bold mb-4 text-gray-900 font-sans">
         Your Unassigned Assignments
       </h2>
@@ -139,7 +163,7 @@ const AdminDashboard = () => {
       >
         <p className="text-lg font-semibold text-gray-900">
           You have{" "}
-          <span className="text-[#003B95]">{stats.unassigned * 2.5}</span>{" "}
+          <span className="text-[#003B95]">{stats.unassignedBannerCount}</span>{" "}
           Unassigned Assignments
         </p>
         <div className="p-3 bg-gray-200 rounded-full group-hover:bg-[#003B95] group-hover:text-white transition-colors">
