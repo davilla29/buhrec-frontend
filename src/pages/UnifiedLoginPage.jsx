@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-// import { useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import axios from "../utils/axios";
-// import { login } from "../../redux/auth/authSlice";
 import toast from "react-hot-toast";
+import { loginSuccess, setLoading } from "../redux/auth/authSlice";
+import { Loader } from "lucide-react";
 
 const ROLE_SETTINGS = {
   admin: {
@@ -21,73 +22,67 @@ const ROLE_SETTINGS = {
 };
 
 const UnifiedLoginPage = () => {
-  const { role } = useParams();
+  const { role } = useParams(); // get role from URL
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const currentRole = ROLE_SETTINGS[role] ? role : "researcher";
   const settings = ROLE_SETTINGS[currentRole];
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [isLoading, setIsLoadingLocal] = useState(false); // local loading state
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-
-    if (error) setError("");
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // const handleLogin = async (e) => {
-  //   e.preventDefault();
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-  //   if (!formData.email || !formData.password) {
-  //     setError("Email and password are required");
-  //     return;
-  //   }
+    if (!formData.email || !formData.password) {
+      toast.error("Email and password are required");
+      return;
+    }
 
-  //   try {
-  //     setIsLoading(true);
+    try {
+      setIsLoadingLocal(true);
+      dispatch(setLoading(true));
 
-  //     // 🔥 Dynamic endpoint
-  //     const res = await axios.post(`/login/${currentRole}`, {
-  //       email: formData.email,
-  //       password: formData.password,
-  //     });
+      // Dynamic login endpoint based on role
+      const res = await axios.post(`/login/${currentRole}`, {
+        email: formData.email,
+        password: formData.password,
+      });
 
-  //     if (res.data.success) {
-  //       const user = res.data.data;
+      if (res.data.success) {
+        const user = res.data.data;
 
-  //       // dispatch(login(user));
+        // Update Redux state
+        dispatch(loginSuccess(user));
 
-  //       navigate(`/${currentRole}/dashboard`);
-  //     }
-  //   } catch (err) {
-  //     if (err.response) {
-  //       const { message, needVerification } = err.response.data;
+        // Redirect to role-specific dashboard
+        navigate(`/${currentRole}/dashboard`);
+      }
+    } catch (err) {
+      if (err.response) {
+        const { message, needVerification } = err.response.data;
 
-  //       if (needVerification) {
-  //         navigate("/verify-email");
-  //       } else {
-  //         toast.error(message || "Login failed");
-  //       }
-  //     } else {
-  //       toast.error("Network error. Please try again.");
-  //     }
-  //   } finally {
-  //     setIsLoading(false);
-  //   }
-  // };
+        if (needVerification) {
+          // navigate("/verify-email");
+          toast.error(message);
+        } else {
+          toast.error(message || "Login failed");
+        }
+      } else {
+        toast.error("Network error. Please try again.");
+      }
+    } finally {
+      setIsLoadingLocal(false);
+      dispatch(setLoading(false));
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#E5E7EB] flex items-center justify-center p-4">
@@ -96,16 +91,7 @@ const UnifiedLoginPage = () => {
           {settings.title}
         </h1>
 
-        {error && (
-          <div className="mb-4 p-3 bg-red-100 text-red-600 text-xs rounded-lg border border-red-200">
-            {error}
-          </div>
-        )}
-
-        <form
-          className="space-y-6"
-          // onSubmit={handleLogin}
-        >
+        <form className="space-y-6" onSubmit={handleLogin}>
           <div>
             <label className="block text-sm font-medium text-gray-900 mb-2">
               Email
@@ -150,10 +136,14 @@ const UnifiedLoginPage = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="text-white cursor-pointer px-12 py-3 rounded-full font-semibold w-full sm:w-1/2 transition-all active:scale-95 disabled:opacity-50"
+              className="flex items-center justify-center text-white cursor-pointer px-12 py-3 rounded-full font-semibold w-full sm:w-1/2 transition-all active:scale-95 disabled:opacity-50"
               style={{ backgroundColor: settings.color }}
             >
-              {isLoading ? "Logging in..." : "Log in"}
+              {isLoading ? (
+                <Loader className="animate-spin h-5 w-5 text-white" />
+              ) : (
+                "Log in"
+              )}
             </button>
           </div>
         </form>

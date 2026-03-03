@@ -10,6 +10,8 @@ const DashboardLayout = lazy(() => import("../layouts/DashboardLayout"));
 const HomePage = lazy(() => import("../pages/Home"));
 const UnifiedLoginPage = lazy(() => import("../pages/UnifiedLoginPage"));
 
+const AdminDashboardPage=lazy(() => import("../pages/admin/AdminDashboard"))
+
 export const routes = createRoutesFromElements(
   <>
     <Route path="/" element={<RootLayout />}>
@@ -32,8 +34,8 @@ export const routes = createRoutesFromElements(
     </Route>
 
     <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
-      <Route path="/admin/dashboard" element={<DashboardLayoutLayout />}>
-        <Route index element={<AdminDashboard />} />
+      <Route path="/admin/dashboard" element={<DashboardLayout />}>
+        <Route index element={<AdminDashboardPage />} />
         {/* <Route path="manage-users" element={<ManageUsers />} />
         <Route path="settings" element={<AdminSettings />} />
         <Route path="*" element={<DashboardNotFound />} /> */}
