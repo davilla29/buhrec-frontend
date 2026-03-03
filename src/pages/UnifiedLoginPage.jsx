@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import axios from "../../utils/axios";
-import { login } from "../../redux/auth/authSlice";
+// import { useDispatch } from "react-redux";
+import axios from "../utils/axios";
+// import { login } from "../../redux/auth/authSlice";
 import toast from "react-hot-toast";
 
 const ROLE_SETTINGS = {
@@ -23,7 +23,7 @@ const ROLE_SETTINGS = {
 const UnifiedLoginPage = () => {
   const { role } = useParams();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const currentRole = ROLE_SETTINGS[role] ? role : "researcher";
   const settings = ROLE_SETTINGS[currentRole];
@@ -48,51 +48,51 @@ const UnifiedLoginPage = () => {
     if (error) setError("");
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
 
-    if (!formData.email || !formData.password) {
-      setError("Email and password are required");
-      return;
-    }
+  //   if (!formData.email || !formData.password) {
+  //     setError("Email and password are required");
+  //     return;
+  //   }
 
-    try {
-      setIsLoading(true);
+  //   try {
+  //     setIsLoading(true);
 
-      // 🔥 Dynamic endpoint
-      const res = await axios.post(`/login/${currentRole}`, {
-        email: formData.email,
-        password: formData.password,
-      });
+  //     // 🔥 Dynamic endpoint
+  //     const res = await axios.post(`/login/${currentRole}`, {
+  //       email: formData.email,
+  //       password: formData.password,
+  //     });
 
-      if (res.data.success) {
-        const user = res.data.data;
+  //     if (res.data.success) {
+  //       const user = res.data.data;
 
-        dispatch(login(user));
+  //       // dispatch(login(user));
 
-        navigate(`/${currentRole}/dashboard`);
-      }
-    } catch (err) {
-      if (err.response) {
-        const { message, needVerification } = err.response.data;
+  //       navigate(`/${currentRole}/dashboard`);
+  //     }
+  //   } catch (err) {
+  //     if (err.response) {
+  //       const { message, needVerification } = err.response.data;
 
-        if (needVerification) {
-          navigate("/verify-email");
-        } else {
-          toast.error(message || "Login failed");
-        }
-      } else {
-        toast.error("Network error. Please try again.");
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  //       if (needVerification) {
+  //         navigate("/verify-email");
+  //       } else {
+  //         toast.error(message || "Login failed");
+  //       }
+  //     } else {
+  //       toast.error("Network error. Please try again.");
+  //     }
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-[#E5E7EB] flex items-center justify-center p-4">
       <div className="bg-white p-6 sm:p-10 rounded-2xl shadow-sm w-full max-w-md">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
           {settings.title}
         </h1>
 
@@ -102,7 +102,10 @@ const UnifiedLoginPage = () => {
           </div>
         )}
 
-        <form className="space-y-6" onSubmit={handleLogin}>
+        <form
+          className="space-y-6"
+          // onSubmit={handleLogin}
+        >
           <div>
             <label className="block text-sm font-medium text-gray-900 mb-2">
               Email
@@ -147,7 +150,7 @@ const UnifiedLoginPage = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="text-white px-12 py-3 rounded-full font-semibold w-full sm:w-1/2 transition-all active:scale-95 disabled:opacity-50"
+              className="text-white cursor-pointer px-12 py-3 rounded-full font-semibold w-full sm:w-1/2 transition-all active:scale-95 disabled:opacity-50"
               style={{ backgroundColor: settings.color }}
             >
               {isLoading ? "Logging in..." : "Log in"}
