@@ -2,8 +2,10 @@ import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import { Route, createRoutesFromElements } from "react-router-dom";
 // import Notfound from "../pages/Notfound";
+import ProtectedRoute from "../routes/ProtectedRoute";
 
 const RootLayout = lazy(() => import("../layouts/RootLayout"));
+const DashboardLayout = lazy(() => import("../layouts/DashboardLayout"));
 
 const HomePage = lazy(() => import("../pages/Home"));
 const UnifiedLoginPage = lazy(() => import("../pages/UnifiedLoginPage"));
@@ -28,5 +30,32 @@ export const routes = createRoutesFromElements(
 
       {/* <Route path="*" element={Notfound} /> */}
     </Route>
+
+    <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
+      <Route path="/admin/dashboard" element={<DashboardLayoutLayout />}>
+        <Route index element={<AdminDashboard />} />
+        {/* <Route path="manage-users" element={<ManageUsers />} />
+        <Route path="settings" element={<AdminSettings />} />
+        <Route path="*" element={<DashboardNotFound />} /> */}
+      </Route>
+    </Route>
+
+    {/* <Route element={<ProtectedRoute allowedRoles={["reviewer"]} />}>
+      <Route path="/reviewer/dashboard" element={<ReviewerLayout />}>
+        <Route index element={<ReviewerDashboard />} />
+        <Route path="assigned-proposals" element={<AssignedProposals />} />
+        <Route path="reviews" element={<Reviews />} />
+        <Route path="*" element={<DashboardNotFound />} />
+      </Route>
+    </Route> */}
+
+    {/* <Route element={<ProtectedRoute allowedRoles={["researcher"]} />}>
+      <Route path="/researcher/dashboard" element={<ResearcherLayout />}>
+        <Route index element={<ResearcherDashboard />} />
+        <Route path="submit-proposal" element={<SubmitProposal />} />
+        <Route path="my-proposals" element={<MyProposals />} />
+        <Route path="*" element={<DashboardNotFound />} />
+      </Route>
+    </Route> */}
   </>,
 );
