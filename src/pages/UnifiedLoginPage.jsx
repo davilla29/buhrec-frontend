@@ -24,7 +24,6 @@ const UnifiedLoginPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Validate role from URL
   const currentRole = ROLE_SETTINGS[role] ? role : "researcher";
   const settings = ROLE_SETTINGS[currentRole];
 
@@ -59,7 +58,8 @@ const UnifiedLoginPage = () => {
     try {
       setIsLoading(true);
 
-      const res = await axios.post("/login", {
+      // 🔥 Dynamic endpoint
+      const res = await axios.post(`/login/${currentRole}`, {
         email: formData.email,
         password: formData.password,
       });
@@ -67,17 +67,9 @@ const UnifiedLoginPage = () => {
       if (res.data.success) {
         const user = res.data.data;
 
-        // Optional: prevent logging into wrong role page
-        if (user.role !== currentRole) {
-          setError(
-            `This account belongs to ${user.role}. Please use the correct login page.`,
-          );
-          return;
-        }
-
         dispatch(login(user));
 
-        navigate(`/${user.role}/dashboard`);
+        navigate(`/${currentRole}/dashboard`);
       }
     } catch (err) {
       if (err.response) {
@@ -102,7 +94,6 @@ const UnifiedLoginPage = () => {
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">
           {settings.title}
         </h1>
-        <p className="text-gray-600 mb-8 text-sm">Sign in to your account</p>
 
         {error && (
           <div className="mb-4 p-3 bg-red-100 text-red-600 text-xs rounded-lg border border-red-200">
@@ -142,15 +133,11 @@ const UnifiedLoginPage = () => {
           <div className="flex items-center space-x-3">
             <input
               type="checkbox"
-              id="show-pass"
               checked={showPassword}
               onChange={() => setShowPassword((prev) => !prev)}
               className="w-4 h-4"
             />
-            <label
-              htmlFor="show-pass"
-              className="text-sm text-gray-600 cursor-pointer"
-            >
+            <label className="text-sm text-gray-600 cursor-pointer">
               Show Password
             </label>
           </div>
