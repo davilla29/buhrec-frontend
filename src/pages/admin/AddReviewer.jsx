@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../utils/axios";
 import toast from "react-hot-toast";
+import { ChevronLeft } from "lucide-react";
 
 function AddReviewer() {
   const navigate = useNavigate();
@@ -43,8 +44,11 @@ function AddReviewer() {
 
   return (
     <div className="min-h-screen  p-1">
-      <button onClick={() => navigate(-1)} className="mb-8 text-2xl">
-        ‹
+      <button
+        onClick={() => navigate(-1)}
+        className="mt-1 p-1 cursor-pointer hover:bg-gray-200 rounded-full transition-colors"
+      >
+        <ChevronLeft size={28} className="text-gray-800" />
       </button>
 
       <form onSubmit={handleSubmit} className="max-w-3xl mx-auto w-full">

@@ -146,6 +146,20 @@ const UnifiedLoginPage = () => {
               )}
             </button>
           </div>
+          {/* Only show for researcher */}
+          {currentRole === "researcher" && (
+            <div className="text-center pt-4">
+              <p className="text-sm text-gray-600">
+                Don’t have an account?{" "}
+                <span
+                  onClick={() => navigate("/researcher/register")}
+                  className="font-semibold text-blue-600 cursor-pointer hover:underline"
+                >
+                  Create Account
+                </span>
+              </p>
+            </div>
+          )}
         </form>
       </div>
     </div>
