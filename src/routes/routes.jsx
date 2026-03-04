@@ -10,7 +10,7 @@ const DashboardLayout = lazy(() => import("../layouts/DashboardLayout"));
 const HomePage = lazy(() => import("../pages/Home"));
 const UnifiedLoginPage = lazy(() => import("../pages/UnifiedLoginPage"));
 const ResearcherSignUpPage = lazy(() => import("../pages/researcher/SignUp"));
-// const ResearcherSignUpPage = lazy(() => import("../pages/researcher/SignUp"));
+const VerifyEmailPage = lazy(() => import("../pages/researcher/VerifyEmail"));
 
 const AdminDashboardPage = lazy(() => import("../pages/admin/AdminDashboard"));
 const AdminPaymentsListPage = lazy(() => import("../pages/admin/Payments"));
@@ -30,8 +30,11 @@ export const routes = createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>
       <Route index element={<HomePage />} />
       <Route path="/login/:role" element={<UnifiedLoginPage />} />
-      <Route path="/auth/researcher/register" element={<ResearcherSignUpPage />} />
-      <Route path="/auth/verify-email" element={<ResearcherSignUpPage />} />
+      <Route
+        path="/auth/researcher/register"
+        element={<ResearcherSignUpPage />}
+      />
+      <Route path="/auth/verify-email" element={<VerifyEmailPage />} />
       {/* <Route
         path="/auth/signup"
         element={
