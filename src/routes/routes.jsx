@@ -6,13 +6,13 @@ import ProtectedRoute from "../routes/ProtectedRoute";
 
 const RootLayout = lazy(() => import("../layouts/RootLayout"));
 const DashboardLayout = lazy(() => import("../layouts/DashboardLayout"));
+const DashboardNotFoundPage = lazy(() => import("../pages/DashboardNotFound"));
 
 const HomePage = lazy(() => import("../pages/Home"));
 const UnifiedLoginPage = lazy(() => import("../pages/UnifiedLoginPage"));
 const ResearcherSignUpPage = lazy(() => import("../pages/researcher/SignUp"));
 const VerifyEmailPage = lazy(() => import("../pages/researcher/VerifyEmail"));
 const NotificationsPage = lazy(() => import("../pages/Notifications"));
-
 
 const AdminDashboardPage = lazy(() => import("../pages/admin/AdminDashboard"));
 const AdminPaymentsListPage = lazy(() => import("../pages/admin/Payments"));
@@ -25,7 +25,9 @@ const ResearcherDashboardPage = lazy(
   () => import("../pages/researcher/ResearcherDashboard"),
 );
 const MyProposalsPage = lazy(() => import("../pages/researcher/Proposals"));
-const ProposalSubmissionPage  = lazy(() => import("../pages/researcher/ProposalSubmission"));
+const ProposalSubmissionPage = lazy(
+  () => import("../pages/researcher/ProposalSubmission"),
+);
 
 export const routes = createRoutesFromElements(
   <>
@@ -60,6 +62,8 @@ export const routes = createRoutesFromElements(
         <Route path="reviewers" element={<AdminReviewersListPage />} />
         <Route path="reviewers/add" element={<AdminAddReviewerPage />} />
         <Route path="notifications" element={<NotificationsPage />} />
+        <Route path="*" element={<DashboardNotFoundPage />} />
+
         {/* <Route path="manage-users" element={<ManageUsers />} />
         <Route path="settings" element={<AdminSettings />} />
         */}
@@ -84,9 +88,10 @@ export const routes = createRoutesFromElements(
           element={<ProposalSubmissionPage />}
         />
         <Route path="notifications" element={<NotificationsPage />} />
+        <Route path="*" element={<DashboardNotFoundPage />} />
         {/* <Route path="submit-proposal" element={<SubmitProposal />} />
      
-        <Route path="*" element={<DashboardNotFound />} /> */}
+         */}
       </Route>
     </Route>
   </>,
