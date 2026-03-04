@@ -6,20 +6,39 @@ import ProtectedRoute from "../routes/ProtectedRoute";
 
 const RootLayout = lazy(() => import("../layouts/RootLayout"));
 const DashboardLayout = lazy(() => import("../layouts/DashboardLayout"));
+const DashboardNotFoundPage = lazy(() => import("../pages/DashboardNotFound"));
 
 const HomePage = lazy(() => import("../pages/Home"));
 const UnifiedLoginPage = lazy(() => import("../pages/UnifiedLoginPage"));
+const ResearcherSignUpPage = lazy(() => import("../pages/researcher/SignUp"));
+const VerifyEmailPage = lazy(() => import("../pages/researcher/VerifyEmail"));
+const NotificationsPage = lazy(() => import("../pages/Notifications"));
 
-const AdminDashboardPage = lazy(() => import("../pages/admin/AdminDashboard"))
+const AdminDashboardPage = lazy(() => import("../pages/admin/AdminDashboard"));
+const AdminPaymentsListPage = lazy(() => import("../pages/admin/Payments"));
+const AdminReviewersListPage = lazy(
+  () => import("../pages/admin/ReviewersList"),
+);
+const AdminAddReviewerPage = lazy(() => import("../pages/admin/AddReviewer"));
 
-const ResearcherDashboardPage = lazy(() => import("../pages/researcher/ResearcherDashboard"))
-
+const ResearcherDashboardPage = lazy(
+  () => import("../pages/researcher/ResearcherDashboard"),
+);
+const MyProposalsPage = lazy(() => import("../pages/researcher/Proposals"));
+const ProposalSubmissionPage = lazy(
+  () => import("../pages/researcher/ProposalSubmission"),
+);
 
 export const routes = createRoutesFromElements(
   <>
     <Route path="/" element={<RootLayout />}>
       <Route index element={<HomePage />} />
       <Route path="/login/:role" element={<UnifiedLoginPage />} />
+      <Route
+        path="/auth/researcher/register"
+        element={<ResearcherSignUpPage />}
+      />
+      <Route path="/auth/verify-email" element={<VerifyEmailPage />} />
       {/* <Route
         path="/auth/signup"
         element={
@@ -37,11 +56,17 @@ export const routes = createRoutesFromElements(
     </Route>
 
     <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
-      <Route path="/admin/dashboard" element={<DashboardLayout />}>
+      <Route path="admin/dashboard" element={<DashboardLayout />}>
         <Route index element={<AdminDashboardPage />} />
+        <Route path="payments" element={<AdminPaymentsListPage />} />
+        <Route path="reviewers" element={<AdminReviewersListPage />} />
+        <Route path="reviewers/add" element={<AdminAddReviewerPage />} />
+        <Route path="notifications" element={<NotificationsPage />} />
+        <Route path="*" element={<DashboardNotFoundPage />} />
+
         {/* <Route path="manage-users" element={<ManageUsers />} />
         <Route path="settings" element={<AdminSettings />} />
-        <Route path="*" element={<DashboardNotFound />} /> */}
+        */}
       </Route>
     </Route>
 
@@ -57,9 +82,16 @@ export const routes = createRoutesFromElements(
     <Route element={<ProtectedRoute allowedRoles={["researcher"]} />}>
       <Route path="/researcher/dashboard" element={<DashboardLayout />}>
         <Route index element={<ResearcherDashboardPage />} />
+        <Route path="my-proposals" element={<MyProposalsPage />} />
+        <Route
+          path="proposals/:proposalId/draft"
+          element={<ProposalSubmissionPage />}
+        />
+        <Route path="notifications" element={<NotificationsPage />} />
+        <Route path="*" element={<DashboardNotFoundPage />} />
         {/* <Route path="submit-proposal" element={<SubmitProposal />} />
-        <Route path="my-proposals" element={<MyProposals />} />
-        <Route path="*" element={<DashboardNotFound />} /> */}
+     
+         */}
       </Route>
     </Route>
   </>,

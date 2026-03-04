@@ -70,8 +70,10 @@ const UnifiedLoginPage = () => {
         const { message, needVerification } = err.response.data;
 
         if (needVerification) {
-          // navigate("/verify-email");
           toast.error(message);
+          navigate("/auth/verify-email", {
+            state: { email: formData.email },
+          });
         } else {
           toast.error(message || "Login failed");
         }
@@ -125,7 +127,7 @@ const UnifiedLoginPage = () => {
               type="checkbox"
               checked={showPassword}
               onChange={() => setShowPassword((prev) => !prev)}
-              className="w-4 h-4"
+              className="w-4 h-4 cursor-pointer"
             />
             <label className="text-sm text-gray-600 cursor-pointer">
               Show Password
@@ -146,6 +148,20 @@ const UnifiedLoginPage = () => {
               )}
             </button>
           </div>
+          {/* Only show for researcher */}
+          {currentRole === "researcher" && (
+            <div className="text-center pt-4">
+              <p className="text-sm text-gray-600">
+                Don’t have an account?{" "}
+                <span
+                  onClick={() => navigate("/auth/researcher/register")}
+                  className="font-semibold text-blue-600 cursor-pointer hover:underline"
+                >
+                  Create Account
+                </span>
+              </p>
+            </div>
+          )}
         </form>
       </div>
     </div>
