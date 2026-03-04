@@ -17,7 +17,7 @@ const ALL_NAV_LINKS = [
   // All roles
   {
     label: "Dashboard",
-    path: "/dashboard",
+    path: "/admin/dashboard",
     roles: ["reviewer", "researcher", "admin"],
     icon: <LayoutDashboard size={20} />,
   },
@@ -25,7 +25,7 @@ const ALL_NAV_LINKS = [
   // Admin sidebar
   {
     label: "Reviewers",
-    path: "/dashboard/reviewers",
+    path: "/admin/dashboard/reviewers",
     roles: ["admin"],
     icon: <Users size={20} />,
   },
@@ -43,7 +43,7 @@ const ALL_NAV_LINKS = [
   },
   {
     label: "Payments",
-    path: "/dashboard/payments",
+    path: "/admin/dashboard/payments",
     roles: ["admin"],
     icon: <CreditCard size={20} />,
   },
