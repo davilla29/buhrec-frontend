@@ -10,7 +10,10 @@ const DashboardLayout = lazy(() => import("../layouts/DashboardLayout"));
 const HomePage = lazy(() => import("../pages/Home"));
 const UnifiedLoginPage = lazy(() => import("../pages/UnifiedLoginPage"));
 
-const AdminDashboardPage=lazy(() => import("../pages/admin/AdminDashboard"))
+const AdminDashboardPage = lazy(() => import("../pages/admin/AdminDashboard"))
+
+const ResearcherDashboardPage = lazy(() => import("../pages/researcher/ResearcherDashboard"))
+
 
 export const routes = createRoutesFromElements(
   <>
@@ -51,13 +54,13 @@ export const routes = createRoutesFromElements(
       </Route>
     </Route> */}
 
-    {/* <Route element={<ProtectedRoute allowedRoles={["researcher"]} />}>
-      <Route path="/researcher/dashboard" element={<ResearcherLayout />}>
-        <Route index element={<ResearcherDashboard />} />
-        <Route path="submit-proposal" element={<SubmitProposal />} />
+    <Route element={<ProtectedRoute allowedRoles={["researcher"]} />}>
+      <Route path="/researcher/dashboard" element={<DashboardLayout />}>
+        <Route index element={<ResearcherDashboardPage />} />
+        {/* <Route path="submit-proposal" element={<SubmitProposal />} />
         <Route path="my-proposals" element={<MyProposals />} />
-        <Route path="*" element={<DashboardNotFound />} />
+        <Route path="*" element={<DashboardNotFound />} /> */}
       </Route>
-    </Route> */}
+    </Route>
   </>,
 );
