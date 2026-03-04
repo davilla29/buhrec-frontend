@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import axios from "../../utils/axios";
+import toast from "react-hot-toast";
 
 function Proposals() {
   const [proposals, setProposals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("All"); // Default to showing everything or a specific tab
+    const [showCreateModal, setShowCreateModal] = useState(false);
+    const [title, setTitle] = useState("");
 
   const tabs = ["Drafts", "Not Reviewed", "Ongoing", "Completed"];
 
@@ -117,7 +120,10 @@ function Proposals() {
                 ? "You have no proposals"
                 : `No proposals found in ${activeTab}`}
             </p>
-            <button className="bg-[#1e40af] text-white px-6 py-2 rounded-full font-medium hover:bg-blue-800 transition-all">
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="bg-[#1e40af] cursor-pointer text-white px-6 py-2 rounded-full font-medium hover:bg-blue-800 transition-all"
+            >
               New Submission
             </button>
           </div>
@@ -181,6 +187,57 @@ function Proposals() {
           </div>
         )}
       </div>
+
+      {showCreateModal && (
+        <div className="fixed inset-0 bg-black/30 flex items-center justify-center">
+          <div className="bg-white p-8 rounded-2xl w-96 relative">
+            <button
+              onClick={() => setShowCreateModal(false)}
+              className="absolute right-4 top-4"
+            >
+              <X size={16} />
+            </button>
+
+            <h3 className="font-bold mb-4">Create New Proposal</h3>
+
+            <input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Enter proposal title"
+              className="w-full cursor-pointer bg-[#E5E7EB] rounded-xl px-4 py-3 mb-6 focus:ring-2 focus:ring-[#003B95]"
+            />
+
+            <button
+              onClick={async () => {
+                if (!title.trim()) {
+                  toast.error("Proposal title is required");
+                  return;
+                }
+                try {
+                  const res = await axios.post("/researcher/create-proposal", {
+                    title,
+                  });
+
+                  toast.success("Created as draft successfully");
+
+                  const proposalId = res.data.proposal._id;
+
+                  navigate(
+                    `/researcher/dashboard/proposals/${proposalId}/draft`,
+                  );
+                } catch (err) {
+                  toast.error(
+                    err.response?.data?.message || "Failed to create proposal",
+                  );
+                }
+              }}
+              className="w-full cursor-pointer py-3 rounded-full bg-[#003B95] text-white font-semibold"
+            >
+              Create Draft
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

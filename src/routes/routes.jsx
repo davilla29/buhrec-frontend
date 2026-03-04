@@ -11,6 +11,8 @@ const HomePage = lazy(() => import("../pages/Home"));
 const UnifiedLoginPage = lazy(() => import("../pages/UnifiedLoginPage"));
 const ResearcherSignUpPage = lazy(() => import("../pages/researcher/SignUp"));
 const VerifyEmailPage = lazy(() => import("../pages/researcher/VerifyEmail"));
+const NotificationsPage = lazy(() => import("../pages/Notifications"));
+
 
 const AdminDashboardPage = lazy(() => import("../pages/admin/AdminDashboard"));
 const AdminPaymentsListPage = lazy(() => import("../pages/admin/Payments"));
@@ -18,12 +20,12 @@ const AdminReviewersListPage = lazy(
   () => import("../pages/admin/ReviewersList"),
 );
 const AdminAddReviewerPage = lazy(() => import("../pages/admin/AddReviewer"));
-const AdminNotificationsPage = lazy(() => import("../pages/Notifications"));
 
 const ResearcherDashboardPage = lazy(
   () => import("../pages/researcher/ResearcherDashboard"),
 );
 const MyProposalsPage = lazy(() => import("../pages/researcher/Proposals"));
+const ProposalSubmissionPage  = lazy(() => import("../pages/researcher/ProposalSubmission"));
 
 export const routes = createRoutesFromElements(
   <>
@@ -57,7 +59,7 @@ export const routes = createRoutesFromElements(
         <Route path="payments" element={<AdminPaymentsListPage />} />
         <Route path="reviewers" element={<AdminReviewersListPage />} />
         <Route path="reviewers/add" element={<AdminAddReviewerPage />} />
-        <Route path="notifications" element={<AdminNotificationsPage />} />
+        <Route path="notifications" element={<NotificationsPage />} />
         {/* <Route path="manage-users" element={<ManageUsers />} />
         <Route path="settings" element={<AdminSettings />} />
         */}
@@ -77,6 +79,11 @@ export const routes = createRoutesFromElements(
       <Route path="/researcher/dashboard" element={<DashboardLayout />}>
         <Route index element={<ResearcherDashboardPage />} />
         <Route path="my-proposals" element={<MyProposalsPage />} />
+        <Route
+          path="proposals/:proposalId/draft"
+          element={<ProposalSubmissionPage />}
+        />
+        <Route path="notifications" element={<NotificationsPage />} />
         {/* <Route path="submit-proposal" element={<SubmitProposal />} />
      
         <Route path="*" element={<DashboardNotFound />} /> */}
