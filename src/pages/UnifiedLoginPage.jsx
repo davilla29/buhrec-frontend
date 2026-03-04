@@ -152,7 +152,7 @@ const UnifiedLoginPage = () => {
               <p className="text-sm text-gray-600">
                 Don’t have an account?{" "}
                 <span
-                  onClick={() => navigate("/researcher/register")}
+                  onClick={() => navigate("/auth/researcher/register")}
                   className="font-semibold text-blue-600 cursor-pointer hover:underline"
                 >
                   Create Account

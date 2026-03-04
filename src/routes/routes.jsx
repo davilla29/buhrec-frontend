@@ -9,11 +9,15 @@ const DashboardLayout = lazy(() => import("../layouts/DashboardLayout"));
 
 const HomePage = lazy(() => import("../pages/Home"));
 const UnifiedLoginPage = lazy(() => import("../pages/UnifiedLoginPage"));
+const ResearcherSignUpPage = lazy(() => import("../pages/researcher/SignUp"));
+// const ResearcherSignUpPage = lazy(() => import("../pages/researcher/SignUp"));
 
 const AdminDashboardPage = lazy(() => import("../pages/admin/AdminDashboard"));
 const AdminPaymentsListPage = lazy(() => import("../pages/admin/Payments"));
-const AdminReviewersListPage = lazy(() => import("../pages/admin/ReviewersList"))
-const AdminAddReviewerPage = lazy(() => import("../pages/admin/AddReviewer"))
+const AdminReviewersListPage = lazy(
+  () => import("../pages/admin/ReviewersList"),
+);
+const AdminAddReviewerPage = lazy(() => import("../pages/admin/AddReviewer"));
 const AdminNotificationsPage = lazy(() => import("../pages/Notifications"));
 
 const ResearcherDashboardPage = lazy(
@@ -21,12 +25,13 @@ const ResearcherDashboardPage = lazy(
 );
 const MyProposalsPage = lazy(() => import("../pages/researcher/Proposals"));
 
-
 export const routes = createRoutesFromElements(
   <>
     <Route path="/" element={<RootLayout />}>
       <Route index element={<HomePage />} />
       <Route path="/login/:role" element={<UnifiedLoginPage />} />
+      <Route path="/auth/researcher/register" element={<ResearcherSignUpPage />} />
+      <Route path="/auth/verify-email" element={<ResearcherSignUpPage />} />
       {/* <Route
         path="/auth/signup"
         element={
