@@ -14,7 +14,7 @@ const Payments = () => {
   const fetchPayments = async (filter) => {
     try {
       setLoading(true);
-      const res = await axios.get(`/payments/list?filter=${filter}`);
+      const res = await axios.get(`/admin/payments/list?filter=${filter}`);
 
       if (res.data.success) {
         setPayments(res.data.data);
@@ -53,8 +53,8 @@ const Payments = () => {
   };
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen">
-      <div className="bg-white rounded-xl shadow-sm p-8">
+    <div className="p-2 min-h-screen">
+      <div className="p-2">
         {/* Header */}
         <div className="mb-6">
           <h1 className="text-xl font-semibold text-gray-800">
@@ -68,7 +68,7 @@ const Payments = () => {
           <div className="flex gap-3">
             <button
               onClick={() => setActiveTab("successful")}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition ${
+              className={`px-4 py-1.5 cursor-pointer rounded-full text-sm font-medium transition ${
                 activeTab === "successful"
                   ? "bg-blue-600 text-white"
                   : "bg-gray-200 text-gray-600"
@@ -79,7 +79,7 @@ const Payments = () => {
 
             <button
               onClick={() => setActiveTab("pending")}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium transition ${
+              className={`px-4 py-1.5 cursor-pointer rounded-full text-sm font-medium transition ${
                 activeTab === "pending"
                   ? "bg-blue-600 text-white"
                   : "bg-gray-200 text-gray-600"
@@ -98,17 +98,12 @@ const Payments = () => {
               />
               <input
                 type="text"
-                placeholder="Search for a payment"
+                placeholder="Search for a payment using app. Id or name"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-9 pr-4 py-2 w-72 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="pl-9 pr-4 py-2 w-85 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-
-            <SlidersHorizontal
-              size={18}
-              className="text-gray-600 cursor-pointer"
-            />
           </div>
         </div>
 
