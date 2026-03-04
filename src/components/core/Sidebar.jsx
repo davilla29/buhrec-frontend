@@ -65,7 +65,7 @@ const ALL_NAV_LINKS = [
   // Researcher sidebar
   {
     label: "Proposals",
-    path: "/dashboard/submissions",
+    path: "/researcher/dashboard/my-proposals",
     roles: ["researcher"],
     icon: <FileText size={20} />,
   },

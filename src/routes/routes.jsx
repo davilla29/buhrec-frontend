@@ -16,6 +16,8 @@ const AdminPaymentsListPage = lazy(() => import("../pages/admin/Payments"));
 const ResearcherDashboardPage = lazy(
   () => import("../pages/researcher/ResearcherDashboard"),
 );
+const MyProposalsPage = lazy(() => import("../pages/researcher/Proposals"));
+
 
 export const routes = createRoutesFromElements(
   <>
@@ -60,8 +62,9 @@ export const routes = createRoutesFromElements(
     <Route element={<ProtectedRoute allowedRoles={["researcher"]} />}>
       <Route path="/researcher/dashboard" element={<DashboardLayout />}>
         <Route index element={<ResearcherDashboardPage />} />
+        <Route path="my-proposals" element={<MyProposalsPage />} />
         {/* <Route path="submit-proposal" element={<SubmitProposal />} />
-        <Route path="my-proposals" element={<MyProposals />} />
+     
         <Route path="*" element={<DashboardNotFound />} /> */}
       </Route>
     </Route>
