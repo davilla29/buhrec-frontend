@@ -142,7 +142,7 @@ const VerifyEmail = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#003B95] text-white py-3 rounded-full font-semibold transition active:scale-95 disabled:opacity-50 flex items-center justify-center"
+            className="w-full cursor-pointer bg-[#003B95] text-white py-3 rounded-full font-semibold transition active:scale-95 disabled:opacity-50 flex items-center justify-center"
           >
             {loading ? (
               <Loader className="animate-spin h-5 w-5" />
@@ -160,7 +160,7 @@ const VerifyEmail = () => {
             className={`text-sm font-medium ${
               countdown > 0
                 ? "text-gray-400 cursor-not-allowed"
-                : "text-[#003B95] hover:underline"
+                : "text-[#003B95] hover:underline cursor-pointer"
             }`}
           >
             {resendLoading ? (
@@ -178,7 +178,7 @@ const VerifyEmail = () => {
         <div className="text-center mt-4">
           <button
             onClick={() => navigate("/login/researcher")}
-            className="text-sm text-gray-500 hover:underline"
+            className="text-sm cursor-pointer text-gray-500 hover:underline"
           >
             Back to Login
           </button>

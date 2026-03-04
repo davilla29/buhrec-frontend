@@ -29,7 +29,7 @@ function SignUp() {
     setErrors({ ...errors, [e.target.name]: "" });
   };
 
-  // ✅ Validation
+  // Validation
   const validate = () => {
     let newErrors = {};
 
@@ -71,7 +71,7 @@ function SignUp() {
       if (res.data.success) {
         toast.success("Registration Successful");
 
-        navigate("/verify-email", {
+        navigate("/auth/verify-email", {
           state: { email: form.email },
         });
       }
@@ -138,7 +138,7 @@ function SignUp() {
               name="dateOfBirth"
               value={form.dateOfBirth}
               onChange={handleChange}
-              max={today} // ✅ disables future date
+              max={today}
               className={`w-full bg-gray-100 rounded-lg px-4 py-3 outline-none focus:ring-2 ${
                 errors.dateOfBirth
                   ? "ring-2 ring-red-500"
@@ -211,10 +211,10 @@ function SignUp() {
               type="checkbox"
               checked={showPassword}
               onChange={() => setShowPassword(!showPassword)}
-              className="w-4 h-4"
+              className="w-4 h-4 cursor-pointer"
               style={{ accentColor: "#003B95" }}
             />
-            <label className="text-sm text-gray-600 cursor-pointer">
+            <label className="text-sm  text-gray-600 cursor-pointer">
               Show Password
             </label>
           </div>
@@ -223,10 +223,22 @@ function SignUp() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-[#003B95] hover:bg-blue-900 text-white py-3 rounded-full font-semibold transition active:scale-95 disabled:opacity-50"
+            className="w-full cursor-pointer bg-[#003B95] hover:bg-blue-900 text-white py-3 rounded-full font-semibold transition active:scale-95 disabled:opacity-50"
           >
             {isLoading ? "Creating account..." : "Sign Up"}
           </button>
+
+          {/* Back to login */}
+          <p className="text-center text-sm text-gray-500">
+            Already have an account?{" "}
+            <button
+              type="button"
+              onClick={() => navigate("/login/researcher")}
+              className="cursor-pointer text-[#003B95] font-semibold hover:underline"
+            >
+              Log in
+            </button>
+          </p>
         </form>
       </div>
     </div>

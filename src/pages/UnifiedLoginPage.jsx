@@ -70,8 +70,10 @@ const UnifiedLoginPage = () => {
         const { message, needVerification } = err.response.data;
 
         if (needVerification) {
-          // navigate("/verify-email");
           toast.error(message);
+          navigate("/auth/verify-email", {
+            state: { email: formData.email },
+          });
         } else {
           toast.error(message || "Login failed");
         }
@@ -125,7 +127,7 @@ const UnifiedLoginPage = () => {
               type="checkbox"
               checked={showPassword}
               onChange={() => setShowPassword((prev) => !prev)}
-              className="w-4 h-4"
+              className="w-4 h-4 cursor-pointer"
             />
             <label className="text-sm text-gray-600 cursor-pointer">
               Show Password
