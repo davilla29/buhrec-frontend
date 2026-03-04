@@ -86,6 +86,13 @@ const Sidebar = () => {
     navigate(`/login/${user?.role || "researcher"}`);
   };
 
+  // Get the first letter of user's name or email
+  const getInitial = () => {
+    if (user?.fullName) return user.fullName.charAt(0).toUpperCase();
+    if (user?.email) return user.email.charAt(0).toUpperCase();
+    return "U";
+  };
+
   return (
     <div className="flex flex-col justify-between h-screen bg-[#003B95] p-6 w-72 text-white">
       {/* Top section */}
@@ -122,12 +129,16 @@ const Sidebar = () => {
       <div className="space-y-6">
         {/* User Profile */}
         <div className="flex items-center space-x-3 px-4">
-          <div className="w-10 h-10 rounded-full bg-gray-300 overflow-hidden border-2 border-white/20">
-            <img
-              src="/avatar-placeholder.png"
-              alt="Profile"
-              className="w-full h-full object-cover"
-            />
+          <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-900 font-bold text-lg border-2 border-white/20 overflow-hidden">
+            {user?.profilePicture ? (
+              <img
+                src={user.profilePicture}
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              getInitial()
+            )}
           </div>
           <div className="text-sm">
             <p className="font-semibold leading-none">
@@ -142,7 +153,7 @@ const Sidebar = () => {
         {/* Logout Button */}
         <button
           onClick={handleLogout}
-          className="flex items-center justify-center space-x-2 w-full bg-[#B91C1C] hover:bg-red-800 text-white py-3 px-4 rounded-lg font-bold transition-all active:scale-95"
+          className="flex cursor-pointer items-center justify-center space-x-2 w-full bg-[#B91C1C] hover:bg-red-800 text-white py-3 px-4 rounded-lg font-bold transition-all active:scale-95"
         >
           <LogOut size={20} />
           <span>Log out</span>
