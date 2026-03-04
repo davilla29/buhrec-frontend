@@ -12,6 +12,8 @@ const UnifiedLoginPage = lazy(() => import("../pages/UnifiedLoginPage"));
 
 const AdminDashboardPage = lazy(() => import("../pages/admin/AdminDashboard"));
 const AdminPaymentsListPage = lazy(() => import("../pages/admin/Payments"));
+const AdminReviewersListPage = lazy(() => import("../pages/admin/ReviewersList"))
+const AdminAddReviewerPage = lazy(() => import("../pages/admin/AddReviewer"))
 
 const ResearcherDashboardPage = lazy(
   () => import("../pages/researcher/ResearcherDashboard"),
@@ -44,6 +46,8 @@ export const routes = createRoutesFromElements(
       <Route path="admin/dashboard" element={<DashboardLayout />}>
         <Route index element={<AdminDashboardPage />} />
         <Route path="payments" element={<AdminPaymentsListPage />} />
+        <Route path="reviewers" element={<AdminReviewersListPage />} />
+        <Route path="reviewers/add" element={<AdminAddReviewerPage />} />
         {/* <Route path="manage-users" element={<ManageUsers />} />
         <Route path="settings" element={<AdminSettings />} />
         */}
