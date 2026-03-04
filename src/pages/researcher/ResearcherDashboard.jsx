@@ -80,7 +80,10 @@ function ResearcherDashboard() {
             Here are your stats!
           </p>
         </div>
-        <button className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors">
+        <button
+          onClick={() => navigate("/researcher/dashboard/notifications")}
+          className="p-2 cursor-pointer bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
+        >
           <Bell size={20} />
         </button>
       </header>
@@ -146,7 +149,7 @@ function ResearcherDashboard() {
           <div className="bg-white p-8 rounded-2xl w-96 relative">
             <button
               onClick={() => setShowCreateModal(false)}
-              className="absolute right-4 top-4"
+              className="absolute right-4 top-4 cursor-pointer"
             >
               <X size={16} />
             </button>
@@ -175,7 +178,9 @@ function ResearcherDashboard() {
 
                   const proposalId = res.data.proposal._id;
 
-                  navigate(`/researcher/dashboard/proposals/${proposalId}/draft`);
+                  navigate(
+                    `/researcher/dashboard/proposals/${proposalId}/draft`,
+                  );
                 } catch (err) {
                   toast.error(
                     err.response?.data?.message || "Failed to create proposal",

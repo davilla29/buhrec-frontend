@@ -117,7 +117,7 @@ const ProposalSubmission = () => {
         <div className="flex items-center gap-4">
           <button
             onClick={() => setShowModal(true)}
-            className="p-2 hover:bg-gray-200 rounded-full"
+            className="p-2 hover:bg-gray-200 cursor-pointer rounded-full"
           >
             <ArrowLeft size={18} />
           </button>
