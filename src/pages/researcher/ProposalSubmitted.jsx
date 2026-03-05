@@ -5,7 +5,7 @@ const ProposalSubmitted = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-[#F3F4F6] flex flex-col items-center justify-center px-6 text-center">
+    <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center">
       <div className="flex items-center justify-between w-full max-w-4xl mb-12">
         <h1 className="text-xl font-bold text-gray-900">Submit a Proposal</h1>
         <button
