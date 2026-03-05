@@ -379,6 +379,8 @@ function Proposals() {
           <div className="flex flex-col gap-4">
             {filteredProposals.map((proposal) => {
               const isDraft = proposal.status?.toLowerCase() === "draft";
+              const isAwaitingPayment =
+                proposal.status?.toLowerCase() === "Awaiting Payment";
               const statusInfo = getStatusStyles(proposal.status);
               const reviewerName =
                 proposal.reviewer?.name || "Pending Assignment";
@@ -388,15 +390,35 @@ function Proposals() {
               return (
                 <div
                   key={proposal._id}
-                  onClick={() =>
-                    isDraft
-                      ? navigate(
-                          `/researcher/dashboard/proposals/${proposal._id}/draft`,
-                        )
-                      : navigate(
-                          `/researcher/dashboard/proposals/${proposal._id}/details`,
-                        )
-                  }
+                  // onClick={() =>
+                  //   isDraft
+                  //     ? navigate(
+                  //         `/researcher/dashboard/proposals/${proposal._id}/draft`,
+                  //       )
+                  //     : navigate(
+                  //         `/researcher/dashboard/proposals/${proposal._id}/details`,
+                  //       )
+                  // }
+                  onClick={() => {
+                    const status = proposal.status?.toLowerCase();
+
+                    if (status === "draft") {
+                      // Open draft editor
+                      navigate(
+                        `/researcher/dashboard/proposals/${proposal._id}/draft`,
+                      );
+                    } else if (status === "awaiting payment") {
+                      // Redirect to existing payment page with txRef
+                      navigate(
+                        `/researcher/dashboard/proposals/${proposal._id}/payment?txRef=${proposal.payment.txRef}`,
+                      );
+                    } else {
+                      // Open details page for all other statuses
+                      navigate(
+                        `/researcher/dashboard/proposals/${proposal._id}/details`,
+                      );
+                    }
+                  }}
                   className="bg-[#f0f0f0] rounded-xl p-5 flex items-center justify-between transition-shadow hover:shadow-md cursor-pointer border border-transparent hover:border-gray-300"
                 >
                   <div className="flex flex-col gap-2">

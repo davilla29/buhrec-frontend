@@ -94,6 +94,14 @@ export const routes = createRoutesFromElements(
           path="proposals/:proposalId/payment"
           element={<ProposalPaymentPage />}
         />
+        {/* <Route
+          path="proposals/:proposalId/payment-success"
+          element={<ProposalPaymentSuccessPage />}
+        />
+        <Route
+          path="proposals/:proposalId/submitted"
+          element={<ProposalSubmittedPage />}
+        /> */}
         <Route path="notifications" element={<NotificationsPage />} />
         <Route path="*" element={<DashboardNotFoundPage />} />
         {/* <Route path="submit-proposal" element={<SubmitProposal />} />
