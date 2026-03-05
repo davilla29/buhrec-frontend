@@ -55,17 +55,61 @@ const ProposalSubmission = () => {
   });
 
   // Fetch draft
+  // useEffect(() => {
+  //   const fetchDraft = async () => {
+  //     try {
+  //       const res = await axios.get(
+  //         `/researcher/proposals/${proposalId}/draft`,
+  //       );
+  //       if (res.data.success) {
+  //         setFormData({
+  //           ...formData,
+  //           ...res.data.draft.formData,
+  //         });
+  //       }
+  //     } catch (err) {
+  //       toast.error("Failed to load draft");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchDraft();
+  // }, [proposalId]);
+
   useEffect(() => {
     const fetchDraft = async () => {
       try {
         const res = await axios.get(
           `/researcher/proposals/${proposalId}/draft`,
         );
+
         if (res.data.success) {
-          setFormData({
-            ...formData,
-            ...res.data.draft.formData,
+          const draft = res.data.draft;
+
+          // Set form data
+          setFormData((prev) => ({
+            ...prev,
+            ...draft.formData,
+          }));
+
+          // Convert documents array → files object
+          const loadedFiles = {
+            applicationLetter: null,
+            proposalDocument: null,
+            turnItInReport: null,
+          };
+
+          draft.documents?.forEach((doc) => {
+            loadedFiles[doc.type] = {
+              name: doc.filename,
+              url: doc.url,
+              publicId: doc.publicId,
+              existing: true,
+            };
           });
+
+          setFiles(loadedFiles);
         }
       } catch (err) {
         toast.error("Failed to load draft");
@@ -114,7 +158,11 @@ const ProposalSubmission = () => {
 
     setFiles((prev) => ({
       ...prev,
-      [key]: file,
+      [key]: {
+        name: file.name,
+        file,
+        existing: false,
+      },
     }));
   };
 
@@ -132,14 +180,14 @@ const ProposalSubmission = () => {
       const payload = new FormData();
       payload.append("formData", JSON.stringify(formData));
 
-      if (files.applicationLetter)
-        payload.append("applicationLetter", files.applicationLetter);
+      if (files.applicationLetter?.file)
+        payload.append("applicationLetter", files.applicationLetter.file);
 
-      if (files.proposalDocument)
-        payload.append("proposalDocument", files.proposalDocument);
+      if (files.proposalDocument?.file)
+        payload.append("proposalDocument", files.proposalDocument.file);
 
-      if (files.turnItInReport)
-        payload.append("turnItInReport", files.turnItInReport);
+      if (files.turnItInReport?.file)
+        payload.append("turnItInReport", files.turnItInReport.file);
 
       await axios.patch(`/researcher/proposals/${proposalId}/draft`, payload);
 
@@ -193,24 +241,39 @@ const ProposalSubmission = () => {
               </span>
             </div>
 
-            <div className="flex items-center gap-4">
-              <label className="text-blue-700 text-sm cursor-pointer hover:underline">
-                Replace
-                <input
-                  type="file"
-                  accept=".pdf,.doc,.docx"
-                  className="hidden"
-                  onChange={(e) => handleFileChange(key, e.target.files[0])}
-                />
-              </label>
+            <div className="flex items-center justify-between bg-gray-100 p-4 rounded-xl border">
+              <div className="flex items-center gap-3">
+                <FileText className="text-blue-700" size={20} />
 
-              <button
-                type="button"
-                onClick={() => removeFile(key)}
-                className="text-red-500 cursor-pointer hover:text-red-700"
-              >
-                <Trash2 size={18} />
-              </button>
+                <a
+                  href={file.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm font-medium text-gray-700 hover:underline"
+                >
+                  {file.name}
+                </a>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <label className="text-blue-700 text-sm ml-3 cursor-pointer hover:underline">
+                  Replace
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx"
+                    className="hidden"
+                    onChange={(e) => handleFileChange(key, e.target.files[0])}
+                  />
+                </label>
+
+                <button
+                  type="button"
+                  onClick={() => removeFile(key)}
+                  className="text-red-500 cursor-pointer hover:text-red-700"
+                >
+                  <Trash2 size={18} />
+                </button>
+              </div>
             </div>
           </div>
         )}
