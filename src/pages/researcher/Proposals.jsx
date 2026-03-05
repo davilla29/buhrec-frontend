@@ -382,6 +382,7 @@ function Proposals() {
               const isAwaitingPayment =
                 proposal.status?.toLowerCase() === "Awaiting Payment";
               const statusInfo = getStatusStyles(proposal.status);
+              const isPaid = proposal.payment?.status === "paid"; // payment completed
               const reviewerName =
                 proposal.reviewer?.name || "Pending Assignment";
               const reviewerAvatar =
@@ -390,6 +391,11 @@ function Proposals() {
               return (
                 <div
                   key={proposal._id}
+                  onClick={() =>
+                    navigate(
+                      `/researcher/dashboard/proposals/${proposal._id}/draft`,
+                    )
+                  }
                   // onClick={() =>
                   //   isDraft
                   //     ? navigate(
@@ -399,26 +405,26 @@ function Proposals() {
                   //         `/researcher/dashboard/proposals/${proposal._id}/details`,
                   //       )
                   // }
-                  onClick={() => {
-                    const status = proposal.status?.toLowerCase();
+                  // onClick={() => {
+                  //   const status = proposal.status?.toLowerCase();
 
-                    if (status === "draft") {
-                      // Open draft editor
-                      navigate(
-                        `/researcher/dashboard/proposals/${proposal._id}/draft`,
-                      );
-                    } else if (status === "awaiting payment") {
-                      // Redirect to existing payment page with txRef
-                      navigate(
-                        `/researcher/dashboard/proposals/${proposal._id}/payment?txRef=${proposal.payment.txRef}`,
-                      );
-                    } else {
-                      // Open details page for all other statuses
-                      navigate(
-                        `/researcher/dashboard/proposals/${proposal._id}/details`,
-                      );
-                    }
-                  }}
+                  //   if (status === "draft") {
+                  //     // Open draft editor
+                  //     navigate(
+                  //       `/researcher/dashboard/proposals/${proposal._id}/draft`,
+                  //     );
+                  //   } else if (status === "awaiting payment") {
+                  //     // Redirect to existing payment page with txRef
+                  //     navigate(
+                  //       `/researcher/dashboard/proposals/${proposal._id}/payment?txRef=${proposal.payment.txRef}`,
+                  //     );
+                  //   } else {
+                  //     // Open details page for all other statuses
+                  //     navigate(
+                  //       `/researcher/dashboard/proposals/${proposal._id}/details`,
+                  //     );
+                  //   }
+                  // }}
                   className="bg-[#f0f0f0] rounded-xl p-5 flex items-center justify-between transition-shadow hover:shadow-md cursor-pointer border border-transparent hover:border-gray-300"
                 >
                   <div className="flex flex-col gap-2">
@@ -447,7 +453,7 @@ function Proposals() {
                     </div>
                   </div>
 
-                  {!isDraft && (
+                  {!isDraft && !isAwaitingPayment && !isPaid && (
                     <span
                       className={`px-5 py-1.5 rounded-full text-white text-sm font-medium transition-colors ${
                         proposal.status?.toLowerCase() === "revisions needed"
@@ -457,6 +463,47 @@ function Proposals() {
                     >
                       View Details
                     </span>
+                  )}
+                  {proposal.status?.toLowerCase() === "awaiting payment" && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation(); // avoid triggering the card click
+                        navigate(
+                          `/researcher/dashboard/proposals/${proposal._id}/payment?txRef=${proposal.payment.txRef}`,
+                        );
+                      }}
+                      className="px-5 py-1.5 rounded-full text-white text-sm font-medium bg-[#1e40af] hover:bg-blue-900"
+                    >
+                      Pay Now
+                    </button>
+                  )}
+                  {isPaid && (
+                    <button
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        try {
+                          // Call the submit function
+                          const res = await axios.post(
+                            `/researcher/proposals/${proposal._id}/submit`,
+                          );
+
+                          if (res.data.success) {
+                            navigate(
+                              `/researcher/dashboard/proposals/${proposal._id}/submitted`,
+                            );
+                          }
+                        } catch (err) {
+                          console.error(err);
+                          toast.error(
+                            err.response?.data?.message ||
+                              "Submission failed. Try again.",
+                          );
+                        }
+                      }}
+                      className="px-5 py-1.5 rounded-full text-white text-sm font-medium bg-green-600 hover:bg-green-700"
+                    >
+                      Submit Proposal
+                    </button>
                   )}
                 </div>
               );

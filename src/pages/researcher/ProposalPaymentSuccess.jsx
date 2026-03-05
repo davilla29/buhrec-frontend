@@ -11,7 +11,7 @@ const ProposalPaymentSuccess = () => {
     try {
       setSubmitting(true);
       const res = await axios.post(
-        `/api/researcher/proposals/${proposalId}/submit`,
+        `/researcher/proposals/${proposalId}/submit`,
       );
 
       if (res.data.success) {
