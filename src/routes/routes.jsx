@@ -28,6 +28,15 @@ const MyProposalsPage = lazy(() => import("../pages/researcher/Proposals"));
 const ProposalSubmissionPage = lazy(
   () => import("../pages/researcher/ProposalSubmission"),
 );
+const ProposalPaymentPage = lazy(
+  () => import("../pages/researcher/ProposalPayment"),
+);
+const ProposalPaymentSuccessPage = lazy(
+  () => import("../pages/researcher/ProposalPaymentSuccess"),
+);
+const ProposalSubmittedPage = lazy(
+  () => import("../pages/researcher/ProposalSubmitted"),
+);
 
 export const routes = createRoutesFromElements(
   <>
@@ -86,6 +95,18 @@ export const routes = createRoutesFromElements(
         <Route
           path="proposals/:proposalId/draft"
           element={<ProposalSubmissionPage />}
+        />
+        <Route
+          path="proposals/:proposalId/payment"
+          element={<ProposalPaymentPage />}
+        />
+        <Route
+          path="proposals/:proposalId/payment-success"
+          element={<ProposalPaymentSuccessPage />}
+        />
+        <Route
+          path="proposals/:proposalId/submitted"
+          element={<ProposalSubmittedPage />}
         />
         <Route path="notifications" element={<NotificationsPage />} />
         <Route path="*" element={<DashboardNotFoundPage />} />
