@@ -177,6 +177,8 @@ const ProposalSubmission = () => {
     try {
       setSaving(true);
 
+      const loadingToast = toast.loading("Saving draft...");
+
       const payload = new FormData();
       payload.append("formData", JSON.stringify(formData));
 
@@ -191,7 +193,9 @@ const ProposalSubmission = () => {
 
       await axios.patch(`/researcher/proposals/${proposalId}/draft`, payload);
 
-      toast.success("Draft saved successfully");
+      toast.success("Draft saved successfully", {
+        id: loadingToast,
+      });
       navigate("/researcher/dashboard/my-proposals");
       setShowModal(false);
     } catch (err) {
