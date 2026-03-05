@@ -13,6 +13,7 @@ const ALLOWED_FILE_TYPES = [
 ];
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
+const RESEARCHER_REGEX = /^[A-Za-z]+ [A-Za-z]+ [A-Za-z]+ \d{2}\/\d{4}$/;
 
 const ProposalSubmission = () => {
   const navigate = useNavigate();
@@ -21,6 +22,8 @@ const ProposalSubmission = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [showModal, setShowModal] = useState(false);
+
+  const [researcherErrors, setResearcherErrors] = useState([]);
 
   const [formData, setFormData] = useState({
     projectName: "",
@@ -32,6 +35,18 @@ const ProposalSubmission = () => {
     supervisor: "",
     supervisorEmail: "",
   });
+
+  const validateResearcher = (index, value) => {
+    const errors = [...researcherErrors];
+
+    if (!RESEARCHER_REGEX.test(value.trim())) {
+      errors[index] = "Format must be: Surname Firstname Middlename 21/1234";
+    } else {
+      errors[index] = "";
+    }
+
+    setResearcherErrors(errors);
+  };
 
   const [files, setFiles] = useState({
     applicationLetter: null,
@@ -69,7 +84,10 @@ const ProposalSubmission = () => {
   const handleResearcherChange = (index, value) => {
     const updated = [...formData.researchers];
     updated[index] = value;
+
     handleChange("researchers", updated);
+
+    validateResearcher(index, value);
   };
 
   const addResearcher = () => {
@@ -250,24 +268,39 @@ const ProposalSubmission = () => {
           <label className="font-semibold text-sm">Researcher Name</label>{" "}
           (Surname first, first name, middle name, matric number)
           {formData.researchers.map((name, index) => (
-            <div key={index} className="flex gap-2 mt-2">
-              <input
-                value={name}
-                onChange={(e) => handleResearcherChange(index, e.target.value)}
-                className="flex-1 bg-[#E5E7EB] rounded-xl px-4 py-3"
-              />
-              {formData.researchers.length > 1 && (
-                <button
-                  onClick={() => removeResearcher(index)}
-                  className="p-2 cursor-pointer bg-red-500 text-white rounded-full"
-                >
-                  <X size={14} />
-                </button>
+            <div key={index} className="mt-2">
+              <div className="flex gap-2">
+                <input
+                  value={name}
+                  placeholder="Adeyemi John Michael 21/1234"
+                  onChange={(e) =>
+                    handleResearcherChange(index, e.target.value)
+                  }
+                  className={`flex-1 rounded-xl px-4 py-3 bg-[#E5E7EB] border 
+          ${researcherErrors[index] ? "border-red-500" : "border-transparent"}`}
+                />
+
+                {formData.researchers.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => removeResearcher(index)}
+                    className="p-2 cursor-pointer bg-red-500 text-white rounded-full"
+                  >
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+
+              {researcherErrors[index] && (
+                <p className="text-xs text-red-500 mt-1">
+                  {researcherErrors[index]}
+                </p>
               )}
             </div>
-          ))}{" "}
+          ))}
           <br />
           <button
+            type="button"
             onClick={addResearcher}
             className="cursor-pointer text-sm text-[#003B95] font-semibold"
           >
@@ -276,29 +309,37 @@ const ProposalSubmission = () => {
         </div>
 
         {/* Institution */}
-        <input
-          placeholder="Institution"
-          value={formData.institution}
-          onChange={(e) => handleChange("institution", e.target.value)}
-          className="w-full bg-[#E5E7EB] rounded-xl px-4 py-3"
-        />
+        <div>
+          <label className="font-semibold text-sm">Institution</label>
+          <input
+            placeholder="Institution"
+            value={formData.institution}
+            onChange={(e) => handleChange("institution", e.target.value)}
+            className="w-full bg-[#E5E7EB] rounded-xl px-4 py-3"
+          />
+        </div>
 
         {/* College */}
-        <input
-          placeholder="College"
-          value={formData.college}
-          onChange={(e) => handleChange("college", e.target.value)}
-          className="w-full bg-[#E5E7EB] rounded-xl px-4 py-3"
-        />
+        <div>
+          <label className="font-semibold text-sm">College/School</label>
+          <input
+            placeholder="College"
+            value={formData.college}
+            onChange={(e) => handleChange("college", e.target.value)}
+            className="w-full bg-[#E5E7EB] rounded-xl px-4 py-3"
+          />
+        </div>
 
         {/* Department */}
-        <input
-          placeholder="Department"
-          value={formData.department}
-          onChange={(e) => handleChange("department", e.target.value)}
-          className="w-full bg-[#E5E7EB] rounded-xl px-4 py-3"
-        />
-
+        <div>
+          <label className="font-semibold text-sm">Department</label>
+          <input
+            placeholder="Department"
+            value={formData.department}
+            onChange={(e) => handleChange("department", e.target.value)}
+            className="w-full bg-[#E5E7EB] rounded-xl px-4 py-3"
+          />
+        </div>
         {/* Category */}
         <div>
           <label className="font-semibold text-sm">Category</label>
@@ -321,25 +362,34 @@ const ProposalSubmission = () => {
         </div>
 
         {/* Supervisor */}
-        <input
-          placeholder="Supervisor Name"
-          value={formData.supervisor}
-          onChange={(e) => handleChange("supervisor", e.target.value)}
-          className="w-full bg-[#E5E7EB] rounded-xl px-4 py-3"
-        />
+        <div>
+          <label className="font-semibold text-sm">Supervisor Name</label>
+          <input
+            placeholder="Supervisor Name"
+            value={formData.supervisor}
+            onChange={(e) => handleChange("supervisor", e.target.value)}
+            className="w-full bg-[#E5E7EB] rounded-xl px-4 py-3"
+          />
+        </div>
 
         {/* Supervisor Email */}
-        <input
-          type="email"
-          placeholder="Supervisor Email"
-          value={formData.supervisorEmail}
-          onChange={(e) => handleChange("supervisorEmail", e.target.value)}
-          className="w-full bg-[#E5E7EB] rounded-xl px-4 py-3"
-        />
+        <div>
+          <label className="font-semibold text-sm">Supervisor Email</label>
+          <input
+            type="email"
+            placeholder="Supervisor Email"
+            value={formData.supervisorEmail}
+            onChange={(e) => handleChange("supervisorEmail", e.target.value)}
+            className="w-full bg-[#E5E7EB] rounded-xl px-4 py-3"
+          />
+        </div>
 
         {/* File Uploads */}
         <div className="space-y-6 pt-4">
-          {renderUpload("Application Letter", "applicationLetter")}
+          {renderUpload(
+            "Application letter for ethical clearance",
+            "applicationLetter",
+          )}
           {renderUpload("Proposal Document", "proposalDocument")}
           {renderUpload("Turn-It-In Report", "turnItInReport")}
         </div>
