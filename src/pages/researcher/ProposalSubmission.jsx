@@ -2,9 +2,17 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "../../utils/axios";
 import toast from "react-hot-toast";
-import { ArrowLeft, X, Loader } from "lucide-react";
+import { ArrowLeft, X, Loader, Upload, FileText, Trash2 } from "lucide-react";
 
 const CATEGORIES = ["UG", "PG", "Independent/Masters", "PhD", "International"];
+
+const ALLOWED_FILE_TYPES = [
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
+
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 const ProposalSubmission = () => {
   const navigate = useNavigate();
@@ -35,7 +43,9 @@ const ProposalSubmission = () => {
   useEffect(() => {
     const fetchDraft = async () => {
       try {
-        const res = await axios.get(`/researcher/proposals/${proposalId}/draft`);
+        const res = await axios.get(
+          `/researcher/proposals/${proposalId}/draft`,
+        );
         if (res.data.success) {
           setFormData({
             ...formData,
@@ -72,7 +82,29 @@ const ProposalSubmission = () => {
   };
 
   const handleFileChange = (key, file) => {
-    setFiles((prev) => ({ ...prev, [key]: file }));
+    if (!file) return;
+
+    if (!ALLOWED_FILE_TYPES.includes(file.type)) {
+      toast.error("Only PDF, DOC, or DOCX files are allowed.");
+      return;
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error("File size must be less than 10MB");
+      return;
+    }
+
+    setFiles((prev) => ({
+      ...prev,
+      [key]: file,
+    }));
+  };
+
+  const removeFile = (key) => {
+    setFiles((prev) => ({
+      ...prev,
+      [key]: null,
+    }));
   };
 
   const handleSaveDraft = async () => {
@@ -91,9 +123,10 @@ const ProposalSubmission = () => {
       if (files.turnItInReport)
         payload.append("turnItInReport", files.turnItInReport);
 
-      await axios.patch(`/proposals/${proposalId}/draft`, payload);
+      await axios.patch(`/researcher/proposals/${proposalId}/draft`, payload);
 
       toast.success("Draft saved successfully");
+      navigate("/researcher/dashboard/my-proposals");
       setShowModal(false);
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to save draft");
@@ -109,6 +142,63 @@ const ProposalSubmission = () => {
       </div>
     );
   }
+
+  const renderUpload = (label, key) => {
+    const file = files[key];
+
+    return (
+      <div className="flex flex-col gap-2">
+        <label className="font-semibold text-sm text-gray-700">{label}</label>
+
+        {!file ? (
+          <label className="flex flex-col items-center justify-center w-full p-6 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-blue-700 hover:bg-blue-50 transition">
+            <Upload className="w-6 h-6 text-gray-400 mb-2" />
+
+            <span className="text-sm text-gray-500">
+              Click to upload document
+            </span>
+
+            <input
+              type="file"
+              accept=".pdf,.doc,.docx"
+              className="hidden"
+              onChange={(e) => handleFileChange(key, e.target.files[0])}
+            />
+          </label>
+        ) : (
+          <div className="flex items-center justify-between bg-gray-100 p-4 rounded-xl border">
+            <div className="flex items-center gap-3">
+              <FileText className="text-blue-700" size={20} />
+
+              <span className="text-sm font-medium text-gray-700">
+                {file.name}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <label className="text-blue-700 text-sm cursor-pointer hover:underline">
+                Replace
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx"
+                  className="hidden"
+                  onChange={(e) => handleFileChange(key, e.target.files[0])}
+                />
+              </label>
+
+              <button
+                type="button"
+                onClick={() => removeFile(key)}
+                className="text-red-500 cursor-pointer hover:text-red-700"
+              >
+                <Trash2 size={18} />
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen ">
@@ -127,7 +217,7 @@ const ProposalSubmission = () => {
         <div className="flex gap-3">
           <button
             onClick={handleSaveDraft}
-            className="px-6 py-2 rounded-full bg-[#003B95] text-white font-semibold hover:bg-blue-900"
+            className="px-6 py-2 cursor-pointer rounded-full bg-[#003B95] text-white font-semibold hover:bg-blue-900"
           >
             Save Draft
           </button>
@@ -136,7 +226,7 @@ const ProposalSubmission = () => {
             onClick={() =>
               navigate(`/researcher/proposals/${proposalId}/payment`)
             }
-            className="px-6 py-2 rounded-full bg-green-600 text-white font-semibold hover:bg-green-700"
+            className="px-6 py-2 rounded-full cursor-pointer bg-green-600 text-white font-semibold hover:bg-green-700"
           >
             Proceed to Payment
           </button>
@@ -157,7 +247,8 @@ const ProposalSubmission = () => {
 
         {/* Researchers */}
         <div>
-          <label className="font-semibold text-sm">Researchers</label>
+          <label className="font-semibold text-sm">Researcher Name</label>{" "}
+          (Surname first, first name, middle name, matric number)
           {formData.researchers.map((name, index) => (
             <div key={index} className="flex gap-2 mt-2">
               <input
@@ -168,16 +259,17 @@ const ProposalSubmission = () => {
               {formData.researchers.length > 1 && (
                 <button
                   onClick={() => removeResearcher(index)}
-                  className="p-2 bg-red-500 text-white rounded-full"
+                  className="p-2 cursor-pointer bg-red-500 text-white rounded-full"
                 >
                   <X size={14} />
                 </button>
               )}
             </div>
-          ))}
+          ))}{" "}
+          <br />
           <button
             onClick={addResearcher}
-            className="mt-2 text-sm text-[#003B95] font-semibold"
+            className="cursor-pointer text-sm text-[#003B95] font-semibold"
           >
             + Add Researcher
           </button>
@@ -216,7 +308,7 @@ const ProposalSubmission = () => {
                 key={cat}
                 type="button"
                 onClick={() => handleChange("category", cat)}
-                className={`px-4 py-2 rounded-full border ${
+                className={`px-4 py-2 cursor-pointer rounded-full border ${
                   formData.category === cat
                     ? "bg-[#003B95] text-white"
                     : "bg-white"
@@ -246,37 +338,10 @@ const ProposalSubmission = () => {
         />
 
         {/* File Uploads */}
-        <div>
-          <label className="font-semibold text-sm">Application Letter</label>
-          <input
-            type="file"
-            onChange={(e) =>
-              handleFileChange("applicationLetter", e.target.files[0])
-            }
-            className="mt-2"
-          />
-        </div>
-
-        <div>
-          <label className="font-semibold text-sm">Proposal Document</label>
-          <input
-            type="file"
-            onChange={(e) =>
-              handleFileChange("proposalDocument", e.target.files[0])
-            }
-            className="mt-2"
-          />
-        </div>
-
-        <div>
-          <label className="font-semibold text-sm">Turn-It-In Report</label>
-          <input
-            type="file"
-            onChange={(e) =>
-              handleFileChange("turnItInReport", e.target.files[0])
-            }
-            className="mt-2"
-          />
+        <div className="space-y-6 pt-4">
+          {renderUpload("Application Letter", "applicationLetter")}
+          {renderUpload("Proposal Document", "proposalDocument")}
+          {renderUpload("Turn-It-In Report", "turnItInReport")}
         </div>
       </div>
 
@@ -297,8 +362,8 @@ const ProposalSubmission = () => {
 
             <div className="flex gap-4">
               <button
-                onClick={() => navigate("/researcher/proposals")}
-                className="flex-1 py-3 rounded-full bg-red-600 text-white"
+                onClick={() => navigate("/researcher/dashboard/my-proposals")}
+                className="flex-1 cursor-pointer py-3 rounded-full bg-red-600 text-white"
               >
                 Discard
               </button>
@@ -306,7 +371,7 @@ const ProposalSubmission = () => {
               <button
                 onClick={handleSaveDraft}
                 disabled={saving}
-                className="flex-1 py-3 rounded-full bg-[#003B95] text-white"
+                className="flex-1 cursor-pointer py-3 rounded-full bg-[#003B95] text-white"
               >
                 {saving ? "Saving..." : "Save Draft"}
               </button>
