@@ -59,7 +59,7 @@ function UnassignedAssignments() {
 
               <button
                 onClick={() =>
-                  navigate(`/admin/proposals/${proposal._id}/details`)
+                  navigate(`/admin/dashboard/proposals/${proposal._id}/details`)
                 }
                 className="bg-[#EAB308] cursor-pointer text-white px-8 py-2.5 rounded-full font-medium hover:bg-[#CA8A04] transition-all shadow-sm active:scale-95"
               >
