@@ -22,9 +22,14 @@ const AdminReviewersListPage = lazy(
   () => import("../pages/admin/ReviewersList"),
 );
 const AdminAddReviewerPage = lazy(() => import("../pages/admin/AddReviewer"));
-const AdminAssignmentsPage = lazy(() => import("../pages/admin/AdminAssignments"));
+const AdminAssignmentsPage = lazy(
+  () => import("../pages/admin/AdminAssignments"),
+);
+const AdminUnassignedAssignmentsPage = lazy(
+  () => import("../pages/admin/UnAssignedAssignments"),
+);
 
-// Researcher 
+// Researcher
 const ResearcherDashboardPage = lazy(
   () => import("../pages/researcher/ResearcherDashboard"),
 );
@@ -75,6 +80,10 @@ export const routes = createRoutesFromElements(
         <Route path="reviewers" element={<AdminReviewersListPage />} />
         <Route path="reviewers/add" element={<AdminAddReviewerPage />} />
         <Route path="assignments" element={<AdminAssignmentsPage />} />
+        <Route
+          path="assignments/un-assigned"
+          element={<AdminUnassignedAssignmentsPage />}
+        />
         <Route path="notifications" element={<NotificationsPage />} />
         <Route path="*" element={<DashboardNotFoundPage />} />
 
