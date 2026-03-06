@@ -146,12 +146,12 @@ function ResearcherDashboard() {
 
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center">
-          <div className="bg-white p-8 rounded-2xl w-96 relative">
+          <div className="bg-white px-8 py-12 rounded-2xl w-96 relative">
             <button
               onClick={() => setShowCreateModal(false)}
               className="absolute right-4 top-4 cursor-pointer"
             >
-              <X size={16} />
+              <X size={20} />
             </button>
 
             <h3 className="font-bold mb-4">Create New Proposal</h3>
