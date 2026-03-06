@@ -128,7 +128,7 @@ function ResearcherDashboard() {
               <li key={idx} className="flex items-center space-x-3">
                 <span
                   className={`w-3 h-3 rounded-full ${
-                    event.isCurrent ? "bg-blue-600" : "bg-gray-400"
+                    event.isCurrent ? "bg-blue-600" : "bg-green-500"
                   }`}
                 />
                 <span className="text-sm text-gray-700">{event.label}</span>
