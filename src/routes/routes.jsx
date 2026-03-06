@@ -22,6 +22,9 @@ const AdminReviewersListPage = lazy(
   () => import("../pages/admin/ReviewersList"),
 );
 const AdminAddReviewerPage = lazy(() => import("../pages/admin/AddReviewer"));
+const ReviewerAddedSuccessPage = lazy(
+  () => import("../pages/admin/ReviewerAddedSuccess"),
+);
 const AdminAssignmentsPage = lazy(
   () => import("../pages/admin/AdminAssignments"),
 );
@@ -85,6 +88,7 @@ export const routes = createRoutesFromElements(
         <Route path="payments" element={<AdminPaymentsListPage />} />
         <Route path="reviewers" element={<AdminReviewersListPage />} />
         <Route path="reviewers/add" element={<AdminAddReviewerPage />} />
+        <Route path="reviewers/add/success" element={<ReviewerAddedSuccessPage />} />
         <Route path="assignments" element={<AdminAssignmentsPage />} />
         <Route
           path="assignments/un-assigned"
