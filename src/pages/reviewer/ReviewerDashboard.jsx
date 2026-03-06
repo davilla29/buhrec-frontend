@@ -49,7 +49,7 @@ const ReviewerDashboard = () => {
             <p className="text-gray-500 text-sm mt-1">Here are your stats!</p>
           </div>
           <button
-            onClick={() => navigate("/admin/dashboard/notifications")}
+            onClick={() => navigate("/reviewer/dashboard/notifications")}
             className="p-2 cursor-pointer hover:bg-gray-200 rounded-full transition-all"
           >
             <Bell size={24} className="fill-black" />
