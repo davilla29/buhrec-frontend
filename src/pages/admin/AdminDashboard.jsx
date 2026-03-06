@@ -161,7 +161,7 @@ const AdminDashboard = () => {
         Your Unassigned Assignments
       </h2>
       <div
-        onClick={() => navigate("/dashboard/assignments")}
+        onClick={() => navigate("/admin/dashboard/assignments/un-assigned")}
         className="group bg-[#F3F4F6] p-8 rounded-2xl flex justify-between items-center cursor-pointer hover:shadow-md transition-all active:scale-[0.99]"
       >
         <p className="text-lg font-semibold text-gray-900">
