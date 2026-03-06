@@ -197,7 +197,7 @@ function AdminProposalDetails() {
 
         {/* Action Button replaces Search Icon */}
         <button
-          onClick={() => navigate(`/admin/proposals/${proposalId}/assign`)}
+          onClick={() => navigate(`/admin/dashboard/proposals/${proposalId}/assign`)}
           className="bg-[#003399] text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-md hover:bg-[#002266] transition-all transform active:scale-95 cursor-pointer whitespace-nowrap"
         >
           Assign Reviewer
