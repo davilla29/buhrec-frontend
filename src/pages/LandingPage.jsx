@@ -5,7 +5,6 @@ import objectiveImage from "../assets/images/objective.jpg";
 import requirementsImage from "../assets/images/clearance.jpg";
 import nhrecLogo from "../assets/images/nhrec.jpg";
 
-
 const LandingPage = () => {
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,25 +15,10 @@ const LandingPage = () => {
 
   const heroImage =
     "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&q=80";
-//   const objectiveImage = "../assets/images/objective.jpg";
-//   const nhrecLogo = "../assets/images/nhrec.jpg";
-//   const requirementsImage = "../assets/images/clearance.jpg";
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [currentView, sopSubView]);
-
-  const loginLinks = [
-    { label: "Researchers", path: "/login/researcher" },
-    { label: "Reviewers", path: "/login/reviewer" },
-    { label: "Administrator", path: "/login/admin" },
-  ];
-
-  const handleNavClick = (view) => {
-    setCurrentView(view);
-    setIsAboutOpen(false);
-    setIsMenuOpen(false);
-  };
 
   const renderHome = () => (
     <>
