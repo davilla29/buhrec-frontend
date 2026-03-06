@@ -12,7 +12,7 @@ function UnassignedAssignments() {
     const fetchUnassigned = async () => {
       try {
         const response = await axios.get(
-          "/api/admin/assignments/list?filter=unassigned",
+          "/admin/assignments/list?filter=unassigned",
         );
         if (response.data.success) {
           setProposals(response.data.data);
@@ -27,12 +27,12 @@ function UnassignedAssignments() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen p-2">
       {/* Header */}
       <div className="flex items-center gap-4 mb-8">
         <button
           onClick={() => navigate(-1)}
-          className="p-2 hover:bg-gray-200 rounded-full transition-colors"
+          className="p-2 cursor-pointer hover:bg-gray-200 rounded-full transition-colors"
         >
           <ChevronLeft size={28} />
         </button>
@@ -61,15 +61,9 @@ function UnassignedAssignments() {
                 onClick={() =>
                   navigate(`/admin/proposals/${proposal._id}/details`)
                 }
-                className={`px-6 py-2 rounded-full font-medium transition-all ${
-                  index === proposals.length - 1
-                    ? "bg-[#EAB308] text-white hover:bg-[#CA8A04]" // "Continue Review" style
-                    : "bg-[#EAB308] text-white hover:bg-[#CA8A04]" // "View Details" style
-                }`}
+                className="bg-[#EAB308] cursor-pointer text-white px-8 py-2.5 rounded-full font-medium hover:bg-[#CA8A04] transition-all shadow-sm active:scale-95"
               >
-                {index === proposals.length - 1
-                  ? "Continue Review"
-                  : "View Details"}
+                View Details
               </button>
             </div>
           ))
