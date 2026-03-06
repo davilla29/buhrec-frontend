@@ -179,6 +179,7 @@ import {
   FlaskConical,
 } from "lucide-react";
 import { logout } from "../../redux/auth/authSlice";
+import { clearAssignments } from "../../redux/assignment/assignmentSlice";
 
 const ALL_NAV_LINKS = [
   // Admin sidebar
@@ -259,6 +260,7 @@ const Sidebar = () => {
 
   const handleLogout = () => {
     dispatch(logout());
+    dispatch(clearAssignments());
     navigate(`/login/${user.role}`);
   };
 
