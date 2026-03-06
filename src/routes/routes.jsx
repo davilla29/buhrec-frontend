@@ -9,6 +9,7 @@ const DashboardLayout = lazy(() => import("../layouts/DashboardLayout"));
 const DashboardNotFoundPage = lazy(() => import("../pages/DashboardNotFound"));
 
 const HomePage = lazy(() => import("../pages/Home"));
+const LandingPage = lazy(() => import("../pages/LandingPage"));
 const UnifiedLoginPage = lazy(() => import("../pages/UnifiedLoginPage"));
 const ResearcherSignUpPage = lazy(() => import("../pages/researcher/SignUp"));
 const VerifyEmailPage = lazy(() => import("../pages/researcher/VerifyEmail"));
@@ -41,7 +42,7 @@ const ProposalSubmittedPage = lazy(
 export const routes = createRoutesFromElements(
   <>
     <Route path="/" element={<RootLayout />}>
-      <Route index element={<HomePage />} />
+      <Route index element={<LandingPage />} />
       <Route path="/login/:role" element={<UnifiedLoginPage />} />
       <Route
         path="/auth/researcher/register"
