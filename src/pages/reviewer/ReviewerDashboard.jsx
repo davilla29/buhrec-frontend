@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
-import axios from "../../utils/axios"; // Ensure axios is installed
+import axios from "../../utils/axios";
 import { Bell, Loader2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const ReviewerDashboard = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
-        // Replace with your actual API endpoint
+    
         const response = await axios.get("/reviewer/dashboard");
         setData(response.data);
       } catch (err) {
@@ -46,7 +48,10 @@ const ReviewerDashboard = () => {
             <h1 className="text-3xl font-bold">Welcome, {data?.user?.name}</h1>
             <p className="text-gray-500 text-sm mt-1">Here are your stats!</p>
           </div>
-          <button className="p-2 hover:bg-gray-200 rounded-full transition-all">
+          <button
+            onClick={() => navigate("/admin/dashboard/notifications")}
+            className="p-2 cursor-pointer hover:bg-gray-200 rounded-full transition-all"
+          >
             <Bell size={24} className="fill-black" />
           </button>
         </div>

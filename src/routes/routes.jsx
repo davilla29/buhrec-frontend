@@ -3,6 +3,8 @@ import { Navigate } from "react-router-dom";
 import { Route, createRoutesFromElements } from "react-router-dom";
 // import Notfound from "../pages/Notfound";
 import ProtectedRoute from "../routes/ProtectedRoute";
+import Unauthorized from "../pages/Unauthorized";
+
 
 const RootLayout = lazy(() => import("../layouts/RootLayout"));
 const DashboardLayout = lazy(() => import("../layouts/DashboardLayout"));
@@ -71,6 +73,7 @@ export const routes = createRoutesFromElements(
         element={<ResearcherSignUpPage />}
       />
       <Route path="/auth/verify-email" element={<VerifyEmailPage />} />
+      <Route path="/unauthorized" element={<Unauthorized />} />
       {/* <Route
         path="/auth/signup"
         element={
@@ -122,6 +125,7 @@ export const routes = createRoutesFromElements(
     <Route element={<ProtectedRoute allowedRoles={["reviewer"]} />}>
       <Route path="/reviewer/dashboard" element={<DashboardLayout />}>
         <Route index element={<ReviewerDashboardPage />} />
+        <Route path="notifications" element={<NotificationsPage />} />
         {/* <Route path="assigned-proposals" element={<AssignedProposals />} />
         <Route path="reviews" element={<Reviews />} /> */}
         <Route path="*" element={<DashboardNotFoundPage />} />
