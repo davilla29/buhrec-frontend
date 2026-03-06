@@ -56,6 +56,11 @@ const ProposalSubmittedPage = lazy(
   () => import("../pages/researcher/ProposalSubmitted"),
 );
 
+// Reviewer
+const ReviewerDashboardPage = lazy(
+  () => import("../pages/reviewer/ReviewerDashboard"),
+);
+
 export const routes = createRoutesFromElements(
   <>
     <Route path="/" element={<RootLayout />}>
@@ -88,7 +93,10 @@ export const routes = createRoutesFromElements(
         <Route path="payments" element={<AdminPaymentsListPage />} />
         <Route path="reviewers" element={<AdminReviewersListPage />} />
         <Route path="reviewers/add" element={<AdminAddReviewerPage />} />
-        <Route path="reviewers/add/success" element={<ReviewerAddedSuccessPage />} />
+        <Route
+          path="reviewers/add/success"
+          element={<ReviewerAddedSuccessPage />}
+        />
         <Route path="assignments" element={<AdminAssignmentsPage />} />
         <Route
           path="assignments/un-assigned"
@@ -111,14 +119,14 @@ export const routes = createRoutesFromElements(
       </Route>
     </Route>
 
-    {/* <Route element={<ProtectedRoute allowedRoles={["reviewer"]} />}>
-      <Route path="/reviewer/dashboard" element={<ReviewerLayout />}>
-        <Route index element={<ReviewerDashboard />} />
-        <Route path="assigned-proposals" element={<AssignedProposals />} />
-        <Route path="reviews" element={<Reviews />} />
-        <Route path="*" element={<DashboardNotFound />} />
+    <Route element={<ProtectedRoute allowedRoles={["reviewer"]} />}>
+      <Route path="/reviewer/dashboard" element={<DashboardLayout />}>
+        <Route index element={<ReviewerDashboardPage />} />
+        {/* <Route path="assigned-proposals" element={<AssignedProposals />} />
+        <Route path="reviews" element={<Reviews />} /> */}
+        <Route path="*" element={<DashboardNotFoundPage />} />
       </Route>
-    </Route> */}
+    </Route>
 
     <Route element={<ProtectedRoute allowedRoles={["researcher"]} />}>
       <Route path="/researcher/dashboard" element={<DashboardLayout />}>

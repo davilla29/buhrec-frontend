@@ -10,21 +10,8 @@ function AdminProposalDetails() {
   const [loading, setLoading] = useState(true);
   const [assignment, setAssignment] = useState(null);
 
-  // useEffect(() => {
-  //   const fetchDetails = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `/admin/proposals/${proposalId}/details`,
-  //       );
-  //       if (response.data.success) setData(response.data.data);
-  //     } catch (err) {
-  //       console.error("Fetch error:", err);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-  //   fetchDetails();
-  // }, [proposalId]);
+  const [showUnassignModal, setShowUnassignModal] = useState(false);
+  const [unassignLoading, setUnassignLoading] = useState(false);
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -40,9 +27,10 @@ function AdminProposalDetails() {
 
         if (
           assignmentRes.data.success &&
-          assignmentRes.data.assignments?.length > 0
+          assignmentRes.data.assignments?.status !== "withdrawn"
+          // assignmentRes.data.assignments?.length > 0
         ) {
-          setAssignment(assignmentRes.data.assignments[0]);
+          setAssignment(assignmentRes.data.assignments.status[0]);
         }
       } catch (err) {
         console.error("Fetch error:", err);
@@ -74,6 +62,32 @@ function AdminProposalDetails() {
   const documentContent = latestVersion?.documents?.find(
     (doc) => doc.type === "proposalDocument",
   );
+
+  const handleUnassign = async () => {
+    try {
+      setUnassignLoading(true);
+
+      const res = await axios.put(
+        `/admin/assignments/${assignment._id}/unassign`,
+      );
+
+      if (res.data.success) {
+        setAssignment(null);
+        setShowUnassignModal(false);
+        setData((prev) => ({
+          ...prev,
+          proposal: {
+            ...prev.proposal,
+            status: "Waiting to be assigned",
+          },
+        }));
+      }
+    } catch (error) {
+      console.error("Unassign error:", error);
+    } finally {
+      setUnassignLoading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen ">
@@ -113,8 +127,7 @@ function AdminProposalDetails() {
         <button
           onClick={() => {
             if (assignment) {
-              // later you will add unassign API here
-              console.log("Unassign reviewer");
+              setShowUnassignModal(true);
             } else {
               navigate(`/admin/dashboard/proposals/${proposalId}/assign`);
             }
@@ -166,6 +179,45 @@ function AdminProposalDetails() {
           </div>
         </div>
       </main>
+
+      {showUnassignModal && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl w-105 p-6 relative">
+            {/* Close Button */}
+            <button
+              onClick={() => setShowUnassignModal(false)}
+              className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl"
+            >
+              ×
+            </button>
+
+            <h3 className="text-lg font-bold text-gray-900 mb-3">
+              You are about to unassign a proposal
+            </h3>
+
+            <p className="text-sm text-gray-600 mb-6">
+              Unassigning a proposal will revert it to an unassigned assignment.
+            </p>
+
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setShowUnassignModal(false)}
+                className="px-4 py-2 text-sm rounded-md border border-gray-300 hover:bg-gray-100"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={handleUnassign}
+                disabled={unassignLoading}
+                className="px-5 py-2 text-sm rounded-md bg-red-600 hover:bg-red-700 text-white font-semibold"
+              >
+                {unassignLoading ? "Unassigning..." : "Proceed"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
