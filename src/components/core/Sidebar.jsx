@@ -198,7 +198,7 @@ const ALL_NAV_LINKS = [
   {
     label: "Assignments",
     path: "/admin/dashboard/assignments",
-    roles: ["reviewer", "admin"],
+    roles: ["admin"],
     icon: <Briefcase size={20} />,
   },
   {
@@ -214,6 +214,12 @@ const ALL_NAV_LINKS = [
     path: "/reviewer/dashboard/responses",
     roles: ["reviewer"],
     icon: <MessageSquare size={20} />,
+  },
+  {
+    label: "Assignments",
+    path: "/reviewer/dashboard/assignments",
+    roles: ["reviewer"],
+    icon: <Briefcase size={20} />,
   },
   {
     label: "Notifications",
