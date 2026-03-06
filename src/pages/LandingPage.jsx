@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronDown, Menu, X, ArrowLeft, ChevronRight } from "lucide-react";
+import objectiveImage from "../assets/images/objective.jpg";
+import requirementsImage from "../assets/images/clearance.jpg";
+import nhrecLogo from "../assets/images/nhrec.jpg";
+
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -10,10 +14,11 @@ const LandingPage = () => {
   const [sopSubView, setSopSubView] = useState("steps"); // 'steps' or 'consent'
   const [openStep, setOpenStep] = useState(null);
 
-  const heroImage = "/buhrec_hero_clean_hq_1772149923365.png";
-  const objectiveImage = "/Screenshot 2026-02-26 231433.png";
-  const nhrecLogo = "/download.jpg";
-  const requirementsImage = "/Screenshot 2026-02-26 233303.png";
+  const heroImage =
+    "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&q=80";
+//   const objectiveImage = "../assets/images/objective.jpg";
+//   const nhrecLogo = "../assets/images/nhrec.jpg";
+//   const requirementsImage = "../assets/images/clearance.jpg";
 
   useEffect(() => {
     window.scrollTo(0, 0);
