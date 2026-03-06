@@ -1,8 +1,9 @@
-import React from "react";
+import { useNavigate } from "react-router-dom";
 
 function ReviewerAddedSuccess() {
+  const navigate = useNavigate();
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#f8f9fa] font-sans">
+    <div className="flex flex-col items-center justify-center min-h-screen font-sans">
       <div className="flex flex-col items-center max-w-md px-6 text-center">
         {/* Success Icon */}
         <div className="mb-8">
@@ -33,8 +34,8 @@ function ReviewerAddedSuccess() {
 
         {/* Action Button */}
         <button
-          className="bg-[#003399] hover:bg-[#002b85] text-white px-8 py-2.5 rounded-full text-sm font-medium transition-colors"
-          onClick={() => console.log("Navigating back...")}
+          className="bg-[#003399] cursor-pointer hover:bg-[#002b85] text-white px-8 py-2.5 rounded-full text-sm font-medium transition-colors"
+          onClick={() => navigate("/admin/dashboard/reviewers")}
         >
           Back to Reviewers
         </button>
