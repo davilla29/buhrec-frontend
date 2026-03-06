@@ -123,7 +123,7 @@ function Header({ setCurrentView }) {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-[#003B95] text-white z-50 shadow-md">
+    <header className="left-0 right-0 bg-[#003B95] sticky top-0 text-white z-50 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 sm:h-20">
           {/* Logo */}
@@ -213,7 +213,7 @@ function Header({ setCurrentView }) {
           </div>
         </div>
       )}
-    </nav>
+    </header>
   );
 }
 
