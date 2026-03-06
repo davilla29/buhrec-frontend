@@ -154,16 +154,16 @@ const AssignProposal = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#F3F4F6]">
+    <div className="min-h-screen ">
       {/* Back button */}
       <button
         onClick={() => navigate(-1)}
-        className="p-4 hover:bg-gray-200 rounded-full m-4 transition-colors inline-flex"
+        className="p-4 cursor-pointer hover:bg-gray-200 rounded-full m-4 transition-colors inline-flex"
       >
         <ArrowLeft size={22} className="text-gray-800" />
       </button>
 
-      <div className="max-w-2xl mx-auto px-6 pb-16">
+      <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="mt-2 sm:mt-0">
           <p className="text-[#003B95] font-black uppercase tracking-widest text-[10px] mb-2 sm:mb-1">
