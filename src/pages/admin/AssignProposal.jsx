@@ -93,9 +93,22 @@ const AssignProposal = () => {
         ]);
 
         if (proposalRes.data.success) {
-          setProposal(proposalRes.data.data.proposal);
-          setLevel(proposalRes.data.data.proposal.level || "UG");
+          const proposalData = proposalRes.data.data.proposal;
+          setProposal(proposalData);
+
+          // Set level from currentVersion.formData.category
+          const cat = proposalData.currentVersion?.formData?.category || "G";
+
+          // Map DB category to your PROPOSAL_LEVELS display
+          let displayLevel = cat;
+          if (cat === "UG" || cat === "Undergraduate") displayLevel = "UG";
+          else if (cat === "PG" || cat === "Postgraduate") displayLevel = "PG";
+          else if (cat === "Independent/Masters") displayLevel = "Masters";
+          else if (cat === "PhD") displayLevel = "PhD";
+
+          setLevel(displayLevel);
         }
+
         if (reviewersRes.data.success) setReviewers(reviewersRes.data.data);
       } catch (err) {
         console.error("Error fetching data:", err);
