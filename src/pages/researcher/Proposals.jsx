@@ -138,7 +138,7 @@ function Proposals() {
               const statusInfo = getStatusStyles(proposal.status);
               const isPaid = proposal.payment?.status === "paid"; // payment completed
               const reviewerName =
-                proposal.reviewer?.name || "Pending Assignment";
+                proposal.lastStatusChangedBy?.fullName || "Pending Assignment";
               const reviewerAvatar =
                 proposal.reviewer?.avatar || "/api/placeholder/24/24";
 

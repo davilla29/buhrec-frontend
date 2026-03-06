@@ -16,6 +16,16 @@ function ResearcherDashboard() {
     draftProposals: 0,
     ongoingProposalStatus: "None",
   });
+
+  // Helper function for date formatting (DD-MM-YYYY)
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
+
   const [ongoingProposal, setOngoingProposal] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -120,29 +130,47 @@ function ResearcherDashboard() {
         </button>
       </div>
 
-      {ongoingProposal ? (
-        <div className="bg-[#F3F4F6] p-6 rounded-xl">
-          <h3 className="font-bold text-lg mb-4">{ongoingProposal.title}</h3>
-          <ul className="space-y-2">
+      <div className="mt-4">
+        {ongoingProposal ? (
+          <div className="space-y-6">
             {ongoingProposal.timeline.map((event, idx) => (
-              <li key={idx} className="flex items-center space-x-3">
+              <div key={idx} className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  {/* The Dot */}
+                  <div
+                    className={`w-3 h-3 rounded-full ${
+                      event.isCurrent ? "bg-[#003B95]" : "bg-[#d1dbd2]"
+                    }`}
+                  />
+                  {/* The Label */}
+                  <span
+                    className={`text-sm font-semibold ${
+                      event.isCurrent ? "text-gray-900" : "text-[#9CA3AF]"
+                    }`}
+                  >
+                    {event.label}
+                  </span>
+                </div>
+
+                {/* The Date */}
                 <span
-                  className={`w-3 h-3 rounded-full ${
-                    event.isCurrent ? "bg-blue-600" : "bg-green-500"
+                  className={`text-sm font-semibold ${
+                    event.isCurrent ? "text-gray-900" : "text-[#9CA3AF]"
                   }`}
-                />
-                <span className="text-sm text-gray-700">{event.label}</span>
-              </li>
+                >
+                  {formatDate(event.date)}
+                </span>
+              </div>
             ))}
-          </ul>
-        </div>
-      ) : (
-        <div className="text-center py-20">
-          <p className="text-gray-400 font-bold text-lg">
-            You have no ongoing proposals
-          </p>
-        </div>
-      )}
+          </div>
+        ) : (
+          <div className="text-center py-10 bg-gray-50 rounded-xl">
+            <p className="text-gray-400 font-medium">
+              You have no ongoing proposals
+            </p>
+          </div>
+        )}
+      </div>
 
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/30 flex items-center justify-center">

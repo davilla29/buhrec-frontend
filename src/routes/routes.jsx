@@ -62,6 +62,9 @@ const ProposalSubmittedPage = lazy(
 const ReviewerDashboardPage = lazy(
   () => import("../pages/reviewer/ReviewerDashboard"),
 );
+const ReviewerAssignmentsPage = lazy(
+  () => import("../pages/reviewer/ReviewerAssignments"),
+);
 
 export const routes = createRoutesFromElements(
   <>
@@ -125,6 +128,7 @@ export const routes = createRoutesFromElements(
     <Route element={<ProtectedRoute allowedRoles={["reviewer"]} />}>
       <Route path="/reviewer/dashboard" element={<DashboardLayout />}>
         <Route index element={<ReviewerDashboardPage />} />
+        <Route path="assignments" element={<ReviewerAssignmentsPage />} />
         <Route path="notifications" element={<NotificationsPage />} />
         {/* <Route path="assigned-proposals" element={<AssignedProposals />} />
         <Route path="reviews" element={<Reviews />} /> */}
