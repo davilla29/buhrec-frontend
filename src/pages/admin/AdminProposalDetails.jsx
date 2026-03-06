@@ -1,118 +1,3 @@
-// import React, { useEffect, useState } from "react";
-// import { useParams, useNavigate } from "react-router-dom";
-// import { ChevronLeft, Search } from "lucide-react";
-// import axios from "../../utils/axios";
-
-// function AdminProposalDetails() {
-//   const { proposalId } = useParams();
-//   const navigate = useNavigate();
-//   const [data, setData] = useState(null);
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     const fetchDetails = async () => {
-//       try {
-//         const response = await axios.get(
-//           `/admin/proposals/${proposalId}/details`,
-//         );
-//         if (response.data.success) setData(response.data.data);
-//       } catch (err) {
-//         console.error("Fetch error:", err);
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-//     fetchDetails();
-//   }, [proposalId]);
-
-//   if (loading)
-//     return (
-//       <div className="h-screen flex items-center justify-center">
-//         Loading Proposal...
-//       </div>
-//     );
-
-//   if (!data)
-//     return (
-//       <div className="p-10 text-center text-red-500">
-//         Proposal details not found.
-//       </div>
-//     );
-
-//   const { proposal, latestVersion } = data;
-//   const documentContent = latestVersion?.documents?.find(
-//     (doc) => doc.type === "proposalDocument",
-//   );
-
-//   return (
-//     <div className="flex flex-col min-h-screen ">
-//       {/* Top Sticky Header */}
-//       <header className="bg-white px-8 py-5 flex items-center justify-between  fixed top-0 z-120 ">
-//         <div className="flex items-center gap-5">
-//           <button
-//             onClick={() => navigate(-1)}
-//             className="p-1.5 hover:bg-gray-100 rounded-lg"
-//           >
-//             <ChevronLeft size={24} className="text-gray-700" />
-//           </button>
-//           <div>
-//             <h1 className="text-lg font-bold text-gray-900 truncate max-w-2xl uppercase tracking-tight">
-//               {proposal.title}
-//             </h1>
-//             <div className="flex gap-4 text-[11px] font-bold text-gray-500 mt-0.5">
-//               <span className="bg-gray-100 px-2 py-0.5 rounded uppercase tracking-widest">
-//                 {proposal.status || "Unassigned"}
-//               </span>
-//               <span className="text-blue-700">
-//                 APP ID: {proposal.applicationId}
-//               </span>
-//               <span className="text-blue-700">VERSION: LATEST</span>
-//             </div>
-//           </div>
-//         </div>
-//         <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-//           <Search size={22} className="text-gray-600" />
-//         </button>
-//       </header>
-
-//       {/* Document Previewer */}
-//       <div className="flex-1 overflow-y-auto p-2 lg:pt-16">
-//         <div className="max-w-4xl mx-auto bg-white shadow-2xl p-8 lg:p-10 rounded-sm">
-//           <h2 className="text-xl font-bold uppercase mb-6 border-b-2 border-gray-800 pb-2">
-//             Proposal Document Preview
-//           </h2>
-
-//           {documentContent ? (
-//             <iframe
-//               src={`https://docs.google.com/gview?url=${encodeURIComponent(
-//                 documentContent.url,
-//               )}&embedded=true`}
-//               title="Proposal Document"
-//               className="w-full h-[80vh] border border-gray-300 rounded"
-//             />
-//           ) : (
-//             <p className="text-gray-700 italic">
-//               No proposal document uploaded for this version.
-//             </p>
-//           )}
-
-//           {/* Assign Button Under Preview */}
-//           <div className="mt-6 flex justify-center">
-//             <button
-//               onClick={() => navigate(`/admin/proposals/${proposalId}/assign`)}
-//               className="bg-[#003399] text-white px-10 py-3.5 rounded-full font-bold shadow-2xl hover:bg-[#002266] transition-all transform hover:scale-105 active:scale-95"
-//             >
-//               Assign Reviewer
-//             </button>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default AdminProposalDetails;
-
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { ChevronLeft } from "lucide-react";
@@ -123,20 +8,49 @@ function AdminProposalDetails() {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [assignment, setAssignment] = useState(null);
+
+  // useEffect(() => {
+  //   const fetchDetails = async () => {
+  //     try {
+  //       const response = await axios.get(
+  //         `/admin/proposals/${proposalId}/details`,
+  //       );
+  //       if (response.data.success) setData(response.data.data);
+  //     } catch (err) {
+  //       console.error("Fetch error:", err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+  //   fetchDetails();
+  // }, [proposalId]);
 
   useEffect(() => {
     const fetchDetails = async () => {
       try {
-        const response = await axios.get(
-          `/admin/proposals/${proposalId}/details`,
-        );
-        if (response.data.success) setData(response.data.data);
+        const [proposalRes, assignmentRes] = await Promise.all([
+          axios.get(`/admin/proposals/${proposalId}/details`),
+          axios.get(`/admin/proposals/${proposalId}/assignments`),
+        ]);
+
+        if (proposalRes.data.success) {
+          setData(proposalRes.data.data);
+        }
+
+        if (
+          assignmentRes.data.success &&
+          assignmentRes.data.assignments?.length > 0
+        ) {
+          setAssignment(assignmentRes.data.assignments[0]);
+        }
       } catch (err) {
         console.error("Fetch error:", err);
       } finally {
         setLoading(false);
       }
     };
+
     fetchDetails();
   }, [proposalId]);
 
@@ -197,10 +111,22 @@ function AdminProposalDetails() {
 
         {/* Action Button replaces Search Icon */}
         <button
-          onClick={() => navigate(`/admin/dashboard/proposals/${proposalId}/assign`)}
-          className="bg-[#003399] text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-md hover:bg-[#002266] transition-all transform active:scale-95 cursor-pointer whitespace-nowrap"
+          onClick={() => {
+            if (assignment) {
+              // later you will add unassign API here
+              console.log("Unassign reviewer");
+            } else {
+              navigate(`/admin/dashboard/proposals/${proposalId}/assign`);
+            }
+          }}
+          className={`px-5 py-2.5 rounded-full text-sm font-bold shadow-md transition-all transform active:scale-95 cursor-pointer whitespace-nowrap
+  ${
+    assignment
+      ? "bg-red-600 hover:bg-red-700 text-white"
+      : "bg-[#003399] hover:bg-[#002266] text-white"
+  }`}
         >
-          Assign Reviewer
+          {assignment ? "Unassign Reviewer" : "Assign Reviewer"}
         </button>
       </header>
 
