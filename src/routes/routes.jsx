@@ -10,6 +10,10 @@ const DashboardLayout = lazy(() => import("../layouts/DashboardLayout"));
 const DashboardNotFoundPage = lazy(() => import("../pages/DashboardNotFound"));
 
 const HomePage = lazy(() => import("../pages/Home"));
+const ContactPage = lazy(() => import("../pages/Contact"));
+const ObjectivesPage = lazy(() => import("../pages/Objectives"));
+const SopsGuidelinesPage = lazy(() => import("../pages/SopsGuidelines"));
+const AboutUsPage = lazy(() => import("../pages/AboutUs"));
 const LandingPage = lazy(() => import("../pages/LandingPage"));
 const UnifiedLoginPage = lazy(() => import("../pages/UnifiedLoginPage"));
 const ResearcherSignUpPage = lazy(() => import("../pages/researcher/SignUp"));
@@ -75,11 +79,11 @@ export const routes = createRoutesFromElements(
   <>
     <Route path="/" element={<RootLayout />}>
       <Route index element={<HomePage />} />
-      {/* <Route path="about-us" element={<AboutUs />} />
-      <Route path="objectives" element={<Objectives />} />
-      <Route path="nhrec-mission" element={<NhrecMission />} />
-      <Route path="sops-guidelines" element={<SopsGuidelines />} />
-      <Route path="contact" element={<Contact />} /> */}
+      <Route path="about-us" element={<AboutUsPage />} />
+      <Route path="objectives" element={<ObjectivesPage />} />
+      {/* <Route path="nhrec-mission" element={<NhrecMissionPage />} /> */}
+      <Route path="sops-guidelines" element={<SopsGuidelinesPage />} />
+      <Route path="contact" element={<ContactPage />} />
       <Route path="login/:role" element={<UnifiedLoginPage />} />
       <Route
         path="/auth/researcher/register"
