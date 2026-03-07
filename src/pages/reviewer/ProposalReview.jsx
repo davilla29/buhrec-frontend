@@ -125,7 +125,7 @@ const ProposalReview = () => {
             <span className="text-gray-400">|</span>
             <button
               onClick={() => setShowVersionModal(true)}
-              className="text-blue-600 font-medium flex items-center gap-1 hover:text-blue-800"
+              className="text-blue-600 cursor-pointer font-medium flex items-center gap-1 hover:text-blue-800"
             >
               Version:{" "}
               {versionParam ? `v${data?.version?.versionNumber}` : "Latest"}
@@ -152,7 +152,7 @@ const ProposalReview = () => {
               onClick={() => setShowCommentModal(true)}
               className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors shadow-md"
             >
-              <Plus size={24} className="text-gray-600" />
+              <Plus size={24} className="text-gray-600 cursor-pointer" />
             </button>
           </div>
 
