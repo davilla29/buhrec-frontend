@@ -82,7 +82,7 @@ const ProposalDetails = () => {
                 `/researcher/dashboard/proposals/${proposalId}/submit-revision`,
               )
             }
-            className="mt-12 px-4 py-2 bg-[#003399] text-white rounded-full text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2"
+            className="mt-12 cursor-pointer px-4 py-2 bg-[#003399] hover:bg-blue-900 text-white rounded-full text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2"
           >
             Attach new document
           </button>
