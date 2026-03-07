@@ -503,7 +503,7 @@ function Proposals() {
               const statusInfo = getStatusStyles(proposal.status);
 
               const reviewerName =
-                proposal.lastStatusChangedBy?.fullName || "Pending Assignment";
+                proposal.reviewerName || "Pending Assignment";
 
               const reviewerAvatar =
                 proposal.reviewer?.avatar || "/api/placeholder/24/24";
