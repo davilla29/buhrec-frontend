@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, ChevronDown, Check } from "lucide-react";
 import axios from "../../utils/axios";
+import toast from "react-hot-toast";
 
 const CATEGORIES = [
   "Public Health, Nursing, G...",
+  " Public Health & Epidemiology",
   "Clinical Psychology",
   "Anatomy & Cell Biology",
   "Biomedical Sciences",
@@ -19,10 +21,10 @@ const ConfirmModal = ({ onClose, onConfirm }) => (
       className="absolute inset-0 bg-black/20 backdrop-blur-sm"
       onClick={onClose}
     />
-    <div className="relative bg-white rounded-2xl p-10 w-full max-w-sm shadow-2xl text-center">
+    <div className="relative bg-white rounded-2xl px-20 py-15 w-full max-w-sm shadow-2xl text-center">
       <button
         onClick={onClose}
-        className="absolute right-4 top-4 p-1.5 hover:bg-gray-100 rounded-full"
+        className="absolute right-4 cursor-pointer top-4 p-1.5 hover:bg-gray-100 rounded-full"
       >
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
           <path
@@ -38,7 +40,7 @@ const ConfirmModal = ({ onClose, onConfirm }) => (
       </p>
       <button
         onClick={onConfirm}
-        className="bg-[#003B95] text-white px-10 py-3 rounded-full font-bold text-sm hover:bg-blue-900 transition-colors"
+        className="bg-[#003B95] cursor-pointer text-white px-10 py-3 rounded-full font-bold text-sm hover:bg-blue-900 transition-colors"
       >
         Proceed
       </button>
@@ -47,10 +49,10 @@ const ConfirmModal = ({ onClose, onConfirm }) => (
 );
 
 const SuccessScreen = ({ title, date, onBack }) => (
-  <div className="min-h-screen bg-[#F3F4F6] flex flex-col">
+  <div className="min-h-screen ] flex flex-col">
     <button
       onClick={onBack}
-      className="p-4 hover:bg-gray-200 rounded-full self-start m-4 transition-colors"
+      className="p-4 hover:bg-gray-200 cursor-pointer rounded-full self-start m-4 transition-colors"
     >
       <ArrowLeft size={22} className="text-gray-800" />
     </button>
@@ -64,7 +66,7 @@ const SuccessScreen = ({ title, date, onBack }) => (
       <p className="text-sm text-gray-500 mb-10">{date}</p>
       <button
         onClick={onBack}
-        className="bg-[#003B95] text-white px-8 py-3 rounded-full font-bold text-sm hover:bg-blue-900 transition-colors"
+        className="bg-[#003B95] cursor-pointer text-white px-8 py-3 rounded-full font-bold text-sm hover:bg-blue-900 transition-colors"
       >
         Back to Assignments
       </button>
@@ -121,21 +123,21 @@ const AssignProposal = () => {
     if (!selectedReviewerId) return;
 
     try {
-      await axios.post(`/proposals/${proposalId}/assign-reviewer`, {
+      await axios.post(`/admin/proposals/${proposalId}/assign-reviewer`, {
         reviewerId: selectedReviewerId,
       });
       setShowConfirm(false);
       setDone(true);
     } catch (err) {
       console.error("Error assigning reviewer:", err);
-      alert(err.response?.data?.message || "Assignment failed");
+     toast.error(err.response?.data?.message || "Assignment failed");
     }
   };
 
   if (!proposal) return <div className="p-10 text-center">Loading...</div>;
 
   const title = proposal.title || "Untitled Proposal";
-  const date = proposal.date
+  const date = proposal.assignedAt
     ? new Date(proposal.date).toLocaleDateString("en-GB", {
         day: "numeric",
         month: "numeric",
@@ -148,7 +150,7 @@ const AssignProposal = () => {
       <SuccessScreen
         title={title}
         date={date}
-        onBack={() => navigate("/dashboard/assignments")}
+        onBack={() => navigate("/admin/dashboard/assignments")}
       />
     );
   }
@@ -222,9 +224,7 @@ const AssignProposal = () => {
             <select
               value={selectedReviewerId ?? ""}
               onChange={(e) =>
-                setSelectedReviewerId(
-                  e.target.value ? Number(e.target.value) : null,
-                )
+                setSelectedReviewerId(e.target.value ? e.target.value : null)
               }
               className="w-full appearance-none bg-[#E5E7EB] rounded-xl px-4 py-3 pr-10 text-sm text-gray-700 outline-none focus:ring-2 focus:ring-[#003B95] transition-all cursor-pointer"
             >

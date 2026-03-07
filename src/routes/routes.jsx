@@ -3,6 +3,8 @@ import { Navigate } from "react-router-dom";
 import { Route, createRoutesFromElements } from "react-router-dom";
 // import Notfound from "../pages/Notfound";
 import ProtectedRoute from "../routes/ProtectedRoute";
+import Unauthorized from "../pages/Unauthorized";
+
 
 const RootLayout = lazy(() => import("../layouts/RootLayout"));
 const DashboardLayout = lazy(() => import("../layouts/DashboardLayout"));
@@ -22,6 +24,9 @@ const AdminReviewersListPage = lazy(
   () => import("../pages/admin/ReviewersList"),
 );
 const AdminAddReviewerPage = lazy(() => import("../pages/admin/AddReviewer"));
+const ReviewerAddedSuccessPage = lazy(
+  () => import("../pages/admin/ReviewerAddedSuccess"),
+);
 const AdminAssignmentsPage = lazy(
   () => import("../pages/admin/AdminAssignments"),
 );
@@ -53,6 +58,14 @@ const ProposalSubmittedPage = lazy(
   () => import("../pages/researcher/ProposalSubmitted"),
 );
 
+// Reviewer
+const ReviewerDashboardPage = lazy(
+  () => import("../pages/reviewer/ReviewerDashboard"),
+);
+const ReviewerAssignmentsPage = lazy(
+  () => import("../pages/reviewer/ReviewerAssignments"),
+);
+
 export const routes = createRoutesFromElements(
   <>
     <Route path="/" element={<RootLayout />}>
@@ -63,6 +76,7 @@ export const routes = createRoutesFromElements(
         element={<ResearcherSignUpPage />}
       />
       <Route path="/auth/verify-email" element={<VerifyEmailPage />} />
+      <Route path="/unauthorized" element={<Unauthorized />} />
       {/* <Route
         path="/auth/signup"
         element={
@@ -85,6 +99,10 @@ export const routes = createRoutesFromElements(
         <Route path="payments" element={<AdminPaymentsListPage />} />
         <Route path="reviewers" element={<AdminReviewersListPage />} />
         <Route path="reviewers/add" element={<AdminAddReviewerPage />} />
+        <Route
+          path="reviewers/add/success"
+          element={<ReviewerAddedSuccessPage />}
+        />
         <Route path="assignments" element={<AdminAssignmentsPage />} />
         <Route
           path="assignments/un-assigned"
@@ -107,14 +125,16 @@ export const routes = createRoutesFromElements(
       </Route>
     </Route>
 
-    {/* <Route element={<ProtectedRoute allowedRoles={["reviewer"]} />}>
-      <Route path="/reviewer/dashboard" element={<ReviewerLayout />}>
-        <Route index element={<ReviewerDashboard />} />
-        <Route path="assigned-proposals" element={<AssignedProposals />} />
-        <Route path="reviews" element={<Reviews />} />
-        <Route path="*" element={<DashboardNotFound />} />
+    <Route element={<ProtectedRoute allowedRoles={["reviewer"]} />}>
+      <Route path="/reviewer/dashboard" element={<DashboardLayout />}>
+        <Route index element={<ReviewerDashboardPage />} />
+        <Route path="assignments" element={<ReviewerAssignmentsPage />} />
+        <Route path="notifications" element={<NotificationsPage />} />
+        {/* <Route path="assigned-proposals" element={<AssignedProposals />} />
+        <Route path="reviews" element={<Reviews />} /> */}
+        <Route path="*" element={<DashboardNotFoundPage />} />
       </Route>
-    </Route> */}
+    </Route>
 
     <Route element={<ProtectedRoute allowedRoles={["researcher"]} />}>
       <Route path="/researcher/dashboard" element={<DashboardLayout />}>
