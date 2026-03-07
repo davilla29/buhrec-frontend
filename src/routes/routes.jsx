@@ -5,7 +5,6 @@ import { Route, createRoutesFromElements } from "react-router-dom";
 import ProtectedRoute from "../routes/ProtectedRoute";
 import Unauthorized from "../pages/Unauthorized";
 
-
 const RootLayout = lazy(() => import("../layouts/RootLayout"));
 const DashboardLayout = lazy(() => import("../layouts/DashboardLayout"));
 const DashboardNotFoundPage = lazy(() => import("../pages/DashboardNotFound"));
@@ -76,25 +75,18 @@ export const routes = createRoutesFromElements(
   <>
     <Route path="/" element={<RootLayout />}>
       <Route index element={<LandingPage />} />
-      <Route path="/login/:role" element={<UnifiedLoginPage />} />
+      <Route path="about-us" element={<AboutUs />} />
+      <Route path="objectives" element={<Objectives />} />
+      <Route path="nhrec-mission" element={<NhrecMission />} />
+      <Route path="sops-guidelines" element={<SopsGuidelines />} />
+      <Route path="contact" element={<Contact />} />
+      <Route path="login/:role" element={<UnifiedLoginPage />} />
       <Route
         path="/auth/researcher/register"
         element={<ResearcherSignUpPage />}
       />
       <Route path="/auth/verify-email" element={<VerifyEmailPage />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
-      {/* <Route
-        path="/auth/signup"
-        element={
-          <RouteWithSkeleton Component={SignUp} Fallback={PagePreloader} />
-        }
-      />
-      <Route
-        path="/auth/signin"
-        element={
-          <RouteWithSkeleton Component={SignIn} Fallback={PagePreloader} />
-        }
-      /> */}
 
       {/* <Route path="*" element={Notfound} /> */}
     </Route>
