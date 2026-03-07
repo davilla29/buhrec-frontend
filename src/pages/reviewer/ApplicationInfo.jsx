@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../../utils/axios";
 import { ChevronLeft } from "lucide-react";
 
 const ApplicationInfo = () => {
@@ -10,7 +10,7 @@ const ApplicationInfo = () => {
 
   useEffect(() => {
     axios
-      .get(`/api/reviewer/assignments/${assignmentId}/proposal`)
+      .get(`/reviewer/assignments/${assignmentId}/proposal`)
       .then((res) => setData(res.data))
       .catch(() => navigate(-1));
   }, [assignmentId]);
@@ -23,7 +23,7 @@ const ApplicationInfo = () => {
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8 relative font-sans">
       <button
         onClick={() => navigate(-1)}
-        className="absolute left-12 top-12 hover:scale-110 transition-transform"
+        className="absolute cursor-pointer left-12 top-12 hover:scale-110 transition-transform"
       >
         <ChevronLeft size={40} />
       </button>

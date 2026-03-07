@@ -117,7 +117,7 @@ const ProposalReview = () => {
             <span
               className="text-blue-600 font-medium cursor-pointer hover:underline"
               onClick={() =>
-                navigate(`/reviewer/assignments/${assignmentId}/info`)
+                navigate(`/reviewer/dashboard/assignments/${assignmentId}/info`)
               }
             >
               Application ID: {data?.proposal?.applicationId}
