@@ -39,17 +39,6 @@ const ProposalReview = () => {
       setData(res.data);
 
       // Fetch versions and comments
-      //   const [vRes, cRes] = await Promise.all([
-      //     axios.get(`/reviewer/assignments/${assignmentId}/proposal/versions`),
-      //     axios.get(
-      //       `/reviewer/assignments/${assignmentId}/comments?proposalVersionId=${res.data.version._id}`,
-      //     ),
-      //   ]);
-
-      //   setVersions(vRes.data.versions);
-      //   setComments(cRes.data.comments);
-
-      // Fetch versions and comments
       await Promise.all([
         axios
           .get(`/reviewer/assignments/${assignmentId}/proposal/versions`)
@@ -249,7 +238,7 @@ const ProposalReview = () => {
         </button>
         <button
           onClick={() => setShowDecisionModal(true)}
-          className="px-10 py-3 bg-[#003B95] text-white font-semibold rounded-full hover:bg-blue-900 transition-all uppercase tracking-wide text-sm"
+          className="px-10 py-3 cursor-pointer bg-[#003B95] text-white font-semibold rounded-full hover:bg-blue-900 transition-all uppercase tracking-wide text-sm"
         >
           Complete Review
         </button>
