@@ -75,6 +75,9 @@ const ProposalReviewPage = lazy(
 const ApplicationInfoPage = lazy(
   () => import("../pages/reviewer/ApplicationInfo"),
 );
+const ReviewerResponsesPage = lazy(
+  () => import("../pages/reviewer/ReviewerResponses"),
+);
 
 export const routes = createRoutesFromElements(
   <>
@@ -143,6 +146,10 @@ export const routes = createRoutesFromElements(
         <Route
           path="assignments/:assignmentId/info"
           element={<ApplicationInfoPage />}
+        />
+        <Route
+          path="responses"
+          element={<ReviewerResponsesPage />}
         />
         <Route path="notifications" element={<NotificationsPage />} />
         {/* <Route path="assigned-proposals" element={<AssignedProposals />} />

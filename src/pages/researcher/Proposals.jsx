@@ -625,7 +625,7 @@ function Proposals() {
                           `/researcher/dashboard/proposals/${proposal._id}/payment?txRef=${proposal.payment?.txRef}`,
                         );
                       }}
-                      className="px-5 py-1.5 rounded-full text-white text-sm font-medium bg-blue-800 hover:bg-blue-900"
+                      className="px-5 py-1.5 cursor-pointer rounded-full text-white text-sm font-medium bg-blue-800 hover:bg-blue-900"
                     >
                       Pay
                     </button>
@@ -635,14 +635,14 @@ function Proposals() {
                   {isPaid && !isSubmitted && (
                     <button
                       onClick={handleSubmit}
-                      className="px-5 py-1.5 rounded-full text-white text-sm font-medium bg-green-600 hover:bg-green-700"
+                      className="px-5 py-1.5 rounded-full cursor-pointer text-white text-sm font-medium bg-green-600 hover:bg-green-700"
                     >
                       Submit
                     </button>
                   )}
 
                   {/* Paid and submitted */}
-                  {isPaid && isSubmitted && (
+                  {!isAwaitingModifications && isPaid && isSubmitted && (
                     <button
                       disabled
                       className="px-5 py-1.5 rounded-full text-sm font-medium bg-gray-300 text-gray-600 cursor-not-allowed"
