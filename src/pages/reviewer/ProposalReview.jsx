@@ -39,17 +39,23 @@ const ProposalReview = () => {
       setData(res.data);
 
       // Fetch versions and comments
-      const [vRes, cRes] = await Promise.all([
-        axios.get(
-          `/reviewer/assignments/${assignmentId}/proposal/versions`,
-        ),
-        axios.get(
-          `/reviewer/assignments/${assignmentId}/comments?proposalVersionId=${res.data.version._id}`,
-        ),
-      ]);
+      //   const [vRes, cRes] = await Promise.all([
+      //     axios.get(`/reviewer/assignments/${assignmentId}/proposal/versions`),
+      //     axios.get(
+      //       `/reviewer/assignments/${assignmentId}/comments?proposalVersionId=${res.data.version._id}`,
+      //     ),
+      //   ]);
 
-      setVersions(vRes.data.versions);
-      setComments(cRes.data.comments);
+      //   setVersions(vRes.data.versions);
+      //   setComments(cRes.data.comments);
+
+      // Fetch versions and comments
+      await Promise.all([
+        axios
+          .get(`/reviewer/assignments/${assignmentId}/proposal/versions`)
+          .then((vRes) => setVersions(vRes.data.versions)),
+        fetchComments(res.data.version._id),
+      ]);
     } catch (err) {
       toast.error("Failed to load proposal data");
     } finally {
@@ -57,20 +63,67 @@ const ProposalReview = () => {
     }
   };
 
-  const handleAddComment = async () => {
-    if (!commentText.trim()) return toast.error("Comment cannot be empty");
+  const fetchVersions = async (proposalId) => {
     try {
-      await axios.post(`/reviewer/assignments/${assignmentId}/comments`, {
-        proposalVersionId: data.version._id,
-        message: commentText,
-        severity: "medium",
-      });
+      const vRes = await axios.get(
+        `/reviewer/assignments/${assignmentId}/proposal/versions`,
+      );
+      setVersions(vRes.data.versions);
+    } catch (err) {
+      console.error("Fetch versions error:", err);
+    }
+  };
+
+  const fetchComments = async (proposalVersionId) => {
+    if (!proposalVersionId) return;
+    try {
+      const cRes = await axios.get(
+        `/reviewer/assignments/${assignmentId}/comments?proposalVersionId=${proposalVersionId}`,
+      );
+      setComments(cRes.data.comments);
+    } catch (err) {
+      console.error("Fetch comments error:", err);
+    }
+  };
+
+  // --- Add Comment Function ---
+  const handleAddComment = async () => {
+    if (!commentText.trim()) {
+      return toast.error("Comment cannot be empty");
+    }
+
+    if (!data?.version?._id) {
+      return toast.error("Proposal version not loaded");
+    }
+
+    try {
+      // Post comment to backend
+      const res = await axios.post(
+        `/reviewer/assignments/${assignmentId}/comments`,
+        {
+          proposalVersionId: data.version._id, // make sure this exists
+          comment: commentText,
+          fieldPath: "", // optional, can be empty
+          severity: "medium", // or any severity you want
+          requestsChange: true, // optional
+        },
+      );
+
       toast.success("Comment added");
       setCommentText("");
       setShowCommentModal(false);
-      fetchReviewData();
+
+      // Refresh comments
+      fetchComments(data.version._id);
+
+      //   // Reload comments after adding
+      //   const commentsRes = await axios.get(
+      //     `/reviewer/assignments/${assignmentId}/comments?proposalVersionId=${data.version._id}`,
+      //   );
+      //   setComments(commentsRes.data.comments);
     } catch (err) {
-      toast.error("Failed to add comment");
+      console.error("Add comment error:", err.response || err);
+      toast.error(err.response?.data?.message || "Failed to add comment");
     }
   };
 
@@ -154,12 +207,28 @@ const ProposalReview = () => {
             >
               <Plus size={24} className="text-gray-600 cursor-pointer" />
             </button>
+
+            {/* Comments List
+            <div className="bg-gray-50 p-4 max-h-60 overflow-y-auto border-t">
+              {comments.length === 0 ? (
+                <p className="text-gray-400 text-sm">No comments yet.</p>
+              ) : (
+                comments.map((c) => (
+                  <div key={c._id} className="border-b border-gray-200 py-2">
+                    <p className="text-gray-800 text-sm">{c.comment}</p>
+                    <p className="text-gray-400 text-xs">
+                      By {c.reviewer} • {new Date(c.createdAt).toLocaleString()}
+                    </p>
+                  </div>
+                ))
+              )}
+            </div> */}
           </div>
 
           {/* Dynamic Comment Count Footer */}
           <div className="bg-white border-t px-6 py-3 flex justify-end">
             <span className="text-sm text-gray-500 font-medium">
-              {comments.length} comments
+              {comments.length} comment{comments.length !== 1 ? "s" : ""}
             </span>
           </div>
         </div>
@@ -189,9 +258,10 @@ const ProposalReview = () => {
       {/* --- MODALS --- */}
 
       {/* 1. Add Comment Modal */}
+
       {showCommentModal && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden">
+          <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden relative">
             <div className="p-8">
               <textarea
                 className="w-full h-40 p-4 bg-gray-50 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none resize-none text-gray-700"
@@ -199,12 +269,20 @@ const ProposalReview = () => {
                 value={commentText}
                 onChange={(e) => setCommentText(e.target.value)}
               />
-              <div className="mt-6 flex justify-center">
+
+              <div className="mt-6 flex justify-center gap-4">
                 <button
                   onClick={handleAddComment}
-                  className="bg-[#003B95] text-white px-8 py-2 rounded-full font-medium hover:bg-blue-900"
+                  className="bg-[#003B95] text-white px-8 py-2 rounded-full font-medium hover:bg-blue-900 cursor-pointer"
                 >
                   Add Comment
+                </button>
+
+                <button
+                  onClick={() => setShowCommentModal(false)}
+                  className="bg-gray-200 text-gray-700 px-8 py-2 rounded-full font-medium hover:bg-gray-300 cursor-pointer"
+                >
+                  Cancel
                 </button>
               </div>
             </div>
@@ -299,7 +377,7 @@ const ProposalReview = () => {
                   key={v._id}
                   onClick={() => {
                     navigate(
-                      `/reviewer/assignments/${assignmentId}/review/${v._id}`,
+                      `/reviewer/dashboard/assignments/${assignmentId}/review/${v._id}`,
                     );
                     setShowVersionModal(false);
                   }}
