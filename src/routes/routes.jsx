@@ -61,6 +61,9 @@ const ProposalPaymentSuccessPage = lazy(
 const ProposalSubmittedPage = lazy(
   () => import("../pages/researcher/ProposalSubmitted"),
 );
+const ProposalDetailsPage = lazy(
+  () => import("../pages/researcher/ProposalDetails"),
+);
 
 // Reviewer
 const ReviewerDashboardPage = lazy(
@@ -147,10 +150,7 @@ export const routes = createRoutesFromElements(
           path="assignments/:assignmentId/info"
           element={<ApplicationInfoPage />}
         />
-        <Route
-          path="responses"
-          element={<ReviewerResponsesPage />}
-        />
+        <Route path="responses" element={<ReviewerResponsesPage />} />
         <Route path="notifications" element={<NotificationsPage />} />
         {/* <Route path="assigned-proposals" element={<AssignedProposals />} />
         <Route path="reviews" element={<Reviews />} /> */}
@@ -178,6 +178,18 @@ export const routes = createRoutesFromElements(
           path="proposals/:proposalId/submitted"
           element={<ProposalSubmittedPage />}
         />
+        <Route
+          path="proposals/:proposalId/details"
+          element={<ProposalDetailsPage />}
+        />
+        {/* <Route
+          path="proposals/:proposalId/submit-revision"
+          element={<SubmitRevision />}
+        />
+        <Route
+          path="proposals/:proposalId/success"
+          element={<SubmissionSuccess />}
+        /> */}
         <Route path="notifications" element={<NotificationsPage />} />
         <Route path="*" element={<DashboardNotFoundPage />} />
         {/* <Route path="submit-proposal" element={<SubmitProposal />} />

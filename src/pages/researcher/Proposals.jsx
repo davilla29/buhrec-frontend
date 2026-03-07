@@ -610,7 +610,7 @@ function Proposals() {
                           `/researcher/dashboard/proposals/${proposal._id}/details`,
                         );
                       }}
-                      className="px-5 py-1.5 rounded-full text-white text-sm font-medium bg-blue-800 hover:bg-blue-900"
+                      className="px-5 py-1.5 rounded-full cursor-pointer text-white text-sm font-medium bg-blue-800 hover:bg-blue-900"
                     >
                       View Details
                     </button>
