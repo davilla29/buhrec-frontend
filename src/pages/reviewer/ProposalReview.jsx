@@ -24,6 +24,9 @@ const ProposalReview = () => {
   const [commentText, setCommentText] = useState("");
   const [decisionReason, setDecisionReason] = useState("");
 
+  // Helper to check if the review is currently active
+  const isReviewActive = data?.assignment?.status === "in_progress";
+
   useEffect(() => {
     fetchReviewData();
   }, [assignmentId, versionParam]);
@@ -173,6 +176,12 @@ const ProposalReview = () => {
               {versionParam ? `v${data?.version?.versionNumber}` : "Latest"}
               <ChevronDown size={14} />
             </button>
+            {/* Status Indicator */}
+            {!isReviewActive && (
+              <span className="ml-4 bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-bold uppercase">
+                Read Only: {data?.assignment?.status?.replace("_", " ")}
+              </span>
+            )}
           </div>
         </div>
       </header>
@@ -192,9 +201,14 @@ const ProposalReview = () => {
             {/* Floating Add Comment Button */}
             <button
               onClick={() => setShowCommentModal(true)}
-              className="absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors shadow-md"
+              disabled={!isReviewActive}
+              className={`absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center transition-all shadow-md ${
+                isReviewActive
+                  ? "bg-gray-200 hover:bg-gray-300 text-gray-600 cursor-pointer"
+                  : "bg-gray-100 text-gray-300 cursor-not-allowed opacity-50"
+              }`}
             >
-              <Plus size={24} className="text-gray-600 cursor-pointer" />
+              <Plus size={24} className="text-gray-600" />
             </button>
 
             {/* Comments List
@@ -227,9 +241,10 @@ const ProposalReview = () => {
       <footer className="bg-[#F3F4F6] p-6 flex justify-center gap-4">
         <button
           onClick={() => handleSubmitDecision("send")}
-          disabled={comments.length === 0}
+          // Disabled if no comments OR if status is not in_progress
+          disabled={comments.length === 0 || !isReviewActive}
           className={`px-10 py-3 font-semibold rounded-full transition-all uppercase tracking-wide text-sm ${
-            comments.length > 0
+            comments.length > 0 && isReviewActive
               ? "bg-gray-200 text-gray-700 hover:bg-gray-300 cursor-pointer"
               : "bg-gray-100 text-gray-400 cursor-not-allowed"
           }`}
@@ -238,7 +253,12 @@ const ProposalReview = () => {
         </button>
         <button
           onClick={() => setShowDecisionModal(true)}
-          className="px-10 py-3 cursor-pointer bg-[#003B95] text-white font-semibold rounded-full hover:bg-blue-900 transition-all uppercase tracking-wide text-sm"
+          disabled={!isReviewActive}
+          className={`px-10 py-3 font-semibold rounded-full transition-all uppercase tracking-wide text-sm ${
+            isReviewActive
+              ? "bg-[#003B95] text-white hover:bg-blue-900 cursor-pointer"
+              : "bg-gray-300 text-gray-500 cursor-not-allowed"
+          }`}
         >
           Complete Review
         </button>
