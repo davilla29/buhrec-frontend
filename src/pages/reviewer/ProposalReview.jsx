@@ -32,8 +32,8 @@ const ProposalReview = () => {
     try {
       setLoading(true);
       const endpoint = versionParam
-        ? `/api/reviewer/assignments/${assignmentId}/proposal/version/${versionParam}`
-        : `/api/reviewer/assignments/${assignmentId}/proposal`;
+        ? `/reviewer/assignments/${assignmentId}/proposal/version/${versionParam}`
+        : `/reviewer/assignments/${assignmentId}/proposal`;
 
       const res = await axios.get(endpoint);
       setData(res.data);
@@ -41,10 +41,10 @@ const ProposalReview = () => {
       // Fetch versions and comments
       const [vRes, cRes] = await Promise.all([
         axios.get(
-          `/api/reviewer/assignments/${assignmentId}/proposal/versions`,
+          `/reviewer/assignments/${assignmentId}/proposal/versions`,
         ),
         axios.get(
-          `/api/reviewer/assignments/${assignmentId}/comments?proposalVersionId=${res.data.version._id}`,
+          `/reviewer/assignments/${assignmentId}/comments?proposalVersionId=${res.data.version._id}`,
         ),
       ]);
 
@@ -60,7 +60,7 @@ const ProposalReview = () => {
   const handleAddComment = async () => {
     if (!commentText.trim()) return toast.error("Comment cannot be empty");
     try {
-      await axios.post(`/api/reviewer/assignments/${assignmentId}/comments`, {
+      await axios.post(`/reviewer/assignments/${assignmentId}/comments`, {
         proposalVersionId: data.version._id,
         message: commentText,
         severity: "medium",
@@ -80,7 +80,7 @@ const ProposalReview = () => {
       const finalDecision =
         decision === "send" ? "changes_requested" : decision;
 
-      await axios.post(`/api/reviewer/assignments/${assignmentId}/decision`, {
+      await axios.post(`/reviewer/assignments/${assignmentId}/decision`, {
         decision: finalDecision,
         reason: decisionReason,
       });
@@ -243,7 +243,7 @@ const ProposalReview = () => {
 
       {/* 3. Final Decision Reason Modal (Approve/Reject) */}
       {decisionType && (
-        <div className="fixed inset-0 bg-white z-[60] flex flex-col items-center justify-center p-6 text-center">
+        <div className="fixed inset-0 bg-white z-60 flex flex-col items-center justify-center p-6 text-center">
           <button
             onClick={() => setDecisionType(null)}
             className="absolute left-10 top-10 text-gray-800"
