@@ -439,7 +439,7 @@ function Proposals() {
           <div className="flex gap-2">
             <button
               onClick={() => setActiveTab("All")}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium ${
+              className={`px-4 py-1.5 rounded-full cursor-pointer text-sm font-medium ${
                 activeTab === "All"
                   ? "bg-blue-800 text-white"
                   : "bg-gray-200 text-gray-700 hover:bg-gray-300"
@@ -452,9 +452,9 @@ function Proposals() {
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-1.5 rounded-full text-sm font-medium ${
+                className={`px-4 py-1.5 rounded-full cursor-pointer text-sm font-medium ${
                   activeTab === tab
-                    ? "bg-blue-800 text-white"
+                    ? "bg-blue-800 text-white "
                     : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                 }`}
               >
