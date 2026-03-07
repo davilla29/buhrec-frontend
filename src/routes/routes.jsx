@@ -5,12 +5,16 @@ import { Route, createRoutesFromElements } from "react-router-dom";
 import ProtectedRoute from "../routes/ProtectedRoute";
 import Unauthorized from "../pages/Unauthorized";
 
-
 const RootLayout = lazy(() => import("../layouts/RootLayout"));
 const DashboardLayout = lazy(() => import("../layouts/DashboardLayout"));
 const DashboardNotFoundPage = lazy(() => import("../pages/DashboardNotFound"));
 
 const HomePage = lazy(() => import("../pages/Home"));
+const ContactPage = lazy(() => import("../pages/Contact"));
+const ObjectivesPage = lazy(() => import("../pages/Objectives"));
+const SopsGuidelinesPage = lazy(() => import("../pages/SopsGuidelines"));
+const AboutUsPage = lazy(() => import("../pages/AboutUs"));
+const NhrecMissionPage = lazy(() => import("../pages/NhrecMission"));
 const LandingPage = lazy(() => import("../pages/LandingPage"));
 const UnifiedLoginPage = lazy(() => import("../pages/UnifiedLoginPage"));
 const ResearcherSignUpPage = lazy(() => import("../pages/researcher/SignUp"));
@@ -65,30 +69,32 @@ const ReviewerDashboardPage = lazy(
 const ReviewerAssignmentsPage = lazy(
   () => import("../pages/reviewer/ReviewerAssignments"),
 );
+const ProposalReviewPage = lazy(
+  () => import("../pages/reviewer/ProposalReview"),
+);
+const ApplicationInfoPage = lazy(
+  () => import("../pages/reviewer/ApplicationInfo"),
+);
+const ReviewerResponsesPage = lazy(
+  () => import("../pages/reviewer/ReviewerResponses"),
+);
 
 export const routes = createRoutesFromElements(
   <>
     <Route path="/" element={<RootLayout />}>
-      <Route index element={<LandingPage />} />
-      <Route path="/login/:role" element={<UnifiedLoginPage />} />
+      <Route index element={<HomePage />} />
+      <Route path="about-us" element={<AboutUsPage />} />
+      <Route path="objectives" element={<ObjectivesPage />} />
+      <Route path="nhrec-mission" element={<NhrecMissionPage />} />
+      <Route path="sops-guidelines" element={<SopsGuidelinesPage />} />
+      <Route path="contact" element={<ContactPage />} />
+      <Route path="login/:role" element={<UnifiedLoginPage />} />
       <Route
         path="/auth/researcher/register"
         element={<ResearcherSignUpPage />}
       />
       <Route path="/auth/verify-email" element={<VerifyEmailPage />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
-      {/* <Route
-        path="/auth/signup"
-        element={
-          <RouteWithSkeleton Component={SignUp} Fallback={PagePreloader} />
-        }
-      />
-      <Route
-        path="/auth/signin"
-        element={
-          <RouteWithSkeleton Component={SignIn} Fallback={PagePreloader} />
-        }
-      /> */}
 
       {/* <Route path="*" element={Notfound} /> */}
     </Route>
@@ -129,6 +135,22 @@ export const routes = createRoutesFromElements(
       <Route path="/reviewer/dashboard" element={<DashboardLayout />}>
         <Route index element={<ReviewerDashboardPage />} />
         <Route path="assignments" element={<ReviewerAssignmentsPage />} />
+        <Route
+          path="assignments/:assignmentId/review"
+          element={<ProposalReviewPage />}
+        />
+        <Route
+          path="assignments/:assignmentId/review/:version"
+          element={<ProposalReviewPage />}
+        />
+        <Route
+          path="assignments/:assignmentId/info"
+          element={<ApplicationInfoPage />}
+        />
+        <Route
+          path="responses"
+          element={<ReviewerResponsesPage />}
+        />
         <Route path="notifications" element={<NotificationsPage />} />
         {/* <Route path="assigned-proposals" element={<AssignedProposals />} />
         <Route path="reviews" element={<Reviews />} /> */}
