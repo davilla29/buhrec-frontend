@@ -169,7 +169,12 @@ const ProposalReview = () => {
       <footer className="bg-[#F3F4F6] p-6 flex justify-center gap-4">
         <button
           onClick={() => handleSubmitDecision("send")}
-          className="px-10 py-3 bg-gray-200 text-gray-700 font-semibold rounded-full hover:bg-gray-300 transition-all uppercase tracking-wide text-sm"
+          disabled={comments.length === 0}
+          className={`px-10 py-3 font-semibold rounded-full transition-all uppercase tracking-wide text-sm ${
+            comments.length > 0
+              ? "bg-gray-200 text-gray-700 hover:bg-gray-300 cursor-pointer"
+              : "bg-gray-100 text-gray-400 cursor-not-allowed"
+          }`}
         >
           Send Comments
         </button>

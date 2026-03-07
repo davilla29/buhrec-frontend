@@ -337,7 +337,7 @@ const ReviewerAssignments = () => {
                     <button
                       onClick={() =>
                         navigate(
-                          `/reviewer/assignments/${assignment._id}/review`,
+                          `/reviewer/dashboard/assignments/${assignment._id}/review`,
                         )
                       }
                       className="bg-green-600 hover:bg-green-700 text-white px-6 py-1.5 rounded-full text-sm font-bold transition cursor-pointer shadow-sm"
