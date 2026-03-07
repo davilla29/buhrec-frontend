@@ -74,12 +74,12 @@ const ApplicationInfoPage = lazy(
 export const routes = createRoutesFromElements(
   <>
     <Route path="/" element={<RootLayout />}>
-      <Route index element={<LandingPage />} />
-      <Route path="about-us" element={<AboutUs />} />
+      <Route index element={<HomePage />} />
+      {/* <Route path="about-us" element={<AboutUs />} />
       <Route path="objectives" element={<Objectives />} />
       <Route path="nhrec-mission" element={<NhrecMission />} />
       <Route path="sops-guidelines" element={<SopsGuidelines />} />
-      <Route path="contact" element={<Contact />} />
+      <Route path="contact" element={<Contact />} /> */}
       <Route path="login/:role" element={<UnifiedLoginPage />} />
       <Route
         path="/auth/researcher/register"
