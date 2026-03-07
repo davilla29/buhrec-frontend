@@ -1,4 +1,4 @@
-// import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "../../utils/axios";
 import toast from "react-hot-toast";
@@ -91,7 +91,7 @@ const SubmitRevision = () => {
         <button 
           onClick={handleSubmit}
           disabled={isSubmitting}
-          className="px-16 py-3.5 bg-[#003399] text-white rounded-full font-bold uppercase tracking-widest text-sm hover:bg-blue-900 transition-all shadow-lg active:scale-95 disabled:bg-gray-400"
+          className="px-16 py-3.5 cursor-pointer bg-[#003399] text-white rounded-full font-bold uppercase tracking-widest text-sm hover:bg-blue-900 transition-all shadow-lg active:scale-95 disabled:bg-gray-400"
         >
           {isSubmitting ? "Submitting..." : "Submit Proposal"}
         </button>
