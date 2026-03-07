@@ -314,36 +314,59 @@ function ReviewersList() {
 
         {/* Reviewer Cards */}
         <div className="space-y-5">
-          {reviewers.map((reviewer) => (
-            <div
-              key={reviewer._id}
-              onClick={() => handleOpenModal(reviewer._id)}
-              className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between cursor-pointer hover:shadow-md transition-all"
-            >
-              <div className="flex items-center gap-4">
-                <img
-                  src={reviewer.photoUrl || "https://via.placeholder.com/50"}
-                  className="w-14 h-14 rounded-full object-cover border"
-                  alt={reviewer.fullName}
+          {reviewers.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 bg-gray-50 rounded-xl border border-gray-200 text-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-16 w-16 text-gray-300 mb-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 4v16m8-8H4"
                 />
+              </svg>
+              <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                No reviewers added yet
+              </h2>
+              <p className="text-gray-500 text-sm">
+                Once you add reviewers, they will appear here.
+              </p>
+            </div>
+          ) : (
+            reviewers.map((reviewer) => (
+              <div
+                key={reviewer._id}
+                onClick={() => handleOpenModal(reviewer._id)}
+                className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between cursor-pointer hover:shadow-md transition-all"
+              >
+                <div className="flex items-center gap-4">
+                  <img
+                    src={reviewer.photoUrl || "https://via.placeholder.com/50"}
+                    className="w-14 h-14 rounded-full object-cover border"
+                    alt={reviewer.fullName}
+                  />
 
-                <div>
-                  <h3 className="font-semibold text-gray-800">
-                    {reviewer.title} {reviewer.fullName}
-                  </h3>
-                  <p className="text-sm text-gray-500 mt-1">
-                    {reviewer.specialization}
-                  </p>
+                  <div>
+                    <h3 className="font-semibold text-gray-800">
+                      {reviewer.title} {reviewer.fullName}
+                    </h3>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {reviewer.specialization}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="text-[#002B7F] text-sm font-semibold">
+                  {reviewer.ongoingAssignments} ongoing assignments
                 </div>
               </div>
-
-              <div className="text-[#002B7F] text-sm font-semibold">
-                {reviewer.ongoingAssignments} ongoing assignments {" "}
-              </div>
-
-              
-            </div>
-          ))}
+            ))
+          )}
         </div>
       </main>
 

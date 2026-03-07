@@ -1,176 +1,257 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import React, { useState, useEffect } from "react";
+// import axios from "../../utils/axios";
+// import { Bell, Loader2 } from "lucide-react";
+// import { useNavigate } from "react-router-dom";
+
+// const ReviewerDashboard = () => {
+//   const navigate = useNavigate();
+//   const [data, setData] = useState(null);
+//   const [loading, setLoading] = useState(true);
+
+//   useEffect(() => {
+//     const fetchDashboard = async () => {
+//       try {
+
+//         const response = await axios.get("/reviewer/dashboard");
+//         setData(response.data);
+//       } catch (err) {
+//         console.error("Failed to fetch dashboard", err);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     fetchDashboard();
+//   }, []);
+
+//   if (loading)
+//     return (
+//       <div className="flex h-screen items-center justify-center bg-[#f5f5f5]">
+//         <Loader2 className="animate-spin text-blue-600" size={48} />
+//       </div>
+//     );
+
+//   const StatCard = ({ label, value }) => (
+//     <div className="bg-[#ededed] p-6 rounded-2xl flex flex-col gap-2 min-w-45 flex-1 shadow-sm">
+//       <span className="text-sm font-semibold text-gray-700 leading-tight">
+//         {label}
+//       </span>
+//       <span className="text-4xl font-bold text-black">{value || 0}</span>
+//     </div>
+//   );
+
+//   return (
+//     <div className="min-h-screen p-4 font-sans text-gray-900">
+//       <div className="max-w-6xl mx-auto">
+//         {/* Header */}
+//         <div className="flex justify-between items-start mb-10">
+//           <div>
+//             <h1 className="text-3xl font-bold">Welcome, {data?.user?.name}</h1>
+//             <p className="text-gray-500 text-sm mt-1">Here are your stats!</p>
+//           </div>
+//           <button
+//             onClick={() => navigate("/reviewer/dashboard/notifications")}
+//             className="p-2 cursor-pointer hover:bg-gray-200 rounded-full transition-all"
+//           >
+//             <Bell size={24} className="fill-black" />
+//           </button>
+//         </div>
+
+//         {/* Stats Grid */}
+//         <div className="flex gap-4 mb-12 overflow-x-auto pb-2">
+//           <StatCard
+//             label="Accepted Assignments"
+//             value={data?.stats?.accepted}
+//           />
+//           <StatCard
+//             label="Completed Assignments"
+//             value={data?.stats?.completed}
+//           />
+//           <StatCard
+//             label="Incomplete Assignments"
+//             value={data?.stats?.incomplete}
+//           />
+//           <StatCard
+//             label="Pending Feedback"
+//             value={data?.stats?.pendingFeedback}
+//           />
+//         </div>
+
+//         {/* Recent Assignments Section */}
+//         <h2 className="text-2xl font-bold mb-6">Your Recent Assignments</h2>
+
+//         <div className="space-y-4">
+//           {data?.recentAssignments.length > 0 ? (
+//             data.recentAssignments.map((assignment) => (
+//               <div
+//                 key={assignment.id}
+//                 className="bg-[#ededed] p-6 rounded-xl flex justify-between items-center shadow-sm"
+//               >
+//                 <div className="max-w-2xl">
+//                   <p className="text-xs font-medium text-gray-500 mb-1 uppercase tracking-wider">
+//                     New Assignment Received
+//                   </p>
+//                   <h3 className="text-lg font-bold leading-tight text-[#1a1a1a]">
+//                     {assignment.title}
+//                   </h3>
+//                 </div>
+
+//                 <div className="flex gap-3">
+//                   <button className="bg-[#d4af37] hover:bg-[#b5952f] text-white px-8 py-2 rounded-full text-sm font-bold transition-colors">
+//                     Accept
+//                   </button>
+//                   <button className="bg-[#8b0000] hover:bg-[#6b0000] text-white px-8 py-2 rounded-full text-sm font-bold transition-colors">
+//                     Decline
+//                   </button>
+//                 </div>
+//               </div>
+//             ))
+//           ) : (
+//             <p className="text-gray-500 italic">No recent assignments found.</p>
+//           )}
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ReviewerDashboard;
+
+import React, { useState, useEffect } from "react";
 import axios from "../../utils/axios";
-import { Bell, X, Loader } from "lucide-react";
+import { Bell, Loader2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 const ReviewerDashboard = () => {
   const navigate = useNavigate();
-
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [dashboard, setDashboard] = useState({
-    stats: {
-      accepted: 0,
-      completed: 0,
-      incomplete: 0,
-      feedback: 0,
-    },
-    assignments: [],
-    unreadNotifications: 0,
-    reviewerName: "",
-  });
-
-  const [declineTarget, setDeclineTarget] = useState(null);
+  const [processingId, setProcessingId] = useState(null);
 
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
-        const res = await axios.get("/reviewer/dashboard");
-
-        if (res.data.success) {
-          setDashboard(res.data.data);
-        }
+        const response = await axios.get("/reviewer/dashboard");
+        setData(response.data);
       } catch (err) {
-        toast.error("Failed to load dashboard");
+        console.error("Failed to fetch dashboard", err);
       } finally {
         setLoading(false);
       }
     };
-
     fetchDashboard();
   }, []);
 
-  if (loading) {
+  const handleAccept = async (assignmentId) => {
+    try {
+      setProcessingId(assignmentId);
+
+      await axios.patch(`/reviewer/assignments/${assignmentId}/accept`);
+
+      toast.success("Assignment accepted");
+
+      setTimeout(() => {
+        navigate("/reviewer/dashboard/assignments");
+      }, 800);
+    } catch (error) {
+      toast.error(
+        error?.response?.data?.message || "Failed to accept assignment",
+      );
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
+  if (loading)
     return (
-      <div className="h-screen flex items-center justify-center">
-        <Loader className="animate-spin" />
+      <div className="flex h-screen items-center justify-center bg-[#f5f5f5]">
+        <Loader2 className="animate-spin text-blue-600" size={48} />
       </div>
     );
-  }
+
+  const StatCard = ({ label, value }) => (
+    <div className="bg-[#ededed] p-6 rounded-2xl flex flex-col gap-2 min-w-45 flex-1 shadow-sm">
+      <span className="text-sm font-semibold text-gray-700">{label}</span>
+      <span className="text-4xl font-bold text-black">{value || 0}</span>
+    </div>
+  );
 
   return (
-    <div className="p-4 sm:p-8 bg-white min-h-screen">
-      {/* Header */}
-      <header className="mb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-gray-900 capitalize">
-            Welcome, {dashboard.reviewerName || "Reviewer"}
-          </h1>
-          <p className="text-gray-500 text-sm font-medium">
-            Here are your stats!
-          </p>
-        </div>
+    <div className="min-h-screen p-4 font-sans text-gray-900">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="flex justify-between items-start mb-10">
+          <div>
+            <h1 className="text-3xl font-bold">Welcome, {data?.user?.name}</h1>
+            <p className="text-gray-500 text-sm mt-1">Here are your stats!</p>
+          </div>
 
-        <button
-          onClick={() => navigate("/reviewer/dashboard/notifications")}
-          className="p-3 bg-gray-100 rounded-full relative hover:bg-gray-200 transition-all"
-        >
-          <Bell size={22} className="text-gray-700" />
-
-          {dashboard.unreadNotifications > 0 && (
-            <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-600 text-white text-[10px] font-black rounded-full flex items-center justify-center">
-              {dashboard.unreadNotifications}
-            </span>
-          )}
-        </button>
-      </header>
-
-      {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
-        {[
-          { label: "Accepted Assignments", value: dashboard.stats.accepted },
-          { label: "Completed Assignments", value: dashboard.stats.completed },
-          {
-            label: "Incomplete Assignments",
-            value: dashboard.stats.incomplete,
-          },
-          { label: "Pending Feedback", value: dashboard.stats.feedback },
-        ].map((stat, i) => (
-          <div
-            key={i}
-            className="bg-[#F3F4F6] p-6 rounded-2xl hover:border-blue-100 border"
+          <button
+            onClick={() => navigate("/reviewer/dashboard/notifications")}
+            className="p-2 hover:bg-gray-200 rounded-full"
           >
-            <p className="text-[10px] font-black text-gray-500 uppercase mb-2 tracking-widest">
-              {stat.label}
-            </p>
-            <p className="text-4xl font-black text-gray-900">{stat.value}</p>
-          </div>
-        ))}
-      </div>
-
-      {/* Assignments */}
-      <h2 className="text-xl font-bold mb-6">Your Recent Assignments</h2>
-
-      {dashboard.assignments.length === 0 ? (
-        <div className="text-center py-12">
-          <p className="text-gray-400 font-bold text-lg">
-            No pending assignments
-          </p>
+            <Bell size={24} className="fill-black" />
+          </button>
         </div>
-      ) : (
+
+        {/* Stats */}
+        <div className="flex gap-4 mb-12 overflow-x-auto pb-2">
+          <StatCard
+            label="Accepted Assignments"
+            value={data?.stats?.accepted}
+          />
+          <StatCard
+            label="Completed Assignments"
+            value={data?.stats?.completed}
+          />
+          <StatCard
+            label="Incomplete Assignments"
+            value={data?.stats?.incomplete}
+          />
+          <StatCard
+            label="Pending Feedback"
+            value={data?.stats?.pendingFeedback}
+          />
+        </div>
+
+        {/* Assignments */}
+        <h2 className="text-2xl font-bold mb-6">Your Recent Assignments</h2>
+
         <div className="space-y-4">
-          {dashboard.assignments.map((task) => (
-            <div
-              key={task._id}
-              className="bg-[#F3F4F6] p-6 rounded-2xl flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6"
-            >
-              <div>
-                <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">
-                  New Assignment
-                </p>
-
-                <h3 className="text-lg font-black text-gray-900">
-                  {task.projectName}
-                </h3>
-              </div>
-
-              <div className="flex gap-3">
-                {/* Accept Button */}
-                <button className="bg-yellow-500 text-white px-8 py-3 rounded-full font-bold text-xs uppercase hover:bg-yellow-600">
-                  Accept
-                </button>
-
-                {/* Decline Button */}
-                <button
-                  onClick={() => setDeclineTarget(task._id)}
-                  className="bg-red-700 text-white px-8 py-3 rounded-full font-bold text-xs uppercase hover:bg-red-900"
-                >
-                  Decline
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Decline Modal */}
-      {declineTarget && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/30">
-          <div className="bg-white rounded-2xl p-8 w-96 text-center relative">
-            <button
-              onClick={() => setDeclineTarget(null)}
-              className="absolute right-4 top-4"
-            >
-              <X size={18} />
-            </button>
-
-            <h3 className="text-lg font-bold mb-4">Decline this assignment?</h3>
-
-            <div className="flex gap-3">
-              <button
-                onClick={() => setDeclineTarget(null)}
-                className="flex-1 py-2 rounded-full bg-gray-200"
+          {data?.recentAssignments?.length > 0 ? (
+            data.recentAssignments.map((assignment) => (
+              <div
+                key={assignment.id}
+                className="bg-[#ededed] p-6 rounded-xl flex justify-between items-center"
               >
-                Cancel
-              </button>
+                <div className="max-w-2xl">
+                  <p className="text-xs text-gray-500 uppercase mb-1">
+                    New Assignment Received
+                  </p>
 
-              <button className="flex-1 py-2 rounded-full bg-red-700 text-white">
-                Yes, Decline
-              </button>
-            </div>
-          </div>
+                  <h3 className="text-lg font-bold">{assignment.title}</h3>
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => handleAccept(assignment.id)}
+                    disabled={processingId === assignment.id}
+                    className="bg-[#d4af37] hover:bg-[#b5952f] text-white px-8 py-2 rounded-full text-sm font-bold"
+                  >
+                    {processingId === assignment.id ? "Accepting..." : "Accept"}
+                  </button>
+
+                  <button className="bg-[#8b0000] hover:bg-[#6b0000] text-white px-8 py-2 rounded-full text-sm font-bold">
+                    Decline
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500 italic">No recent assignments found.</p>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };
