@@ -91,29 +91,31 @@ const ProposalReview = () => {
       return toast.error("Proposal version not loaded");
     }
 
-    try {
-      // Post comment to backend
-      const res = await axios.post(
-        `/reviewer/assignments/${assignmentId}/comments`,
-        {
-          proposalVersionId: data.version._id,
-          comment: commentText,
-          fieldPath: "",
-          severity: "medium",
-          requestsChange: true,
-        },
-      );
+    const commentPromise = axios.post(
+      `/reviewer/assignments/${assignmentId}/comments`,
+      {
+        proposalVersionId: data.version._id,
+        comment: commentText,
+        fieldPath: "",
+        severity: "medium",
+        requestsChange: true,
+      },
+    );
 
-      toast.success("Comment added");
-      setCommentText("");
-      setShowCommentModal(false);
-
-      // Refresh comments
-      fetchComments(data.version._id);
-    } catch (err) {
-      console.error("Add comment error:", err.response || err);
-      toast.error(err.response?.data?.message || "Failed to add comment");
-    }
+    toast.promise(commentPromise, {
+      loading: "Adding comment...",
+      success: () => {
+        // Logic to run only on success
+        setCommentText("");
+        setShowCommentModal(false);
+        fetchComments(data.version._id);
+        return "Comment added successfully";
+      },
+      error: (err) => {
+        console.error("Add comment error:", err.response || err);
+        return err.response?.data?.message || "Failed to add comment";
+      },
+    });
   };
 
   const handleSubmitDecision = async (decision) => {
