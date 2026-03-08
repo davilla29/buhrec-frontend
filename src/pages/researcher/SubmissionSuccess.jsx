@@ -49,7 +49,7 @@ const SubmissionSuccess = () => {
 
         <button
           onClick={() => navigate("/researcher/dashboard")}
-          className="group flex items-center mx-auto gap-3 px-12 py-4 bg-[#003399] text-white rounded-full font-bold uppercase tracking-widest text-sm shadow-xl hover:bg-blue-900 transition-all hover:gap-5"
+          className="group flex cursor-pointer items-center mx-auto gap-3 px-12 py-4 bg-[#003399] text-white rounded-full font-bold uppercase tracking-widest text-sm shadow-xl hover:bg-blue-900 transition-all hover:gap-5"
         >
           <LayoutDashboard size={18} />
           <span>Go to Dashboard</span>

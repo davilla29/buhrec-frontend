@@ -218,7 +218,7 @@ const ProposalDetails = () => {
         <div className="flex gap-4 items-start w-full">
           <button
             onClick={() => navigate(-1)}
-            className="p-2 bg-white rounded-full shadow-sm hover:bg-gray-100 transition shrink-0"
+            className="p-2 cursor-pointer bg-white rounded-full shadow-sm hover:bg-gray-100 transition shrink-0"
           >
             <ChevronLeft size={24} />
           </button>
@@ -267,7 +267,7 @@ const ProposalDetails = () => {
             htmlFor="version-select"
             className="text-sm font-bold text-gray-700"
           >
-            Viewing Version:
+            Version:
           </label>
           <select
             id="version-select"
@@ -302,7 +302,7 @@ const ProposalDetails = () => {
                 className="cursor-pointer px-4 py-3 bg-[#003399] hover:bg-blue-900 text-white rounded-full text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition"
               >
                 <PlusCircle size={16} />
-                Submit Revision
+                Attach Document
               </button>
             )}
 
@@ -358,7 +358,7 @@ const ProposalDetails = () => {
                   className="bg-[#EAEAEA] p-6 rounded-xl flex gap-4 border border-gray-100"
                 >
                   <img
-                    src="/avatar-placeholder.png"
+                    src={comment.reviewer?.photoUrl}
                     alt="Reviewer"
                     className="w-10 h-10 rounded-full bg-gray-300 object-cover"
                   />
