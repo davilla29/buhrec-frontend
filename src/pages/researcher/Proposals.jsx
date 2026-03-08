@@ -175,6 +175,9 @@ function Proposals() {
               const canViewDetails =
                 status === "awaiting modifications" ||
                 status === "under review";
+              const isApproved = status === "approved";
+              const isRejected = status === "rejected";
+              const isDecisionFinal = isApproved || isRejected;
 
               const isPaid = proposal.payment?.status === "paid";
 
@@ -193,6 +196,12 @@ function Proposals() {
               /* ------------------------------------------ */
 
               const handleCardClick = () => {
+                if (isDecisionFinal) {
+                  navigate(
+                    `/researcher/dashboard/proposals/${proposal._id}/decision`,
+                  );
+                  return;
+                }
                 if (canViewDetails) {
                   navigate(
                     `/researcher/dashboard/proposals/${proposal._id}/details`,
@@ -278,8 +287,27 @@ function Proposals() {
                   {/* Button Logic                                     */}
                   {/* ------------------------------------------------ */}
 
+                  {/* Final Decision Button (Approved/Rejected) */}
+                  {isDecisionFinal && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(
+                          `/researcher/dashboard/proposals/${proposal._id}/decision`,
+                        );
+                      }}
+                      className={`px-5 py-1.5 rounded-full cursor-pointer text-white text-sm font-medium ${
+                        isApproved
+                          ? "bg-[#003B95] hover:bg-blue-900"
+                          : "bg-[#C1121F] hover:bg-red-900"
+                      }`}
+                    >
+                      View Decision
+                    </button>
+                  )}
+
                   {/* Awaiting Modifications or Under Review */}
-                  {canViewDetails && (
+                  {canViewDetails && !isDecisionFinal && (
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -294,7 +322,7 @@ function Proposals() {
                   )}
 
                   {/* Not Paid */}
-                  {!isPaid && !canViewDetails && (
+                  {!isPaid && !canViewDetails && !isDecisionFinal && (
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -309,24 +337,30 @@ function Proposals() {
                   )}
 
                   {/* Paid but not submitted */}
-                  {isPaid && !isSubmitted && !canViewDetails && (
-                    <button
-                      onClick={handleSubmit}
-                      className="px-5 py-1.5 rounded-full cursor-pointer text-white text-sm font-medium bg-green-600 hover:bg-green-700"
-                    >
-                      Submit
-                    </button>
-                  )}
+                  {isPaid &&
+                    !isSubmitted &&
+                    !canViewDetails &&
+                    !isDecisionFinal && (
+                      <button
+                        onClick={handleSubmit}
+                        className="px-5 py-1.5 rounded-full cursor-pointer text-white text-sm font-medium bg-green-600 hover:bg-green-700"
+                      >
+                        Submit
+                      </button>
+                    )}
 
                   {/* Paid and submitted (Pending review or fully finalized) */}
-                  {!canViewDetails && isPaid && isSubmitted && (
-                    <button
-                      disabled
-                      className="px-5 py-1.5 rounded-full text-sm font-medium bg-gray-300 text-gray-600 cursor-not-allowed"
-                    >
-                      Submitted
-                    </button>
-                  )}
+                  {!canViewDetails &&
+                    !isDecisionFinal &&
+                    isPaid &&
+                    isSubmitted && (
+                      <button
+                        disabled
+                        className="px-5 py-1.5 rounded-full text-sm font-medium bg-gray-300 text-gray-600 cursor-not-allowed"
+                      >
+                        Submitted
+                      </button>
+                    )}
                 </div>
               );
             })}
