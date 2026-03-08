@@ -856,7 +856,9 @@ const ProposalSubmission = () => {
                   onChange={(e) =>
                     handleResearcherChange(index, e.target.value)
                   }
-                  className="flex-1 rounded-xl px-4 py-3 bg-[#E5E7EB]"
+                  className={`flex-1 rounded-xl px-4 py-3 bg-[#E5E7EB] ${
+                    researcherErrors[index] ? "border-2 border-red-500" : ""
+                  }`}
                 />
 
                 {!isPaid && formData.researchers.length > 1 && (
@@ -869,6 +871,11 @@ const ProposalSubmission = () => {
                   </button>
                 )}
               </div>
+              {researcherErrors[index] && (
+                <p className="text-red-500 text-xs mt-1 ml-1 font-medium">
+                  {researcherErrors[index]}
+                </p>
+              )}
             </div>
           ))}
 
