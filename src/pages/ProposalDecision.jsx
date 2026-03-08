@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "../../utils/axios";
+import axios from "../utils/axios";
 import toast from "react-hot-toast";
 
 const ProposalDecision = () => {
-  const { id } = useParams(); // Proposal ID
+  const { proposalId } = useParams(); // Proposal id
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
@@ -12,9 +12,7 @@ const ProposalDecision = () => {
   useEffect(() => {
     const fetchDecisionDetails = async () => {
       try {
-        // Fetch the proposal details (Assuming you have an endpoint that returns the proposal and its assignment/decision reason)
-        // If your existing /researcher/proposals/:id endpoint doesn't return the review assignment, you may need to populate it on the backend.
-        const res = await axios.get(`/researcher/proposals/${id}`);
+        const res = await axios.get(`/researcher/proposals/${proposalId}`);
         setData(res.data.proposal);
       } catch (err) {
         toast.error("Failed to load decision details");
@@ -24,7 +22,7 @@ const ProposalDecision = () => {
     };
 
     fetchDecisionDetails();
-  }, [id]);
+  }, [proposalId]);
 
   if (loading) {
     return (
@@ -48,16 +46,21 @@ const ProposalDecision = () => {
     ? "Your proposal was approved"
     : "Your proposal was rejected";
 
-  // Format the date
-  const dateStr = data.createdAt
-    ? new Date(data.createdAt).toLocaleDateString()
-    : "N/A";
+  // Format the date explicitly to match the "D/M/YYYY" mockup style (e.g., 4/2/2026)
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    const d = new Date(dateString);
+    return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+  };
 
-  // The reason from the reviewer (Make sure your backend populates this from the Assignment model)
+  // Uses the newly added assignedAt field from the backend, falls back to createdAt
+  const dateStr = formatDate(data.assignedAt || data.createdAt);
+
+  // The reason from the reviewer
   const reasonText = data.decisionReason || "No additional comment provided";
 
   return (
-    <div className="min-h-screen bg-[#F9F9F9] flex flex-col items-center justify-center p-6 font-sans">
+    <div className="min-h-screen  flex flex-col items-center justify-center p-2 font-sans">
       <div className="w-full max-w-4xl">
         {/* Header Section */}
         <div className="mb-24">
@@ -80,7 +83,7 @@ const ProposalDecision = () => {
         {/* Action Button */}
         <div className="flex justify-center">
           <button
-            onClick={() => navigate("/researcher/dashboard/proposals")}
+            onClick={() => navigate("/researcher/dashboard/my-proposals")}
             className={`px-8 py-3 rounded-full text-white font-medium transition-all cursor-pointer ${buttonBg}`}
           >
             Back to proposals
