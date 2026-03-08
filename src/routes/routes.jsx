@@ -4,6 +4,7 @@ import { Route, createRoutesFromElements } from "react-router-dom";
 // import Notfound from "../pages/Notfound";
 import ProtectedRoute from "../routes/ProtectedRoute";
 import Unauthorized from "../pages/Unauthorized";
+import NotFound from "../pages/NotFound";
 
 const RootLayout = lazy(() => import("../layouts/RootLayout"));
 const DashboardLayout = lazy(() => import("../layouts/DashboardLayout"));
@@ -70,9 +71,7 @@ const SubmitRevisionPage = lazy(
 const SubmissionSuccessPage = lazy(
   () => import("../pages/researcher/SubmissionSuccess"),
 );
-const ProposalDecisionPage = lazy(
-  () => import("../pages/ProposalDecision"),
-);
+const ProposalDecisionPage = lazy(() => import("../pages/ProposalDecision"));
 
 // Reviewer
 const ReviewerDashboardPage = lazy(
@@ -108,7 +107,7 @@ export const routes = createRoutesFromElements(
       <Route path="/auth/verify-email" element={<VerifyEmailPage />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
 
-      {/* <Route path="*" element={Notfound} /> */}
+      <Route path="*" element={<NotFound />} />
     </Route>
 
     <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
