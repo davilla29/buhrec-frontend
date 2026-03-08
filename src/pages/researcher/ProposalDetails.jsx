@@ -207,6 +207,10 @@ const ProposalDetails = () => {
     );
   }
 
+  // Determine if the currently viewed version is the absolute latest version
+  const isLatestVersion =
+    versions.length > 0 && selectedVersionNum === versions[0].versionNumber;
+
   return (
     <div className="min-h-screen p-2">
       {/* Header Area */}
@@ -287,21 +291,22 @@ const ProposalDetails = () => {
         {/* Sidebar Navigation & Actions */}
         <div className="w-full md:w-56 flex flex-col gap-6">
           {/* Action Button - Only show attach document if modifications are requested */}
-          {proposalData.status === "Awaiting Modifications" && (
-            <button
-              onClick={() =>
-                navigate(
-                  `/researcher/dashboard/proposals/${proposalId}/submit-revision`,
-                )
-              }
-              className="cursor-pointer px-4 py-3 bg-[#003399] hover:bg-blue-900 text-white rounded-full text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition"
-            >
-              <PlusCircle size={16} />
-              Submit Revision
-            </button>
-          )}
+          {proposalData.status === "Awaiting Modifications" &&
+            isLatestVersion && (
+              <button
+                onClick={() =>
+                  navigate(
+                    `/researcher/dashboard/proposals/${proposalId}/submit-revision`,
+                  )
+                }
+                className="cursor-pointer px-4 py-3 bg-[#003399] hover:bg-blue-900 text-white rounded-full text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-md transition"
+              >
+                <PlusCircle size={16} />
+                Submit Revision
+              </button>
+            )}
 
-          {/* Current Version Metadata */}
+          {/* Current Version Metadata
           {currentVersionDetails && (
             <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
               <h3 className="text-sm font-bold text-gray-900 mb-3 border-b pb-2">
@@ -324,7 +329,7 @@ const ProposalDetails = () => {
                 </div>
               )}
             </div>
-          )}
+          )} */}
         </div>
 
         {/* Main Comments List */}
