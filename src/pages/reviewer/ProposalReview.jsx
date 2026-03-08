@@ -742,7 +742,7 @@ const ProposalReview = () => {
 
       {/* 3. Final Decision Reason Modal (Approve/Reject) */}
       {decisionType && (
-        <div className="fixed inset-0 bg-white z-[60] flex flex-col items-center justify-center p-6 text-center">
+        <div className="fixed inset-0 bg-white z-60 flex flex-col items-center justify-center p-6 text-center">
           <button
             onClick={() => setDecisionType(null)}
             className="absolute left-10 top-10 text-gray-800"
