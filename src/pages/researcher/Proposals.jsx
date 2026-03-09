@@ -424,10 +424,7 @@ function Proposals() {
 
       {showCreateModal && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-4 sm:p-0">
-          <div className="bg-white p-6 sm:p-8 rounded-3xl sm:rounded-2xl w-full sm:w-[400px] max-w-md relative animate-in slide-in-from-bottom sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-200 shadow-2xl">
-            {/* Mobile Drag Handle */}
-            <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-6 sm:hidden"></div>
-
+          <div className="bg-white p-6 sm:p-8 rounded-3xl sm:rounded-2xl w-full sm:w-100 max-w-md relative animate-in slide-in-from-bottom sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-200 shadow-2xl">
             <button
               onClick={() => setShowCreateModal(false)}
               className="absolute right-4 top-4 sm:right-5 sm:top-5 p-2 rounded-full hover:bg-gray-100 cursor-pointer transition-colors"
