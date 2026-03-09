@@ -1,127 +1,3 @@
-// import { useNavigate, useParams } from "react-router-dom";
-// import { ArrowLeft } from "lucide-react";
-// import axios from "../../utils/axios";
-// import toast from "react-hot-toast";
-// import { useEffect, useState } from "react";
-
-// function ProposalPayment() {
-//   const navigate = useNavigate();
-//   const { proposalId } = useParams();
-//   const [proposal, setProposal] = useState(null);
-//   const [loading, setLoading] = useState(true);
-
-//   useEffect(() => {
-//     const fetchProposal = async () => {
-//       try {
-//         const res = await axios.get(
-//           `/researcher/proposals/${proposalId}/draft`,
-//         );
-//         if (res.data.success) {
-//           setProposal(res.data.proposal);
-//         }
-//       } catch (err) {
-//         console.error(err);
-//         toast.error("Failed to fetch proposal details");
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchProposal();
-//   }, [proposalId]);
-
-//   const handleMakePayment = async () => {
-//     try {
-//       const res = await axios.post(
-//         `/researcher/proposals/${proposalId}/payment/init`,
-//       );
-
-//       if (res.data.success && res.data.paymentLink) {
-//         // Redirect to Flutterwave payment page
-//         window.location.href = res.data.paymentLink;
-//       }
-//     } catch (err) {
-//       console.error(err);
-//       toast.error(
-//         err.response?.data?.message ||
-//           "Payment initialization failed. Try again.",
-//       );
-//     }
-//   };
-
-//   const handleSubmitProposal = () => {
-//     // Navigate to submit page
-//     navigate(`/researcher/dashboard/proposals/${proposalId}/submit`);
-//   };
-
-//   if (loading) {
-//     return (
-//       <div className="flex h-full items-center justify-center min-h-screen">
-//         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-800"></div>
-//       </div>
-//     );
-//   }
-
-//   const isPaid = proposal?.payment?.status === "paid";
-
-//   return (
-//     <div className="min-h-screen flex flex-col">
-//       {/* Top Navigation Bar */}
-//       <div className="flex items-center justify-between w-full px-10 py-8">
-//         <button
-//           onClick={() => navigate("/researcher/dashboard/proposals")}
-//           className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-
-//         >
-//           <ArrowLeft size={28} className="text-gray-800" />
-//         </button>
-
-//         <h1 className="text-2xl font-bold text-gray-900">Submit a proposal</h1>
-
-//         <button
-//           onClick={handleSubmitProposal}
-//           disabled={!isPaid}
-//           className={`px-6 py-2.5 rounded-full font-medium text-sm transition-colors ${
-//             isPaid
-//               ? "bg-blue-800 text-white hover:bg-blue-900 cursor-pointer"
-//               : "bg-gray-300 text-gray-600 cursor-not-allowed"
-//           }`}
-//         >
-//           Submit Proposal
-//         </button>
-//       </div>
-
-//       {/* Center Content */}
-//       <div className="grow flex flex-col items-center justify-center px-6 -mt-20">
-//         <p className="text-lg text-gray-800 mb-2">Your total is</p>
-
-//         <h2 className="text-[100px] font-bold text-black leading-none mb-6">
-//           N{proposal?.feeAmount ?? 7000}
-//         </h2>
-
-//         <p className="text-gray-500 text-center max-w-md mb-12 text-lg leading-snug">
-//           Once payment is made, your application cannot be{" "}
-//           <br className="hidden md:block" /> edited
-//         </p>
-
-//         <button
-//           onClick={handleMakePayment}
-//           disabled={isPaid}
-//           className={`px-14 py-4 rounded-full font-bold text-lg shadow-md transition-all ${
-//             isPaid
-//               ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-//               : "bg-[#003B95] hover:bg-[#002e75] text-white cursor-pointer active:scale-95"
-//           }`}
-//         >
-//           {isPaid ? "Payment Completed" : "Make Payment"}
-//         </button>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default ProposalPayment;
-
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import axios from "../../utils/axios";
@@ -188,7 +64,7 @@ function ProposalPayment() {
   if (loading) {
     return (
       <div className="flex h-full items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-800"></div>
+        <div className="animate-spin rounded-full h-10 w-10 border-4 border-gray-200 border-t-blue-800"></div>
       </div>
     );
   }
@@ -197,30 +73,33 @@ function ProposalPayment() {
   const isSubmitted = proposal?.versionCount > 0;
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-white">
       {/* Top Navigation */}
-      <div className="flex items-center justify-between w-full px-10 py-8 z-10">
+      <div className="flex items-center justify-between w-full px-4 sm:px-6 md:px-10 py-4 md:py-8 z-10 gap-2 md:gap-4">
         {/* BACK BUTTON */}
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="p-2 hover:bg-gray-100 cursor-pointer rounded-full transition-colors"
+          className="p-2 hover:bg-gray-100 cursor-pointer rounded-full transition-colors active:scale-95 shrink-0"
+          aria-label="Go back"
         >
-          <ArrowLeft size={28} className="text-gray-800" />
+          <ArrowLeft className="w-6 h-6 md:w-7 md:h-7 text-gray-800" />
         </button>
 
-        <h1 className="text-2xl font-bold text-gray-900">Submit a proposal</h1>
+        <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 flex-1 text-center truncate px-2">
+          Submit a proposal
+        </h1>
 
         {/* SUBMIT BUTTON */}
         <button
           onClick={handleSubmitProposal}
           disabled={!isPaid || isSubmitted}
-          className={`px-6 py-2.5 rounded-full font-medium text-sm transition-colors ${
+          className={`px-4 py-2 md:px-6 md:py-2.5 rounded-full font-medium text-xs md:text-sm transition-all active:scale-95 whitespace-nowrap shadow-sm shrink-0 ${
             isSubmitted
-              ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+              ? "bg-gray-200 text-gray-500 cursor-not-allowed"
               : isPaid
-                ? "bg-blue-800 text-white hover:bg-blue-900"
-                : "bg-gray-300 text-gray-600 cursor-not-allowed"
+                ? "bg-blue-800 text-white hover:bg-blue-900 cursor-pointer shadow-blue-900/20"
+                : "bg-gray-200 text-gray-500 cursor-not-allowed"
           }`}
         >
           {isSubmitted ? "Already Submitted" : "Submit Proposal"}
@@ -228,26 +107,28 @@ function ProposalPayment() {
       </div>
 
       {/* Center Content */}
-      <div className="grow flex flex-col items-center justify-center px-6 -mt-20">
-        <p className="text-lg text-gray-800 mb-2">Your total is</p>
+      <div className="grow flex flex-col items-center justify-center px-6 -mt-10 md:-mt-20">
+        <p className="text-base md:text-lg text-gray-800 mb-2 md:mb-3 font-medium">
+          Your total is
+        </p>
 
-        <h2 className="text-[100px] font-bold text-black leading-none mb-6">
+        <h2 className="text-6xl sm:text-[80px] md:text-[100px] font-bold text-black leading-none mb-6 md:mb-8 tracking-tight">
           ₦{proposal?.feeAmount ?? 7000}
         </h2>
 
-        <p className="text-gray-500 text-center max-w-md mb-12 text-lg leading-snug">
+        <p className="text-gray-500 text-center max-w-xs md:max-w-md mb-10 md:mb-12 text-sm md:text-lg leading-relaxed md:leading-snug">
           Once payment is made, your application cannot be
-          <br className="hidden md:block" /> edited
+          <br className="hidden sm:block" /> edited.
         </p>
 
         {/* PAYMENT BUTTON */}
         <button
           onClick={handleMakePayment}
           disabled={isPaid}
-          className={`px-14 py-4 rounded-full font-bold text-lg shadow-md transition-all ${
+          className={`w-full sm:w-auto px-10 md:px-14 py-3.5 md:py-4 rounded-full font-bold text-base md:text-lg shadow-md transition-all active:scale-95 ${
             isPaid
-              ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-              : "bg-[#003B95] hover:bg-[#002e75] text-white active:scale-95"
+              ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+              : "bg-[#003B95] hover:bg-[#002e75] text-white cursor-pointer shadow-blue-900/20"
           }`}
         >
           {isPaid ? "Payment Completed" : "Make Payment"}
