@@ -13,6 +13,10 @@ function Proposals() {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [title, setTitle] = useState("");
 
+  // Search states
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
   const tabs = ["Drafts", "Not Reviewed", "Ongoing", "Completed"];
 
   /* ------------------------------------------------ */
@@ -38,35 +42,48 @@ function Proposals() {
   }, []);
 
   /* ------------------------------------------------ */
-  /* Filtering Logic                                  */
+  /* Filtering & Search Logic                         */
   /* ------------------------------------------------ */
 
   const filteredProposals = useMemo(() => {
-    if (activeTab === "All") return proposals;
+    let filtered = proposals;
 
-    return proposals.filter((p) => {
-      const status = p.status?.toLowerCase();
+    // 1. Filter by Tab
+    if (activeTab !== "All") {
+      filtered = filtered.filter((p) => {
+        const status = p.status?.toLowerCase();
+        switch (activeTab) {
+          case "Drafts":
+            return status === "draft";
+          case "Not Reviewed":
+            return status === "waiting to be assigned";
+          case "Ongoing":
+            return (
+              status === "under review" || status === "awaiting modifications"
+            );
+          case "Completed":
+            return status === "approved" || status === "rejected";
+          default:
+            return true;
+        }
+      });
+    }
 
-      switch (activeTab) {
-        case "Drafts":
-          return status === "draft";
+    // 2. Filter by Search Query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter((p) => p.title?.toLowerCase().includes(query));
+    }
 
-        case "Not Reviewed":
-          return status === "waiting to be assigned";
+    return filtered;
+  }, [proposals, activeTab, searchQuery]);
 
-        case "Ongoing":
-          return (
-            status === "under review" || status === "awaiting modifications"
-          );
-
-        case "Completed":
-          return status === "approved" || status === "rejected";
-
-        default:
-          return true;
-      }
-    });
-  }, [proposals, activeTab]);
+  const handleToggleSearch = () => {
+    setIsSearchOpen((prev) => !prev);
+    if (isSearchOpen) {
+      setSearchQuery(""); // Clear search when closing
+    }
+  };
 
   /* ------------------------------------------------ */
   /* Status Styling                                   */
@@ -76,16 +93,12 @@ function Proposals() {
     switch (status?.toLowerCase()) {
       case "rejected":
         return { text: "Review Rejected", color: "text-red-600" };
-
       case "awaiting modifications":
         return { text: "Modifications Requested", color: "text-yellow-500" };
-
       case "under review":
         return { text: "Under Review", color: "text-blue-500" };
-
       case "approved":
         return { text: "Review Approved", color: "text-blue-600" };
-
       default:
         return { text: "", color: "" };
     }
@@ -96,7 +109,10 @@ function Proposals() {
   if (loading) {
     return (
       <div className="flex h-full items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-800"></div>
+        <div className="flex flex-col items-center space-y-3">
+          <div className="animate-spin rounded-full h-10 w-10 border-4 border-gray-200 border-t-blue-800"></div>
+          <p className="text-gray-500 font-medium">Loading proposals...</p>
+        </div>
       </div>
     );
   }
@@ -104,47 +120,81 @@ function Proposals() {
   /* ------------------------------------------------ */
 
   return (
-    <div className="min-h-screen p-2">
-      <div className="max-w-4xl">
+    <div className="min-h-screen p-4 md:p-6 lg:p-8 max-w-5xl mx-auto">
+      <div>
         {/* Header */}
-        <header className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-800">Your Proposals</h1>
-          <p className="text-gray-500">Here are your proposals!</p>
+        <header className="mb-6 flex justify-between items-center gap-4">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
+              Your Proposals
+            </h1>
+            <p className="text-sm md:text-base text-gray-500 mt-1">
+              Here are your proposals!
+            </p>
+          </div>
+
+          {/* Search Toggle & Filter Icons */}
+          <div className="flex gap-2 md:gap-4 text-gray-600 items-center">
+            <button
+              onClick={handleToggleSearch}
+              className="p-2 cursor-pointer hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center active:scale-95"
+              aria-label="Toggle search"
+            >
+              {isSearchOpen ? (
+                <X className="w-5 h-5 md:w-6 md:h-6 text-gray-800" />
+              ) : (
+                <Search className="w-5 h-5 md:w-6 md:h-6 hover:text-blue-800 transition-colors" />
+              )}
+            </button>
+          </div>
         </header>
 
-        {/* Filter Toolbar */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex gap-2">
+        {/* Conditionally Rendered Search Input */}
+        {isSearchOpen && (
+          <div className="mb-6 animate-in slide-in-from-top-2 fade-in duration-200">
+            <input
+              type="text"
+              autoFocus
+              placeholder="Search proposals by title..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-gray-100 rounded-xl px-4 py-3 md:py-3.5 text-sm outline-none border border-transparent focus:border-blue-800 focus:bg-white focus:shadow-sm transition-all"
+            />
+          </div>
+        )}
+
+        {/* Filter Toolbar (Tabs) */}
+        <div className="flex gap-2 mb-6 md:mb-8 overflow-x-auto pb-2 no-scrollbar whitespace-nowrap">
+          <button
+            onClick={() => {
+              setActiveTab("All");
+              setSearchQuery("");
+            }}
+            className={`px-5 py-2 rounded-full cursor-pointer text-sm font-semibold transition-colors ${
+              activeTab === "All"
+                ? "bg-blue-800 text-white shadow-sm"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+          >
+            All
+          </button>
+
+          {tabs.map((tab) => (
             <button
-              onClick={() => setActiveTab("All")}
-              className={`px-4 py-1.5 rounded-full cursor-pointer text-sm font-medium ${
-                activeTab === "All"
-                  ? "bg-blue-800 text-white"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              key={tab}
+              onClick={() => {
+                setActiveTab(tab);
+                setSearchQuery("");
+              }}
+              className={`px-5 py-2 rounded-full cursor-pointer text-sm font-semibold transition-colors ${
+                activeTab === tab
+                  ? "bg-blue-800 text-white shadow-sm"
+                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
               }`}
             >
-              All
+              {tab}
             </button>
-
-            {tabs.map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-4 py-1.5 rounded-full cursor-pointer text-sm font-medium ${
-                  activeTab === tab
-                    ? "bg-blue-800 text-white "
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
-
-          <div className="flex gap-4 text-gray-600">
-            <Search className="w-5 h-5 cursor-pointer hover:text-blue-800" />
-            <SlidersHorizontal className="w-5 h-5 cursor-pointer hover:text-blue-800" />
-          </div>
+          ))}
         </div>
 
         {/* ------------------------------------------------ */}
@@ -152,16 +202,18 @@ function Proposals() {
         {/* ------------------------------------------------ */}
 
         {filteredProposals.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-20">
-            <p className="text-gray-500 mb-4">
-              {activeTab === "All"
-                ? "You have no proposals"
-                : `No proposals found in ${activeTab}`}
+          <div className="flex flex-col items-center justify-center py-16 md:py-24 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 text-center px-4">
+            <p className="text-gray-500 mb-6 font-medium">
+              {activeTab === "All" && !searchQuery
+                ? "You have no proposals yet."
+                : searchQuery
+                  ? `No results found for "${searchQuery}"`
+                  : `No proposals found in ${activeTab}`}
             </p>
 
             <button
               onClick={() => setShowCreateModal(true)}
-              className="bg-blue-800 text-white px-6 py-2 rounded-full font-medium hover:bg-blue-900"
+              className="bg-blue-800 cursor-pointer text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-900 transition-all active:scale-95 shadow-md"
             >
               New Submission
             </button>
@@ -180,16 +232,14 @@ function Proposals() {
               const isDecisionFinal = isApproved || isRejected;
 
               const isPaid = proposal.payment?.status === "paid";
-
               const isSubmitted = proposal.versionCount > 0;
 
               const statusInfo = getStatusStyles(proposal.status);
 
               const reviewerName =
                 proposal.reviewerName || "Pending Assignment";
-
               const reviewerAvatar =
-                proposal.reviewer?.avatar || "/api/placeholder/24/24";
+                proposal.reviewer?.avatar || "https://via.placeholder.com/30";
 
               /* ------------------------------------------ */
               /* Card Navigation Logic                      */
@@ -208,14 +258,12 @@ function Proposals() {
                   );
                   return;
                 }
-
                 if (isPaid) {
                   navigate(
                     `/researcher/dashboard/proposals/${proposal._id}/draft`,
                   );
                   return;
                 }
-
                 navigate(
                   `/researcher/dashboard/proposals/${proposal._id}/draft`,
                 );
@@ -254,30 +302,31 @@ function Proposals() {
                 <div
                   key={proposal._id}
                   onClick={handleCardClick}
-                  className="bg-[#f0f0f0] rounded-xl p-5 flex items-center justify-between hover:shadow-md cursor-pointer border border-transparent hover:border-gray-300"
+                  className="bg-[#f8f9fa] rounded-2xl p-4 md:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 hover:shadow-md cursor-pointer border border-gray-100 hover:border-gray-300 transition-all active:scale-[0.99]"
                 >
                   {/* Left Content */}
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-2.5 w-full sm:w-auto flex-1">
                     {statusInfo.text && (
-                      <span className={`text-xs font-bold ${statusInfo.color}`}>
+                      <span
+                        className={`text-[10px] md:text-xs font-black uppercase tracking-wider ${statusInfo.color}`}
+                      >
                         {statusInfo.text}
                       </span>
                     )}
 
-                    <h3 className="text-lg font-semibold text-gray-800 max-w-lg">
+                    <h3 className="text-base md:text-lg font-bold text-gray-900 max-w-xl leading-tight">
                       {proposal.title}
                     </h3>
 
-                    <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-gray-400 overflow-hidden">
+                    <div className="flex items-center gap-2 mt-1">
+                      <div className="w-6 h-6 rounded-full bg-gray-200 overflow-hidden shrink-0 border border-gray-300">
                         <img
                           src={reviewerAvatar}
                           alt={reviewerName}
                           className="w-full h-full object-cover"
                         />
                       </div>
-
-                      <span className="text-sm text-gray-600">
+                      <span className="text-xs md:text-sm text-gray-600 font-medium truncate">
                         {reviewerName}
                       </span>
                     </div>
@@ -286,81 +335,82 @@ function Proposals() {
                   {/* ------------------------------------------------ */}
                   {/* Button Logic                                     */}
                   {/* ------------------------------------------------ */}
-
-                  {/* Final Decision Button (Approved/Rejected) */}
-                  {isDecisionFinal && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(
-                          `/researcher/dashboard/proposals/${proposal._id}/decision`,
-                        );
-                      }}
-                      className={`px-5 py-1.5 rounded-full cursor-pointer text-white text-sm font-medium ${
-                        isApproved
-                          ? "bg-[#003B95] hover:bg-blue-900"
-                          : "bg-[#C1121F] hover:bg-red-900"
-                      }`}
-                    >
-                      View Decision
-                    </button>
-                  )}
-
-                  {/* Awaiting Modifications or Under Review */}
-                  {canViewDetails && !isDecisionFinal && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(
-                          `/researcher/dashboard/proposals/${proposal._id}/details`,
-                        );
-                      }}
-                      className="px-5 py-1.5 rounded-full cursor-pointer text-white text-sm font-medium bg-blue-800 hover:bg-blue-900"
-                    >
-                      View Details
-                    </button>
-                  )}
-
-                  {/* Not Paid */}
-                  {!isPaid && !canViewDetails && !isDecisionFinal && (
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(
-                          `/researcher/dashboard/proposals/${proposal._id}/payment?txRef=${proposal.payment?.txRef}`,
-                        );
-                      }}
-                      className="px-5 py-1.5 cursor-pointer rounded-full text-white text-sm font-medium bg-blue-800 hover:bg-blue-900"
-                    >
-                      Pay
-                    </button>
-                  )}
-
-                  {/* Paid but not submitted */}
-                  {isPaid &&
-                    !isSubmitted &&
-                    !canViewDetails &&
-                    !isDecisionFinal && (
+                  <div className="w-full sm:w-auto shrink-0 mt-2 sm:mt-0">
+                    {/* Final Decision Button (Approved/Rejected) */}
+                    {isDecisionFinal && (
                       <button
-                        onClick={handleSubmit}
-                        className="px-5 py-1.5 rounded-full cursor-pointer text-white text-sm font-medium bg-green-600 hover:bg-green-700"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(
+                            `/researcher/dashboard/proposals/${proposal._id}/decision`,
+                          );
+                        }}
+                        className={`w-full sm:w-auto px-6 py-2.5 md:py-2 rounded-full cursor-pointer text-white text-sm font-bold transition-colors ${
+                          isApproved
+                            ? "bg-[#003B95] hover:bg-blue-900"
+                            : "bg-[#C1121F] hover:bg-red-900"
+                        }`}
                       >
-                        Submit
+                        View Decision
                       </button>
                     )}
 
-                  {/* Paid and submitted (Pending review or fully finalized) */}
-                  {!canViewDetails &&
-                    !isDecisionFinal &&
-                    isPaid &&
-                    isSubmitted && (
+                    {/* Awaiting Modifications or Under Review */}
+                    {canViewDetails && !isDecisionFinal && (
                       <button
-                        disabled
-                        className="px-5 py-1.5 rounded-full text-sm font-medium bg-gray-300 text-gray-600 cursor-not-allowed"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(
+                            `/researcher/dashboard/proposals/${proposal._id}/details`,
+                          );
+                        }}
+                        className="w-full sm:w-auto px-6 py-2.5 md:py-2 rounded-full cursor-pointer text-white text-sm font-bold bg-blue-800 hover:bg-blue-900 transition-colors"
                       >
-                        Submitted
+                        View Details
                       </button>
                     )}
+
+                    {/* Not Paid */}
+                    {!isPaid && !canViewDetails && !isDecisionFinal && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate(
+                            `/researcher/dashboard/proposals/${proposal._id}/payment?txRef=${proposal.payment?.txRef}`,
+                          );
+                        }}
+                        className="w-full sm:w-auto px-8 py-2.5 md:py-2 cursor-pointer rounded-full text-white text-sm font-bold bg-blue-800 hover:bg-blue-900 transition-colors"
+                      >
+                        Pay
+                      </button>
+                    )}
+
+                    {/* Paid but not submitted */}
+                    {isPaid &&
+                      !isSubmitted &&
+                      !canViewDetails &&
+                      !isDecisionFinal && (
+                        <button
+                          onClick={handleSubmit}
+                          className="w-full sm:w-auto px-8 py-2.5 md:py-2 rounded-full cursor-pointer text-white text-sm font-bold bg-green-600 hover:bg-green-700 transition-colors shadow-sm"
+                        >
+                          Submit
+                        </button>
+                      )}
+
+                    {/* Paid and submitted (Pending review or fully finalized) */}
+                    {!canViewDetails &&
+                      !isDecisionFinal &&
+                      isPaid &&
+                      isSubmitted && (
+                        <button
+                          disabled
+                          className="w-full sm:w-auto px-6 py-2.5 md:py-2 rounded-full text-sm font-bold bg-gray-200 text-gray-500 cursor-not-allowed"
+                        >
+                          Submitted
+                        </button>
+                      )}
+                  </div>
                 </div>
               );
             })}
@@ -369,27 +419,39 @@ function Proposals() {
       </div>
 
       {/* ------------------------------------------------ */}
-      {/* Create Proposal Modal                           */}
+      {/* Create Proposal Modal                            */}
       {/* ------------------------------------------------ */}
 
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black/30 flex items-center justify-center">
-          <div className="bg-white p-8 rounded-2xl w-96 relative">
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 p-4 sm:p-0">
+          <div className="bg-white p-6 sm:p-8 rounded-3xl sm:rounded-2xl w-full sm:w-[400px] max-w-md relative animate-in slide-in-from-bottom sm:slide-in-from-bottom-0 sm:zoom-in-95 duration-200 shadow-2xl">
+            {/* Mobile Drag Handle */}
+            <div className="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-6 sm:hidden"></div>
+
             <button
               onClick={() => setShowCreateModal(false)}
-              className="absolute right-4 top-4"
+              className="absolute right-4 top-4 sm:right-5 sm:top-5 p-2 rounded-full hover:bg-gray-100 cursor-pointer transition-colors"
+              aria-label="Close modal"
             >
-              <X size={16} />
+              <X size={20} className="text-gray-500" />
             </button>
 
-            <h3 className="font-bold mb-4">Create New Proposal</h3>
+            <h3 className="text-lg md:text-xl font-bold mb-6 text-gray-900 pr-8">
+              Create New Proposal
+            </h3>
 
-            <input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Enter proposal title"
-              className="w-full bg-gray-200 rounded-xl px-4 py-3 mb-6"
-            />
+            <div>
+              <label className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-2 block">
+                Proposal Title
+              </label>
+              <input
+                autoFocus
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Enter proposal title..."
+                className="w-full cursor-text bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 sm:py-3 mb-8 focus:outline-none focus:ring-2 focus:ring-blue-800/50 focus:border-blue-800 transition-all text-sm sm:text-base"
+              />
+            </div>
 
             <button
               onClick={async () => {
@@ -416,7 +478,7 @@ function Proposals() {
                   );
                 }
               }}
-              className="w-full py-3 rounded-full bg-blue-900 text-white font-semibold"
+              className="w-full cursor-pointer py-3.5 sm:py-3 rounded-full bg-blue-800 hover:bg-blue-900 text-white font-bold transition-all active:scale-95 shadow-md shadow-blue-900/20"
             >
               Create Draft
             </button>
