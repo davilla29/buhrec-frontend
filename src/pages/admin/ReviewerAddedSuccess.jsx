@@ -8,7 +8,7 @@ function ReviewerAddedSuccess() {
         {/* Success Icon */}
         <div className="mb-6 md:mb-8 text-[#003399]">
           <svg
-            className="w-24 h-24 md:w-32 md:h-32 lg:w-[140px] lg:h-[140px]"
+            className="w-24 h-24 md:w-32 md:h-32 lg:w-35 lg:h-35"
             viewBox="0 0 100 100"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
