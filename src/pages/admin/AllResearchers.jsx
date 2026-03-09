@@ -50,9 +50,6 @@ const ResearcherModal = ({ researcher, onClose }) => {
               {researcher.department}
             </p>
           </div>
-          <button className="absolute sm:static right-12 top-4 p-2 cursor-pointer hover:bg-gray-100 rounded-full text-blue-600 hidden sm:block">
-            <MoreHorizontal size={24} />
-          </button>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 mb-8 bg-gray-50 p-5 sm:p-6 rounded-2xl border border-gray-100">
@@ -96,7 +93,7 @@ const ResearcherModal = ({ researcher, onClose }) => {
                 {researcher.completed || 0}
               </p>
             </div>
-            <div className="bg-[#F3F4F6] rounded-2xl p-5 flex-[2] relative flex flex-row sm:flex-col justify-between sm:justify-center items-center sm:items-start group cursor-pointer hover:bg-gray-200 transition-colors">
+            <div className="bg-[#F3F4F6] rounded-2xl p-5 flex-2 relative flex flex-row sm:flex-col justify-between sm:justify-center items-center sm:items-start group cursor-pointer hover:bg-gray-200 transition-colors">
               <div>
                 <p className="text-[10px] font-black text-gray-500 uppercase tracking-wider mb-1 sm:mb-2 leading-tight">
                   Ongoing Proposal Status
