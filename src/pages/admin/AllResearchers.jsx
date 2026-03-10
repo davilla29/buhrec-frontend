@@ -3,17 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { MoreHorizontal, ChevronRight, X, Search } from "lucide-react";
 import axios from "../../utils/axios";
 import toast from "react-hot-toast";
+import { initials } from "../../utils/initialsHelper";
 
 const ResearcherModal = ({ researcher, onClose }) => {
   const navigate = useNavigate();
   if (!researcher) return null;
-
-  const initials =
-    researcher.name
-      ?.split(" ")
-      .map((n) => n[0])
-      .join("")
-      .slice(0, 2) || "R";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">

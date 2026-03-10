@@ -207,7 +207,7 @@ function ReviewersList() {
               </div>
 
               {/* Dot Menu */}
-              <div className="absolute top-0 right-0 sm:relative">
+              <div className="absolute top-6 right-0 sm:relative">
                 <button
                   onClick={() => setShowDotMenu(!showDotMenu)}
                   className="p-2 hover:bg-gray-100 rounded-full text-gray-500 cursor-pointer transition-colors"
