@@ -792,7 +792,7 @@ const ProposalSubmission = () => {
   };
 
   return (
-    <div className="min-h-screen p-3 md:p-6 lg:p-2 max-w-4xl mx-auto">
+    <div className="min-h-screen p-3 mt-6 sm:mt-0 md:p-6 lg:p-2 max-w-4xl mx-auto">
       {/* Header Area */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-8 gap-5">
         {/* Title & Back Button */}
