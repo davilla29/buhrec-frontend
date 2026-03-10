@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../utils/axios";
 import toast from "react-hot-toast";
+import { getInitials } from "../../utils/initialsHelper";
 
 function ReviewersList() {
   const [reviewers, setReviewers] = useState([]);
@@ -119,25 +120,29 @@ function ReviewersList() {
                   className="bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between cursor-pointer hover:shadow-md hover:border-blue-100 transition-all active:scale-[0.98] gap-4"
                 >
                   <div className="flex items-center gap-4">
-                    <img
-                      src={
-                        reviewer.photoUrl || "https://via.placeholder.com/60"
-                      }
-                      className="w-12 h-12 md:w-14 md:h-14 rounded-full object-cover border border-gray-200 shrink-0 bg-gray-50"
-                      alt={reviewer.fullName}
-                    />
+                    <div className="w-15 h-15 md:w-20 md:h-20 sm:w-24 sm:h-24 rounded-full bg-blue-50 text-blue-600 font-bold flex items-center justify-center text-xl sm:text-3xl overflow-hidden shrink-0 ">
+                      {reviewer.photoUrl ? (
+                        <img
+                          src={reviewer.photoUrl}
+                          alt="Avatar"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        getInitials(reviewer.fullName || reviewer.name)
+                      )}
+                    </div>
 
                     <div>
-                      <h3 className="font-semibold text-gray-800 text-sm md:text-base leading-tight">
+                      <h3 className="font-semibold text-gray-800 text-md md:text-base leading-tight">
                         {reviewer.title} {reviewer.fullName}
                       </h3>
-                      <p className="text-xs md:text-sm text-gray-500 mt-1 line-clamp-1">
+                      <p className="text-sm md:text-sm text-gray-500 mt-1 line-clamp-1">
                         {reviewer.specialization}
                       </p>
                     </div>
                   </div>
 
-                  <div className="text-[#002B7F] text-xs md:text-sm font-semibold sm:text-right bg-blue-50 sm:bg-transparent px-3 py-1.5 sm:px-0 sm:py-0 rounded-full self-start sm:self-auto">
+                  <div className="text-[#002B7F] text-sm md:text-sm font-semibold sm:text-right bg-blue-50 sm:bg-transparent px-3 py-1.5 sm:px-0 sm:py-0 rounded-full self-start sm:self-auto">
                     {reviewer.ongoingAssignments || 0} ongoing
                   </div>
                 </div>
@@ -182,14 +187,19 @@ function ReviewersList() {
             {/* Top Section */}
             <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between mb-8 sm:mb-10 gap-4 text-center sm:text-left relative">
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6 w-full">
-                <img
-                  src={
-                    selectedReviewer.photoUrl ||
-                    "https://via.placeholder.com/100"
-                  }
-                  className="w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-gray-50 shadow-sm shrink-0 bg-gray-100"
-                  alt="Profile"
-                />
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-blue-50 text-blue-600 font-bold flex items-center justify-center text-2xl sm:text-3xl overflow-hidden shrink-0 ">
+                  {selectedReviewer.photoUrl ? (
+                    <img
+                      src={selectedReviewer.photoUrl}
+                      alt="Avatar"
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    getInitials(
+                      selectedReviewer.fullName || selectedReviewer.name,
+                    )
+                  )}
+                </div>
 
                 <div className="pt-2">
                   <h2 className="text-xl sm:text-2xl font-bold text-gray-900 leading-tight pr-0 sm:pr-8">
