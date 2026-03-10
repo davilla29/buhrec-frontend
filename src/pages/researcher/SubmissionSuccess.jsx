@@ -35,11 +35,11 @@ const SubmissionSuccess = () => {
         {/* Animated Success Icon */}
         <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 mx-auto mb-8 md:mb-12">
           {/* Outer Ring */}
-          <div className="absolute inset-0 border-[4px] md:border-[6px] border-[#003399] rounded-full opacity-10 animate-pulse"></div>
+          <div className="absolute inset-0 border-4 md:border-[6px] border-[#003399] rounded-full opacity-10 animate-pulse"></div>
           {/* Inner Circle */}
-          <div className="w-full h-full border-[4px] md:border-[6px] border-[#003399] rounded-full flex items-center justify-center bg-white shadow-xl relative z-10">
+          <div className="w-full h-full border-4 md:border-[6px] border-[#003399] rounded-full flex items-center justify-center bg-white shadow-xl relative z-10">
             <Check 
-              className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-[90px] lg:h-[90px] text-[#003399]" 
+              className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 lg:w-22.5 lg:h-22.5 text-[#003399]" 
               strokeWidth={4} 
             />
           </div>

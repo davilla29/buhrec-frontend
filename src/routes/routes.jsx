@@ -96,7 +96,7 @@ export const routes = createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>
       <Route index element={<HomePage />} />
       <Route path="about-us" element={<AboutUsPage />} />
-      {/* <Route path="test" element={<SubmissionSuccessPage />} /> */}
+      {/* <Route path="test" element={<ProposalPaymentSuccessPage />} /> */}
       <Route path="objectives" element={<ObjectivesPage />} />
       <Route path="nhrec-mission" element={<NhrecMissionPage />} />
       <Route path="sops-guidelines" element={<SopsGuidelinesPage />} />
