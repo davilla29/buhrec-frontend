@@ -13,8 +13,8 @@ const ProposalSubmitted = () => {
         </h1> */}
 
         <button
-          onClick={() => navigate("/dashboard")}
-          className="w-full sm:w-auto bg-[#003B95] hover:bg-blue-900 text-white px-8 py-3.5 sm:py-2.5 rounded-full font-bold text-sm transition-all active:scale-95 shadow-md shadow-blue-900/20"
+          onClick={() => navigate("/researcher/dashboard")}
+          className="w-full sm:w-auto cursor-pointer bg-[#003B95] hover:bg-blue-900 text-white px-8 py-3.5 sm:py-2.5 rounded-full font-bold text-sm transition-all active:scale-95 shadow-md shadow-blue-900/20"
         >
           Go to Dashboard
         </button>
