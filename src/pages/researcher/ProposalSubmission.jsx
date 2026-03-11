@@ -43,7 +43,15 @@ const ProposalSubmission = () => {
     turnItInReport: null,
   });
 
-  const isPaid = status !== "Draft";
+  // const isPaid = status !== "Draft";
+  const isPaid = [
+    "Paid",
+    "Waiting to be assigned",
+    "Under Review",
+    "Awaiting Modifications",
+    "Approved",
+    "Rejected",
+  ].includes(status);
 
   useEffect(() => {
     const fetchDraft = async () => {
