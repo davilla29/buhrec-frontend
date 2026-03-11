@@ -59,6 +59,9 @@ const ProposalPaymentPage = lazy(
 const ProposalPaymentSuccessPage = lazy(
   () => import("../pages/researcher/ProposalPaymentSuccess"),
 );
+const ProposalPaymentFailedPage = lazy(
+  () => import("../pages/researcher/ProposalPaymentFailed"),
+);
 const ProposalSubmittedPage = lazy(
   () => import("../pages/researcher/ProposalSubmitted"),
 );
@@ -184,6 +187,10 @@ export const routes = createRoutesFromElements(
         <Route
           path="proposals/:proposalId/payment-success"
           element={<ProposalPaymentSuccessPage />}
+        />
+        <Route
+          path="proposals/:proposalId/payment-failed"
+          element={<ProposalPaymentFailedPage />}
         />
         <Route
           path="proposals/:proposalId/submitted"
