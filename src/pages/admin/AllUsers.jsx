@@ -69,7 +69,7 @@ const AllUsers = () => {
   };
 
   return (
-    <div className="bg-[#FAFAFA] min-h-screen p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-4">
       <div className="max-w-6xl mx-auto">
         <header className="mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Manage Users</h1>
@@ -84,7 +84,7 @@ const AllUsers = () => {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all ${
+              className={`px-4 cursor-pointer sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all ${
                 activeTab === tab
                   ? 'bg-[#003B95] text-white shadow-md'
                   : 'bg-gray-200 text-gray-600 hover:bg-gray-300'

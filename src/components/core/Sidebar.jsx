@@ -213,6 +213,12 @@ const ALL_NAV_LINKS = [
     icon: <FlaskConical size={20} />,
   },
   {
+    label: "All Users",
+    path: "/admin/dashboard/all-users",
+    roles: ["admin"],
+    icon: <Users size={20} />,
+  },
+  {
     label: "Assignments",
     path: "/admin/dashboard/assignments",
     roles: ["admin"],
