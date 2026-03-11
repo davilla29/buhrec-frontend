@@ -44,6 +44,9 @@ const AdminProposalDetailsPage = lazy(
 const AdminProposalAssignPage = lazy(
   () => import("../pages/admin/AssignProposal"),
 );
+const AllUsersPage = lazy(
+  () => import("../pages/admin/AllUsers"),
+);
 
 // Researcher
 const ResearcherDashboardPage = lazy(
@@ -126,6 +129,7 @@ export const routes = createRoutesFromElements(
           element={<ReviewerAddedSuccessPage />}
         />
         <Route path="assignments" element={<AdminAssignmentsPage />} />
+        <Route path="all-users" element={<AllUsersPage />} />
         <Route
           path="assignments/un-assigned"
           element={<AdminUnassignedAssignmentsPage />}
