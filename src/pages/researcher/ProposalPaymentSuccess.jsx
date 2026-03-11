@@ -1,14 +1,20 @@
-import React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom"; // <-- Back to useParams
 import axios from "../../utils/axios";
 import toast from "react-hot-toast";
 
 const ProposalPaymentSuccess = () => {
   const navigate = useNavigate();
-  const { proposalId } = useParams();
-  const [submitting, setSubmitting] = React.useState(false);
+  const { proposalId } = useParams(); // <-- Grab ID directly from the URL path defined in your <Route />
+
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmitProposal = async () => {
+    if (!proposalId) {
+      toast.error("Proposal ID is missing.");
+      return;
+    }
+
     try {
       setSubmitting(true);
       const res = await axios.post(
@@ -16,22 +22,20 @@ const ProposalPaymentSuccess = () => {
       );
 
       if (res.data.success) {
-        navigate(`/proposals/${proposalId}/submitted`);
+        navigate(`/researcher/dashboard/proposals/${proposalId}/submitted`);
       }
     } catch (err) {
       console.error(err);
-      toast.error("Submission failed. Try again.");
+      toast.error(
+        err.response?.data?.message || "Submission failed. Try again.",
+      );
       setSubmitting(false);
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-6 md:p-8">
-      {/* Card Container: 
-        Wrapping the content in a white card makes it look substantially better 
-        on large screens instead of letting it float in the grey background.
-      */}
-      <div className=" w-full max-w-lg px-6 py-12 md:px-12 md:py-16 rounded-4xl flex flex-col items-center text-center animate-in zoom-in-95 fade-in duration-300 ease-out">
+      <div className="w-full max-w-lg px-6 py-12 md:px-12 md:py-16 rounded-4xl flex flex-col items-center text-center animate-in zoom-in-95 fade-in duration-300 ease-out">
         {/* Animated Checkmark Icon */}
         <div className="w-24 h-24 md:w-28 md:h-28 rounded-full border-4 border-green-500 bg-green-50 flex items-center justify-center mb-6 md:mb-8">
           <svg
