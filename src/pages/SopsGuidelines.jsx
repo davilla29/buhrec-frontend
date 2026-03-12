@@ -24,19 +24,59 @@ const SopsGuidelines = () => {
       desc: "State the general and specific objectives of the research clearly and precisely.",
     },
     {
+      title: "Literature Review",
+      desc: "Summarize relevant previous studies and identify gaps in knowledge that the proposed research intends to address.",
+    },
+    {
       title: "Methodology",
       desc: "Describe the research design, sampling technique, data collection methods, and data analysis plan.",
     },
-    // ... add remaining steps here
+    {
+      title: "Study Population",
+      desc: "Define the target population, inclusion and exclusion criteria, and the sample size with justification.",
+    },
+    {
+      title: "Study Product (where applicable)",
+      desc: "If applicable, describe the product being studied, including dosage, formulation, administration route, and storage requirements.",
+    },
+    {
+      title: "Study Procedure (where applicable)",
+      desc: "Outline the step-by-step procedure for the study, including the sequence of events and timelines for each phase.",
+    },
+    {
+      title: "Assessment of Safety (where applicable)",
+      desc: "Describe the safety monitoring plan, adverse event reporting procedures, and any stopping rules for the study.",
+    },
+    {
+      title: "Clinical Management (where applicable)",
+      desc: "Describe the clinical management plan, including how participants will be monitored and managed during and after the study.",
+    },
+    {
+      title: "Statistics, data handling and record keeping",
+      desc: "Explain the statistical methods to be used, data management procedures, confidentiality measures, and record-keeping protocols.",
+    },
+    {
+      title: "Other requirements",
+      desc: "Include any additional documents such as informed consent forms, questionnaires, data collection tools, and CVs of researchers.",
+    },
+    {
+      title: "Further Information",
+      desc: "Any additional information relevant to the ethical review, including funding sources, potential conflicts of interest, and institutional approvals.",
+    },
   ];
 
   const consentChecklist = [
+    "End of the research",
     "Purpose(s) of research",
-    "Procedures of the research",
+    "Very brief information on the procedures of the research",
     "Compensation (available or not)",
-    "Withdrawal procedures",
-    "Confidentiality modality",
-    "Contact person information",
+    "Consequences of participants' decision to withdraw from research also procedure for orderly termination of participation",
+    "Modality of providing treatments and action(s) to be taken in case of injury or adverse event (where applicable)",
+    "What happens to research results, participants and communities when the research has completed (where applicable)",
+    "Post-research benefits to participants (where applicable)",
+    "Any apparent or potential conflict of interest by the researcher",
+    "Contact person information including contact address, telephone, fax, e-mail and any other relevant information of researcher(s)",
+    "Name and signature of researcher and date",
   ];
 
   return (
@@ -48,17 +88,30 @@ const SopsGuidelines = () => {
       </section>
 
       <section className="py-16 px-4 max-w-5xl mx-auto space-y-12">
+        <div className="space-y-6 text-center">
+          <h2 className="text-xl font-black text-yellow-500 uppercase tracking-widest">
+            Submission PROCEDURE
+          </h2>
+          <div className="bg-gray-50 border border-gray-100 p-8 rounded-3xl text-sm sm:text-base text-gray-800 font-bold leading-relaxed max-w-4xl mx-auto italic">
+            Categories of researcher: BSc., MSc., M.Phil., PhD, PG Diploma,
+            Independent researchers.
+            <br />
+            <br />A well written protocol, which contains all the information
+            listed below, as may be relevant to each discipline, should be
+            submitted when requesting for Ethical clearance.
+          </div>
+        </div>
         <div className="flex justify-center border-b border-gray-100">
           <div className="flex gap-12">
             <button
               onClick={() => setSopSubView("steps")}
-              className={`pb-4 text-sm font-black uppercase tracking-widest transition-all ${sopSubView === "steps" ? "text-yellow-500 border-b-4 border-yellow-500" : "text-gray-400"}`}
+              className={`pb-4 text-sm cursor-pointer font-black uppercase tracking-widest transition-all ${sopSubView === "steps" ? "text-yellow-500 border-b-4 border-yellow-500" : "text-gray-400"}`}
             >
               Steps
             </button>
             <button
               onClick={() => setSopSubView("consent")}
-              className={`pb-4 text-sm font-black uppercase tracking-widest transition-all ${sopSubView === "consent" ? "text-yellow-500 border-b-4 border-yellow-500" : "text-gray-400"}`}
+              className={`pb-4 text-sm cursor-pointer font-black uppercase tracking-widest transition-all ${sopSubView === "consent" ? "text-yellow-500 border-b-4 border-yellow-500" : "text-gray-400"}`}
             >
               Consent Checklist
             </button>
