@@ -244,6 +244,7 @@ import {
   CreditCard,
   FlaskConical,
   Menu,
+  Settings,
   X,
 } from "lucide-react";
 import { logout } from "../../redux/auth/authSlice";
@@ -300,6 +301,12 @@ const ALL_NAV_LINKS = [
     path: "/reviewer/dashboard/notifications",
     roles: ["reviewer"],
     icon: <Bell size={20} />,
+  },
+  {
+    label: "Settings",
+    path: "/reviewer/dashboard/settings",
+    roles: ["reviewer"],
+    icon: <Settings size={20} />,
   },
 
   // Researcher sidebar

@@ -183,8 +183,8 @@ const ReviewerSettings = () => {
       .slice(0, 2) || "RV";
 
   return (
-    <div className="bg-[#FAFAFA] min-h-screen p-4 sm:p-8">
-      <div className="max-w-2xl mx-auto bg-white p-6 sm:p-10 rounded-3xl shadow-sm border border-gray-100">
+    <div className="min-h-screen p-4 sm:p-2">
+      <div className="max-w-4xl mx-auto  p-6 sm:p-10">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-10">
           <div className="flex items-center gap-3 w-full sm:w-auto">
@@ -202,7 +202,7 @@ const ReviewerSettings = () => {
             className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#003B95] hover:bg-blue-900 disabled:bg-blue-300 text-white px-8 py-2.5 rounded-full font-bold text-sm transition-all active:scale-95 shadow-md"
           >
             {saving ? (
-              <div className="animate-spin h-4 w-4 border-b-2 border-white rounded-full"></div>
+              <div className="animate-spin cursor-pointer h-4 w-4 border-b-2 border-white rounded-full"></div>
             ) : (
               <Save size={16} />
             )}
@@ -398,7 +398,7 @@ const ReviewerSettings = () => {
             <button
               onClick={handlePasswordChange}
               disabled={pwLoading}
-              className="mt-2 w-full sm:w-auto bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-full font-bold text-sm transition-all active:scale-95 disabled:bg-gray-400 disabled:cursor-not-allowed"
+              className="mt-2 w-full cursor-pointer sm:w-auto bg-gray-900 hover:bg-black text-white px-8 py-3 rounded-full font-bold text-sm transition-all active:scale-95 disabled:bg-gray-400 disabled:cursor-not-allowed"
             >
               {pwLoading ? "Updating..." : "Update Password"}
             </button>
