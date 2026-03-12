@@ -98,9 +98,7 @@ const ReviewerSettings = () => {
         formData.append("photo", selectedFile); // Ensure your multer expects 'photo'
       }
 
-      const res = await axios.put("/reviewer/profile", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const res = await axios.put("/reviewer/profile", formData);
 
       if (res.data.success) {
         toast.success("Profile updated successfully!");
@@ -199,10 +197,10 @@ const ReviewerSettings = () => {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#003B95] hover:bg-blue-900 disabled:bg-blue-300 text-white px-8 py-2.5 rounded-full font-bold text-sm transition-all active:scale-95 shadow-md"
+            className="w-full sm:w-auto flex cursor-pointer  items-center justify-center gap-2 bg-[#003B95] hover:bg-blue-900 disabled:bg-blue-300 text-white px-8 py-2.5 rounded-full font-bold text-sm transition-all active:scale-95 shadow-md"
           >
             {saving ? (
-              <div className="animate-spin cursor-pointer h-4 w-4 border-b-2 border-white rounded-full"></div>
+              <div className="animate-spin h-4 w-4 border-b-2 border-white rounded-full"></div>
             ) : (
               <Save size={16} />
             )}
