@@ -296,12 +296,7 @@ const ALL_NAV_LINKS = [
     roles: ["reviewer"],
     icon: <Briefcase size={20} />,
   },
-  {
-    label: "Notifications",
-    path: "/reviewer/dashboard/notifications",
-    roles: ["reviewer"],
-    icon: <Bell size={20} />,
-  },
+
   {
     label: "Settings",
     path: "/reviewer/dashboard/settings",
@@ -336,6 +331,7 @@ const Sidebar = () => {
 
   // Dynamic dashboard path
   const dashboardPath = `/${user.role}/dashboard`;
+  const notificationPath = `/${user.role}/dashboard/notifications`;
 
   // Add dynamic dashboard link at the top
   const dynamicLinks = [
@@ -345,7 +341,15 @@ const Sidebar = () => {
       roles: ["reviewer", "researcher", "admin"],
       icon: <LayoutDashboard size={20} />,
     },
+
     ...ALL_NAV_LINKS,
+
+    {
+      label: "Notifications",
+      path: notificationPath,
+      roles: ["reviewer", "researcher", "admin"],
+      icon: <Bell size={20} />,
+    },
   ];
 
   // Filter links based on user role
