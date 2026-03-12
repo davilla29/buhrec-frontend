@@ -44,12 +44,11 @@ const AdminProposalDetailsPage = lazy(
 const AdminProposalAssignPage = lazy(
   () => import("../pages/admin/AssignProposal"),
 );
-const AllUsersPage = lazy(
-  () => import("../pages/admin/AllUsers"),
-);
+const AllUsersPage = lazy(() => import("../pages/admin/AllUsers"));
 const AllResearchersPage = lazy(() => import("../pages/admin/AllResearchers"));
-const ResearcherProposalsPage = lazy(() => import("../pages/admin/ResearcherProposals"));
-
+const ResearcherProposalsPage = lazy(
+  () => import("../pages/admin/ResearcherProposals"),
+);
 
 // Researcher
 const ResearcherDashboardPage = lazy(
@@ -81,7 +80,9 @@ const SubmissionSuccessPage = lazy(
   () => import("../pages/researcher/SubmissionSuccess"),
 );
 const ProposalDecisionPage = lazy(() => import("../pages/ProposalDecision"));
-const ResearcherSettingsPage = lazy(() => import("../pages/researcher/ResearcherSettings"));
+const ResearcherSettingsPage = lazy(
+  () => import("../pages/researcher/ResearcherSettings"),
+);
 
 // Reviewer
 const ReviewerDashboardPage = lazy(

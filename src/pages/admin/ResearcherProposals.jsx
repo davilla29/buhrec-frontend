@@ -160,9 +160,11 @@ function ResearcherProposals() {
 
                   <button
                     onClick={() =>
-                      navigate(`/admin/proposals/${proposal._id}/details`)
+                      navigate(
+                        `/admin/dashboard/proposals/${proposal._id}/details`,
+                      )
                     }
-                    className={`shrink-0 px-6 py-2 rounded-full text-xs font-black uppercase tracking-wider text-white transition-colors ${
+                    className={`shrink-0 cursor-pointer px-6 py-2 rounded-full text-xs font-black uppercase tracking-wider text-white transition-colors ${
                       isGreenButton
                         ? "bg-[#16A34A] hover:bg-green-700"
                         : "bg-[#003B95] hover:bg-blue-900"

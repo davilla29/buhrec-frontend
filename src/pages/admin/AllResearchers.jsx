@@ -87,7 +87,7 @@ const ResearcherModal = ({ researcher, onClose }) => {
                 {researcher.completed || 0}
               </p>
             </div>
-            <div className="bg-[#F3F4F6] rounded-2xl p-5 flex-2 relative flex flex-row sm:flex-col justify-between sm:justify-center items-center sm:items-start group cursor-pointer hover:bg-gray-200 transition-colors">
+            <div className="bg-[#F3F4F6] rounded-2xl p-5 flex-2 relative flex flex-row sm:flex-col justify-between sm:justify-center items-center sm:items-start group  hover:bg-gray-200 transition-colors">
               <div>
                 <p className="text-[10px] font-black text-gray-500 uppercase tracking-wider mb-1 sm:mb-2 leading-tight">
                   Ongoing Proposal Status
@@ -96,9 +96,9 @@ const ResearcherModal = ({ researcher, onClose }) => {
                   {researcher.ongoingStatus || "None"}
                 </p>
               </div>
-              <div className="sm:absolute sm:right-5 sm:top-1/2 sm:-translate-y-1/2 w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+              {/* <div className="sm:absolute sm:right-5 sm:top-1/2 sm:-translate-y-1/2 w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
                 <ChevronRight size={18} className="text-[#003B95]" />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
