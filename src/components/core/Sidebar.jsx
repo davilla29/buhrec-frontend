@@ -244,6 +244,7 @@ import {
   CreditCard,
   FlaskConical,
   Menu,
+  Settings,
   X,
 } from "lucide-react";
 import { logout } from "../../redux/auth/authSlice";
@@ -301,6 +302,12 @@ const ALL_NAV_LINKS = [
     roles: ["reviewer"],
     icon: <Bell size={20} />,
   },
+  {
+    label: "Settings",
+    path: "/reviewer/dashboard/settings",
+    roles: ["reviewer"],
+    icon: <Settings size={20} />,
+  },
 
   // Researcher sidebar
   {
@@ -308,6 +315,13 @@ const ALL_NAV_LINKS = [
     path: "/researcher/dashboard/my-proposals",
     roles: ["researcher"],
     icon: <FileText size={20} />,
+  },
+
+  {
+    label: "Settings",
+    path: "/researcher/dashboard/settings",
+    roles: ["researcher"],
+    icon: <Settings size={20} />,
   },
 ];
 
@@ -429,9 +443,9 @@ const Sidebar = () => {
             {/* User Profile */}
             <div className="flex items-center space-x-3 px-2">
               <div className="w-10 h-10 shrink-0 rounded-full bg-white flex items-center justify-center text-[#003B95] font-bold text-lg border-2 border-white/20 overflow-hidden shadow-sm">
-                {user.profilePicture ? (
+                {user.photoUrl ? (
                   <img
-                    src={user.profilePicture}
+                    src={user.photoUrl}
                     alt="Profile"
                     className="w-full h-full object-cover"
                   />
@@ -452,7 +466,7 @@ const Sidebar = () => {
             {/* Logout Button */}
             <button
               onClick={handleLogout}
-              className="flex items-center justify-center space-x-2 w-full bg-[#B91C1C] hover:bg-red-800 text-white py-2.5 px-4 rounded-lg font-bold text-sm transition-all active:scale-95 shadow-sm"
+              className="flex items-center cursor-pointer justify-center space-x-2 w-full bg-[#B91C1C] hover:bg-red-800 text-white py-2.5 px-4 rounded-lg font-bold text-sm transition-all active:scale-95 shadow-sm"
             >
               <LogOut size={18} />
               <span>Log out</span>

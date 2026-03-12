@@ -47,6 +47,8 @@ const AdminProposalAssignPage = lazy(
 const AllUsersPage = lazy(
   () => import("../pages/admin/AllUsers"),
 );
+const AllResearchersPage = lazy(() => import("../pages/admin/AllResearchers"));
+
 
 // Researcher
 const ResearcherDashboardPage = lazy(
@@ -78,7 +80,7 @@ const SubmissionSuccessPage = lazy(
   () => import("../pages/researcher/SubmissionSuccess"),
 );
 const ProposalDecisionPage = lazy(() => import("../pages/ProposalDecision"));
-const AllResearchersPage = lazy(() => import("../pages/admin/AllResearchers"));
+const ResearcherSettingsPage = lazy(() => import("../pages/researcher/ResearcherSettings"));
 
 // Reviewer
 const ReviewerDashboardPage = lazy(
@@ -95,6 +97,9 @@ const ApplicationInfoPage = lazy(
 );
 const ReviewerResponsesPage = lazy(
   () => import("../pages/reviewer/ReviewerResponses"),
+);
+const ReviewerSettingsPage = lazy(
+  () => import("../pages/reviewer/ReviewerSettings"),
 );
 
 export const routes = createRoutesFromElements(
@@ -169,6 +174,7 @@ export const routes = createRoutesFromElements(
           element={<ApplicationInfoPage />}
         />
         <Route path="responses" element={<ReviewerResponsesPage />} />
+        <Route path="settings" element={<ReviewerSettingsPage />} />
         <Route path="notifications" element={<NotificationsPage />} />
         {/* <Route path="assigned-proposals" element={<AssignedProposals />} />
         <Route path="reviews" element={<Reviews />} /> */}
@@ -219,9 +225,9 @@ export const routes = createRoutesFromElements(
         ;
         <Route path="notifications" element={<NotificationsPage />} />
         <Route path="*" element={<DashboardNotFoundPage />} />
-        {/* <Route path="submit-proposal" element={<SubmitProposal />} />
+        <Route path="settings" element={<ResearcherSettingsPage />} />
      
-         */}
+        
       </Route>
     </Route>
   </>,
