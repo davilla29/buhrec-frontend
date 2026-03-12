@@ -28,6 +28,12 @@ const AdminPaymentsListPage = lazy(() => import("../pages/admin/Payments"));
 const AdminReviewersListPage = lazy(
   () => import("../pages/admin/ReviewersList"),
 );
+const AdminReviewerAssignemntsPage = lazy(
+  () => import("../pages/admin/Reviewer_Assignments/AdminReviewerAssignments"),
+);
+const AdminReviewerAssignmentDetailsPage = lazy(
+  () => import("../pages/admin/Reviewer_Assignments/AdminAssignmentDetails"),
+);
 const AdminAddReviewerPage = lazy(() => import("../pages/admin/AddReviewer"));
 const ReviewerAddedSuccessPage = lazy(
   () => import("../pages/admin/ReviewerAddedSuccess"),
@@ -44,11 +50,11 @@ const AdminProposalDetailsPage = lazy(
 const AdminProposalAssignPage = lazy(
   () => import("../pages/admin/AssignProposal"),
 );
-const AllUsersPage = lazy(
-  () => import("../pages/admin/AllUsers"),
-);
+const AllUsersPage = lazy(() => import("../pages/admin/AllUsers"));
 const AllResearchersPage = lazy(() => import("../pages/admin/AllResearchers"));
-
+const ResearcherProposalsPage = lazy(
+  () => import("../pages/admin/ResearcherProposals"),
+);
 
 // Researcher
 const ResearcherDashboardPage = lazy(
@@ -80,7 +86,9 @@ const SubmissionSuccessPage = lazy(
   () => import("../pages/researcher/SubmissionSuccess"),
 );
 const ProposalDecisionPage = lazy(() => import("../pages/ProposalDecision"));
-const ResearcherSettingsPage = lazy(() => import("../pages/researcher/ResearcherSettings"));
+const ResearcherSettingsPage = lazy(
+  () => import("../pages/researcher/ResearcherSettings"),
+);
 
 // Reviewer
 const ReviewerDashboardPage = lazy(
@@ -123,11 +131,20 @@ export const routes = createRoutesFromElements(
       <Route path="*" element={<NotFound />} />
     </Route>
 
+    {/* ADMIN */}
     <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
       <Route path="admin/dashboard" element={<DashboardLayout />}>
         <Route index element={<AdminDashboardPage />} />
         <Route path="payments" element={<AdminPaymentsListPage />} />
         <Route path="reviewers" element={<AdminReviewersListPage />} />
+        <Route
+          path="reviewers/:reviewerId/assignments"
+          element={<AdminReviewerAssignemntsPage />}
+        />
+        <Route
+          path="assignments/:assignmentId/details"
+          element={<AdminReviewerAssignmentDetailsPage />}
+        />
         <Route path="reviewers/add" element={<AdminAddReviewerPage />} />
         <Route
           path="reviewers/add/success"
@@ -148,6 +165,10 @@ export const routes = createRoutesFromElements(
           element={<AdminProposalAssignPage />}
         />
         <Route path="researchers" element={<AllResearchersPage />} />
+        <Route
+          path="researchers/:researcherId/proposals"
+          element={<ResearcherProposalsPage />}
+        />
         <Route path="notifications" element={<NotificationsPage />} />
         <Route path="*" element={<DashboardNotFoundPage />} />
 
@@ -226,8 +247,6 @@ export const routes = createRoutesFromElements(
         <Route path="notifications" element={<NotificationsPage />} />
         <Route path="*" element={<DashboardNotFoundPage />} />
         <Route path="settings" element={<ResearcherSettingsPage />} />
-     
-        
       </Route>
     </Route>
   </>,
