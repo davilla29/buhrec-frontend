@@ -184,6 +184,24 @@ const ReviewerDashboard = () => {
     }
   };
 
+  const handleDecline = async (assignmentId) => {
+    const reason = window.prompt("Please provide a reason for declining:");
+    if (reason === null) return;
+
+    try {
+      setProcessingId(assignmentId);
+      await axios.patch(`/reviewer/assignments/${assignmentId}/decline`, {
+        reason,
+      });
+      toast.success("Assignment declined");
+      fetchAssignments();
+    } catch (error) {
+      toast.error("Failed to decline assignment");
+    } finally {
+      setProcessingId(null);
+    }
+  };
+
   if (loading)
     return (
       <div className="flex h-screen items-center justify-center bg-[#f5f5f5]">
@@ -268,8 +286,14 @@ const ReviewerDashboard = () => {
                     {processingId === assignment.id ? "Accepting..." : "Accept"}
                   </button>
 
-                  <button className="bg-[#8b0000] hover:bg-[#6b0000] text-white px-8 py-2 rounded-full text-sm font-bold">
-                    Decline
+                  <button
+                    onClick={() => handleDecline(assignment._id)}
+                    disabled={processingId === assignment.id}
+                    className="bg-[#8b0000] hover:bg-[#6b0000] text-white px-6 py-1.5 rounded-full text-sm font-bold transition cursor-pointer shadow-sm"
+                  >
+                    {processingId === assignment.id
+                      ? "Declining..."
+                      : "Declining"}
                   </button>
                 </div>
               </div>
