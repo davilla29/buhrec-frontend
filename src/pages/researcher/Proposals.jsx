@@ -238,8 +238,7 @@ function Proposals() {
 
               const reviewerName =
                 proposal.reviewerName || "Pending Assignment";
-              const reviewerAvatar =
-                proposal.reviewer?.avatar || "https://via.placeholder.com/30";
+              const reviewerAvatar = proposal.reviewerPhoto || "";
 
               /* ------------------------------------------ */
               /* Card Navigation Logic                      */
