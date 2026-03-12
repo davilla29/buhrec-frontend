@@ -316,6 +316,13 @@ const ALL_NAV_LINKS = [
     roles: ["researcher"],
     icon: <FileText size={20} />,
   },
+
+  {
+    label: "Settings",
+    path: "/researcher/dashboard/settings",
+    roles: ["researcher"],
+    icon: <Settings size={20} />,
+  },
 ];
 
 const Sidebar = () => {
