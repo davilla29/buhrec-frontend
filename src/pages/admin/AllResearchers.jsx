@@ -107,7 +107,7 @@ const ResearcherModal = ({ researcher, onClose }) => {
           <button
             onClick={() => {
               onClose();
-              navigate(`/admin/researchers/${researcher.id}/proposals`);
+              navigate(`/admin/dashboard/researchers/${researcher.id}/proposals`);
             }}
             className="w-full sm:w-auto cursor-pointer bg-[#003B95] text-white px-12 py-4 rounded-full font-black text-xs uppercase tracking-[0.2em] hover:bg-blue-900 transition-all shadow-lg active:scale-95"
           >

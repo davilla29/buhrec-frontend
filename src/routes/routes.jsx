@@ -48,6 +48,7 @@ const AllUsersPage = lazy(
   () => import("../pages/admin/AllUsers"),
 );
 const AllResearchersPage = lazy(() => import("../pages/admin/AllResearchers"));
+const ResearcherProposalsPage = lazy(() => import("../pages/admin/ResearcherProposals"));
 
 
 // Researcher
@@ -123,6 +124,7 @@ export const routes = createRoutesFromElements(
       <Route path="*" element={<NotFound />} />
     </Route>
 
+    {/* ADMIN */}
     <Route element={<ProtectedRoute allowedRoles={["admin"]} />}>
       <Route path="admin/dashboard" element={<DashboardLayout />}>
         <Route index element={<AdminDashboardPage />} />
@@ -148,6 +150,10 @@ export const routes = createRoutesFromElements(
           element={<AdminProposalAssignPage />}
         />
         <Route path="researchers" element={<AllResearchersPage />} />
+        <Route
+          path="researchers/:researcherId/proposals"
+          element={<ResearcherProposalsPage />}
+        />
         <Route path="notifications" element={<NotificationsPage />} />
         <Route path="*" element={<DashboardNotFoundPage />} />
 
@@ -226,8 +232,6 @@ export const routes = createRoutesFromElements(
         <Route path="notifications" element={<NotificationsPage />} />
         <Route path="*" element={<DashboardNotFoundPage />} />
         <Route path="settings" element={<ResearcherSettingsPage />} />
-     
-        
       </Route>
     </Route>
   </>,
