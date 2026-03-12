@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "../../utils/axios";
 import toast from "react-hot-toast";
 import { Plus, X, ChevronDown, Info } from "lucide-react";
+import SmartDocumentViewer from "../../components/SmartDocumentViewer";
 
 const ProposalReview = () => {
   const { assignmentId, version: versionParam } = useParams();
@@ -222,12 +223,13 @@ const ProposalReview = () => {
         <div className="w-full max-w-5xl bg-white shadow-sm rounded-lg overflow-hidden relative border border-gray-200">
           {/* Google Docs Iframe */}
           <div className="relative w-full h-[80vh] bg-gray-50">
-            <iframe
+            {/* <iframe
               src={`https://docs.google.com/gview?url=${encodeURIComponent(docUrl)}&embedded=true`}
               title="Proposal Document"
               className="w-full h-full border-none"
               loading="lazy"
-            />
+            /> */}
+            <SmartDocumentViewer url={docUrl} />
 
             {/* Floating Add Comment Button */}
             <button
