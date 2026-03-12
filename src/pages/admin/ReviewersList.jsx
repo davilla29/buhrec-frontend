@@ -334,7 +334,14 @@ function ReviewersList() {
 
             {/* Button */}
             <div className="text-center pt-2">
-              <button className="w-full sm:w-auto bg-[#002B7F] text-white px-10 py-3.5 sm:py-3 rounded-full text-sm font-semibold cursor-pointer hover:bg-blue-900 transition-all active:scale-95 shadow-lg shadow-blue-900/20">
+              <button
+                onClick={() =>
+                  navigate(
+                    `/admin/dashboard/reviewers/${selectedReviewer._id}/assignments`,
+                  )
+                }
+                className="w-full sm:w-auto bg-[#002B7F] text-white px-10 py-3.5 sm:py-3 rounded-full text-sm font-semibold cursor-pointer hover:bg-blue-900 transition-all active:scale-95 shadow-lg shadow-blue-900/20"
+              >
                 View Assignments
               </button>
             </div>
