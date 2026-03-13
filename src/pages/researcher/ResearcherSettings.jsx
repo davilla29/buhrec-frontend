@@ -46,7 +46,7 @@ const ResearcherSettings = () => {
             fullName: r.fullName || "",
             institution: r.institution || "",
             occupation: r.occupation || "",
-            phone: r.phone || "",
+            phoneNumber: r.phoneNumber || "",
             department: r.department || "",
           });
           setPhotoPreview(r.photoUrl || null);
@@ -90,7 +90,7 @@ const ResearcherSettings = () => {
       formData.append("fullName", form.fullName);
       formData.append("institution", form.institution);
       formData.append("occupation", form.occupation);
-      formData.append("phone", form.phone);
+      formData.append("phoneNumber", form.phoneNumber);
       formData.append("department", form.department);
 
       if (selectedFile) {
@@ -148,7 +148,8 @@ const ResearcherSettings = () => {
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#003B95]"></div>
+        {/* <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#003B95]"></div> */}
+        <div className="w-8 h-8 border-4 border-gray-200 border-t-[#003B95] rounded-full animate-spin" />
       </div>
     );
   }
@@ -197,7 +198,7 @@ const ResearcherSettings = () => {
             className="w-full sm:w-auto flex cursor-pointer items-center justify-center gap-2 bg-[#003B95] hover:bg-blue-900 disabled:bg-blue-300 text-white px-8 py-2.5 rounded-full font-bold text-sm transition-all active:scale-95 shadow-md"
           >
             {saving ? (
-              <div className="animate-spin h-4 w-4 border-b-2 border-white rounded-full"></div>
+              <div className="w-3 h-3 border-4 border-gray-200 border-t-[#003B95] rounded-full animate-spin" />
             ) : (
               <Save size={16} />
             )}
@@ -306,9 +307,9 @@ const ResearcherSettings = () => {
               Phone
             </label>
             <input
-              name="phone"
+              name="phoneNumber"
               className={INPUT_CLS}
-              value={form.phone}
+              value={form.phoneNumber}
               onChange={handleInputChange}
               placeholder="e.g. +234 801 234 5678"
             />
