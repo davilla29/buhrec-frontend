@@ -181,8 +181,8 @@ const ReviewerSettings = () => {
       .slice(0, 2) || "RV";
 
   return (
-    <div className="min-h-screen p-4 sm:p-2">
-      <div className="max-w-4xl mx-auto  p-6 sm:p-10">
+    <div className="min-h-screen p-2 sm:p-1">
+      <div className="max-w-4xl mx-auto  p-4 sm:p-10">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-10">
           <div className="flex items-center gap-3 w-full sm:w-auto">
