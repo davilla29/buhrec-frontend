@@ -29,12 +29,11 @@
 //     }
 //   };
 
-//   // Logic to handle Accept
 //   const handleAccept = async (assignmentId) => {
 //     try {
 //       await axios.patch(`/reviewer/assignments/${assignmentId}/accept`);
 //       toast.success("Assignment accepted");
-//       fetchAssignments(); // Refresh list
+//       fetchAssignments();
 //     } catch (error) {
 //       toast.error(
 //         error.response?.data?.message || "Failed to accept assignment",
@@ -42,10 +41,9 @@
 //     }
 //   };
 
-//   // Logic to handle Decline (simple prompt for reason)
 //   const handleDecline = async (assignmentId) => {
 //     const reason = window.prompt("Please provide a reason for declining:");
-//     if (reason === null) return; // User cancelled
+//     if (reason === null) return;
 
 //     try {
 //       await axios.patch(`/reviewer/assignments/${assignmentId}/decline`, {
@@ -73,16 +71,46 @@
 //     }
 //   };
 
+//   // Helper to render the status text above the title
+//   const renderStatusBadge = (assignment) => {
+//     const status = assignment.proposal?.status;
+//     const decision = assignment.decision;
+
+//     if (status === "Approved" || decision === "approve") {
+//       return (
+//         <p className="text-xs text-[#003B95] font-bold mb-1 uppercase tracking-wider">
+//           Review Accepted
+//         </p>
+//       );
+//     }
+//     if (status === "Rejected" || decision === "reject") {
+//       return (
+//         <p className="text-xs text-[#8B0000] font-bold mb-1 uppercase tracking-wider">
+//           Review Rejected
+//         </p>
+//       );
+//     }
+//     if (
+//       status === "Awaiting Modifications" ||
+//       decision === "changes_requested"
+//     ) {
+//       return (
+//         <p className="text-xs text-[#008000] font-bold mb-1 uppercase tracking-wider">
+//           Changes Requested
+//         </p>
+//       );
+//     }
+//     return null;
+//   };
+
 //   const filtered = filterAssignments();
 
 //   return (
 //     <div className="min-h-screen p-2">
 //       <div className="max-w-5xl mx-auto">
-//         {/* Header */}
 //         <h1 className="text-2xl font-bold">Your Assignments</h1>
 //         <p className="text-gray-500 text-sm mb-6">View all your assignments</p>
 
-//         {/* Tabs */}
 //         <div className="flex items-center justify-between mb-6">
 //           <div className="flex gap-2">
 //             {tabs.map((tab) => (
@@ -99,7 +127,6 @@
 //               </button>
 //             ))}
 //           </div>
-
 //           <div className="flex gap-3 text-gray-600">
 //             <Search size={20} className="cursor-pointer hover:text-blue-800" />
 //             <SlidersHorizontal
@@ -109,7 +136,6 @@
 //           </div>
 //         </div>
 
-//         {/* Assignment List */}
 //         <div className="space-y-4">
 //           {loading ? (
 //             <p className="text-center py-10 text-gray-500 italic">
@@ -126,20 +152,14 @@
 //                 className="bg-[#ededed] p-5 rounded-xl flex justify-between items-center shadow-sm"
 //               >
 //                 <div className="max-w-2xl">
-//                   {/* Shows for Completed items that were rejected by the reviewer previously */}
-//                   {activeTab === "Completed" &&
-//                     assignment.decision === "reject" && (
-//                       <p className="text-xs text-red-500 font-semibold mb-1 uppercase tracking-wider">
-//                         Review Rejected
-//                       </p>
-//                     )}
+//                   {/* Status Badge Rendering */}
+//                   {renderStatusBadge(assignment)}
 
 //                   <h3 className="font-semibold text-gray-800 text-lg">
 //                     {assignment.proposal?.title}
 //                   </h3>
 //                 </div>
 
-//                 {/* Actions per Tab */}
 //                 <div className="flex gap-2">
 //                   {activeTab === "Unaccepted" && (
 //                     <>
@@ -191,7 +211,7 @@
 //                           `/reviewer/dashboard/assignments/${assignment._id}/review`,
 //                         )
 //                       }
-//                       className="bg-green-600 hover:bg-green-700 text-white px-6 py-1.5 rounded-full text-sm font-bold transition cursor-pointer shadow-sm"
+//                       className="bg-[#00c853] hover:bg-[#00a344] text-white px-8 py-2 rounded-full text-sm font-bold transition cursor-pointer shadow-md"
 //                     >
 //                       Inspect Review
 //                     </button>
@@ -288,14 +308,14 @@ const ReviewerAssignments = () => {
 
     if (status === "Approved" || decision === "approve") {
       return (
-        <p className="text-xs text-[#003B95] font-bold mb-1 uppercase tracking-wider">
+        <p className="text-[10px] sm:text-xs text-[#003B95] font-bold mb-1.5 uppercase tracking-wider">
           Review Accepted
         </p>
       );
     }
     if (status === "Rejected" || decision === "reject") {
       return (
-        <p className="text-xs text-[#8B0000] font-bold mb-1 uppercase tracking-wider">
+        <p className="text-[10px] sm:text-xs text-[#8B0000] font-bold mb-1.5 uppercase tracking-wider">
           Review Rejected
         </p>
       );
@@ -305,7 +325,7 @@ const ReviewerAssignments = () => {
       decision === "changes_requested"
     ) {
       return (
-        <p className="text-xs text-[#008000] font-bold mb-1 uppercase tracking-wider">
+        <p className="text-[10px] sm:text-xs text-[#008000] font-bold mb-1.5 uppercase tracking-wider">
           Changes Requested
         </p>
       );
@@ -316,20 +336,29 @@ const ReviewerAssignments = () => {
   const filtered = filterAssignments();
 
   return (
-    <div className="min-h-screen p-2">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-[#FAFAFA]">
       <div className="max-w-5xl mx-auto">
-        <h1 className="text-2xl font-bold">Your Assignments</h1>
-        <p className="text-gray-500 text-sm mb-6">View all your assignments</p>
+        {/* Header */}
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+            Your Assignments
+          </h1>
+          <p className="text-gray-500 text-sm mt-1">
+            View all your assignments
+          </p>
+        </div>
 
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex gap-2">
+        {/* Toolbar */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 sm:mb-8">
+          {/* Tabs - horizontally scrollable on mobile */}
+          <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 whitespace-nowrap hide-scrollbar">
             {tabs.map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-1 rounded-full text-sm font-medium transition cursor-pointer ${
+                className={`px-4 sm:px-5 py-2 rounded-full text-sm font-medium transition-colors cursor-pointer ${
                   activeTab === tab
-                    ? "bg-blue-800 text-white"
+                    ? "bg-blue-800 text-white shadow-sm"
                     : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                 }`}
               >
@@ -337,51 +366,55 @@ const ReviewerAssignments = () => {
               </button>
             ))}
           </div>
-          <div className="flex gap-3 text-gray-600">
-            <Search size={20} className="cursor-pointer hover:text-blue-800" />
-            <SlidersHorizontal
-              size={20}
-              className="cursor-pointer hover:text-blue-800"
-            />
+
+          {/* Action Icons */}
+          <div className="flex gap-3 text-gray-600 self-end md:self-auto shrink-0">
+            <button className="p-2 hover:bg-gray-200 rounded-full transition-colors cursor-pointer">
+              <Search size={20} />
+            </button>
+            <button className="p-2 hover:bg-gray-200 rounded-full transition-colors cursor-pointer">
+              <SlidersHorizontal size={20} />
+            </button>
           </div>
         </div>
 
+        {/* Assignments List */}
         <div className="space-y-4">
           {loading ? (
-            <p className="text-center py-10 text-gray-500 italic">
-              Loading assignments...
-            </p>
+            <div className="flex justify-center py-20">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-800"></div>
+            </div>
           ) : filtered.length === 0 ? (
-            <p className="text-gray-500 text-center py-10 bg-white rounded-xl border border-dashed border-gray-300">
-              No assignments found in this category.
-            </p>
+            <div className="text-gray-500 text-center py-16 bg-white rounded-2xl border border-dashed border-gray-300">
+              <p className="font-medium">
+                No assignments found in this category.
+              </p>
+            </div>
           ) : (
             filtered.map((assignment) => (
               <div
                 key={assignment._id}
-                className="bg-[#ededed] p-5 rounded-xl flex justify-between items-center shadow-sm"
+                className="bg-white border border-gray-100 p-5 sm:p-6 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6 shadow-sm hover:shadow-md transition-shadow"
               >
-                <div className="max-w-2xl">
-                  {/* Status Badge Rendering */}
+                <div className="w-full sm:max-w-xl">
                   {renderStatusBadge(assignment)}
-
-                  <h3 className="font-semibold text-gray-800 text-lg">
+                  <h3 className="font-bold text-gray-900 text-base sm:text-lg leading-snug">
                     {assignment.proposal?.title}
                   </h3>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex flex-row w-full sm:w-auto gap-3 shrink-0 mt-2 sm:mt-0">
                   {activeTab === "Unaccepted" && (
                     <>
                       <button
                         onClick={() => handleAccept(assignment._id)}
-                        className="bg-[#d4af37] hover:bg-[#b8962e] text-white px-6 py-1.5 rounded-full text-sm font-bold transition cursor-pointer shadow-sm"
+                        className="flex-1 sm:flex-none bg-[#d4af37] hover:bg-[#b8962e] text-white px-6 py-2.5 sm:py-2 rounded-full text-sm font-bold transition-colors cursor-pointer shadow-sm"
                       >
                         Accept
                       </button>
                       <button
                         onClick={() => handleDecline(assignment._id)}
-                        className="bg-[#8b0000] hover:bg-[#6b0000] text-white px-6 py-1.5 rounded-full text-sm font-bold transition cursor-pointer shadow-sm"
+                        className="flex-1 sm:flex-none bg-[#8b0000] hover:bg-[#6b0000] text-white px-6 py-2.5 sm:py-2 rounded-full text-sm font-bold transition-colors cursor-pointer shadow-sm"
                       >
                         Decline
                       </button>
@@ -395,7 +428,7 @@ const ReviewerAssignments = () => {
                           `/reviewer/dashboard/assignments/${assignment._id}/review`,
                         )
                       }
-                      className="bg-[#d4af37] hover:bg-[#b8962e] text-white px-6 py-1.5 rounded-full text-sm font-bold transition cursor-pointer shadow-sm"
+                      className="w-full sm:w-auto bg-[#d4af37] hover:bg-[#b8962e] text-white px-8 py-2.5 sm:py-2 rounded-full text-sm font-bold transition-colors cursor-pointer shadow-sm"
                     >
                       Begin Review
                     </button>
@@ -408,7 +441,7 @@ const ReviewerAssignments = () => {
                           `/reviewer/dashboard/assignments/${assignment._id}/review`,
                         )
                       }
-                      className="bg-blue-700 hover:bg-blue-800 text-white px-6 py-1.5 rounded-full text-sm font-bold transition cursor-pointer shadow-sm"
+                      className="w-full sm:w-auto bg-blue-700 hover:bg-blue-800 text-white px-8 py-2.5 sm:py-2 rounded-full text-sm font-bold transition-colors cursor-pointer shadow-sm"
                     >
                       Continue Review
                     </button>
@@ -421,7 +454,7 @@ const ReviewerAssignments = () => {
                           `/reviewer/dashboard/assignments/${assignment._id}/review`,
                         )
                       }
-                      className="bg-[#00c853] hover:bg-[#00a344] text-white px-8 py-2 rounded-full text-sm font-bold transition cursor-pointer shadow-md"
+                      className="w-full sm:w-auto bg-[#00c853] hover:bg-[#00a344] text-white px-8 py-2.5 sm:py-2 rounded-full text-sm font-bold transition-colors cursor-pointer shadow-sm"
                     >
                       Inspect Review
                     </button>
