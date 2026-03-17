@@ -13,11 +13,9 @@ const ReviewerResponses = () => {
     const fetchResponses = async () => {
       try {
         setLoading(true);
-        // Ensure this route matches your backend router (e.g., /api/reviewer/responses)
         const res = await axios.get("/reviewer/responses");
 
         if (res.data.success) {
-          // KEY CHANGE: Accessing 'res.data.responses' to match your backend method
           setResponses(res.data.responses);
         } else {
           toast.error(res.data.message || "Failed to load responses");
@@ -33,9 +31,10 @@ const ReviewerResponses = () => {
     fetchResponses();
   }, []);
 
-  const handleContinueReview = (proposalId) => {
+  const handleContinueReview = (assignmentId) => {
     toast.success("Opening proposal...");
-    navigate(`/reviewer/review/${proposalId}`);
+    // Using the standard assignment review route
+    navigate(`/reviewer/dashboard/assignments/${assignmentId}/review`);
   };
 
   if (loading) {
@@ -50,55 +49,61 @@ const ReviewerResponses = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-8 bg-white min-h-screen">
-      <header className="mb-10">
-        <h1 className="text-2xl font-bold text-gray-900 mb-1">
-          Your Responses
-        </h1>
-        <p className="text-gray-500 text-sm">
-          The following proposals have changes effected by the researchers
-        </p>
-      </header>
+    <div className="min-h-screen p-5 sm:p-6 lg:p-8">
+      <div className="max-w-5xl mx-auto">
+        {/* Header */}
+        <header className="mb-6 sm:mb-10">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">
+            Your Responses
+          </h1>
+          <p className="text-gray-500 text-sm">
+            The following proposals have changes effected by the researchers.
+          </p>
+        </header>
 
-      <div className="flex flex-col gap-5">
-        {responses.length > 0 ? (
-          responses.map((proposal) => (
-            <div
-              key={proposal._id}
-              className="flex items-center justify-between p-7 bg-[#f4f4f4] rounded-xl transition-all duration-200"
-            >
-              <div className="flex-1 pr-6">
-                <div className="flex items-center gap-2 mb-2">
-                  {/* Subtle pulsing dot to indicate new update */}
-                  <span className="relative flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#003399]"></span>
-                  </span>
-                  <span className="text-[11px] font-bold text-[#003399] uppercase tracking-wide">
-                    Changes Effected By Researcher
-                  </span>
-                </div>
-                <h2 className="text-lg font-bold text-gray-900 leading-snug max-w-2xl">
-                  {proposal.title}
-                </h2>
-              </div>
-
-              <button
-                onClick={() => handleContinueReview(proposal._id)}
-                className="flex items-center justify-center px-8 py-2 bg-[#003399] text-white rounded-full text-sm font-semibold hover:bg-blue-900 transition-colors shadow-sm whitespace-nowrap"
+        {/* Responses List */}
+        <div className="flex flex-col gap-4">
+          {responses.length > 0 ? (
+            responses.map((proposal) => (
+              <div
+                key={proposal._id}
+                className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 sm:p-6 bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200 gap-4 sm:gap-6"
               >
-                Continue Review
-              </button>
+                <div className="flex-1 w-full">
+                  <div className="flex items-center gap-2.5 mb-2">
+                    {/* Subtle pulsing dot to indicate new update */}
+                    <span className="relative flex h-2.5 w-2.5 shrink-0">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#003B95]"></span>
+                    </span>
+                    <span className="text-[10px] sm:text-xs font-bold text-[#003B95] uppercase tracking-wider">
+                      Changes Effected By Researcher
+                    </span>
+                  </div>
+                  <h2 className="text-base sm:text-lg font-bold text-gray-900 leading-snug max-w-2xl">
+                    {proposal.title}
+                  </h2>
+                </div>
+
+                <button
+                  onClick={() => handleContinueReview(proposal.assignmentId)}
+                  className="w-full sm:w-auto flex items-center justify-center px-6 sm:px-8 py-2.5 sm:py-2 bg-[#003B95] text-white rounded-full text-sm font-bold hover:bg-blue-900 transition-colors shadow-sm whitespace-nowrap shrink-0 cursor-pointer"
+                >
+                  Continue Review
+                </button>
+              </div>
+            ))
+          ) : (
+            <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-gray-300">
+              <h3 className="text-gray-900 font-bold text-lg">
+                All caught up!
+              </h3>
+              <p className="text-gray-500 mt-2 text-sm">
+                No new researcher responses found at the moment.
+              </p>
             </div>
-          ))
-        ) : (
-          <div className="text-center py-24 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
-            <h3 className="text-gray-900 font-bold text-lg">All caught up!</h3>
-            <p className="text-gray-500 mt-2 text-sm">
-              No new researcher responses found at the moment.
-            </p>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

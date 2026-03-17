@@ -180,24 +180,25 @@ const ProposalReview = () => {
   return (
     <div className="min-h-screen bg-[#F3F4F6] flex flex-col font-sans">
       {/* Header */}
-      <header className="bg-white border-b px-8 py-4 flex justify-between items-center sticky top-0 z-10">
-        <div className="flex flex-col">
-          <h1 className="text-xl font-bold text-gray-800 uppercase tracking-tight">
+      <header className="bg-white border-b px-4 md:px-8 py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 sticky top-0 z-10">
+        <div className="flex flex-col w-full">
+          <h1 className="text-lg md:text-xl font-bold text-gray-800 uppercase tracking-tight line-clamp-2 md:line-clamp-1">
             {data?.proposal?.title}
           </h1>
-          <div className="flex items-center gap-4 text-sm mt-1">
+
+          <div className="flex flex-wrap items-center gap-2 md:gap-4 text-xs md:text-sm mt-2 md:mt-1">
             <span
               className="text-blue-600 font-medium cursor-pointer hover:underline"
               onClick={() =>
                 navigate(`/reviewer/dashboard/assignments/${assignmentId}/info`)
               }
             >
-              Application ID: {data?.proposal?.applicationId}
+              ID: {data?.proposal?.applicationId}
             </span>
-            <span className="text-gray-400">|</span>
+            <span className="text-gray-400 hidden sm:inline">|</span>
             <button
               onClick={() => setShowVersionModal(true)}
-              className="text-blue-600 cursor-pointer font-medium flex items-center gap-1 hover:text-blue-800"
+              className="text-blue-600 cursor-pointer font-medium flex items-center gap-1 hover:text-blue-800 bg-blue-50 md:bg-transparent px-2 py-1 md:p-0 rounded"
             >
               Version:{" "}
               {versionParam ? `v${data?.version?.versionNumber}` : "Latest"}
@@ -206,11 +207,11 @@ const ProposalReview = () => {
 
             {/* Status Indicators */}
             {!isLatestVersion ? (
-              <span className="ml-4 bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-bold uppercase border border-gray-200">
+              <span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-[10px] md:text-xs font-bold uppercase border border-gray-200">
                 Older Version (Read-Only)
               </span>
             ) : !isAssignmentActive ? (
-              <span className="ml-4 bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-bold uppercase">
+              <span className="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-[10px] md:text-xs font-bold uppercase whitespace-nowrap">
                 Read Only: {data?.assignment?.status?.replace("_", " ")}
               </span>
             ) : null}
@@ -219,23 +220,17 @@ const ProposalReview = () => {
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 flex justify-center p-6 relative">
+      <main className="flex-1 flex justify-center p-3 md:p-6 relative">
         <div className="w-full max-w-5xl bg-white shadow-sm rounded-lg overflow-hidden relative border border-gray-200">
           {/* Google Docs Iframe */}
-          <div className="relative w-full h-[80vh] bg-gray-50">
-            {/* <iframe
-              src={`https://docs.google.com/gview?url=${encodeURIComponent(docUrl)}&embedded=true`}
-              title="Proposal Document"
-              className="w-full h-full border-none"
-              loading="lazy"
-            /> */}
+          <div className="relative w-full h-[65vh] md:h-[80vh] bg-gray-50 flex-1">
             <SmartDocumentViewer url={docUrl} />
 
             {/* Floating Add Comment Button */}
             <button
               onClick={() => setShowCommentModal(true)}
               disabled={!canInteract}
-              className={`absolute right-6 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center transition-all shadow-md ${
+              className={`absolute right-4 md:right-6 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 rounded-full flex items-center justify-center transition-all shadow-md z-10 ${
                 canInteract
                   ? "bg-gray-200 hover:bg-gray-300 text-gray-600 cursor-pointer"
                   : "bg-gray-100 text-gray-300 cursor-not-allowed opacity-50"
@@ -246,16 +241,18 @@ const ProposalReview = () => {
           </div>
 
           {/* Dynamic Comment Count Footer */}
-          <div className="bg-white border-t px-6 py-3 flex justify-between items-center">
+          <div className="bg-white border-t px-4 md:px-6 py-3 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
             {!isLatestVersion && (
-              <p className="text-xs text-red-500 font-medium flex items-center gap-1">
-                <Info size={14} />
-                You cannot add comments to past versions. Please switch to the
-                latest version to review.
+              <p className="text-xs text-red-500 font-medium flex items-start sm:items-center gap-1">
+                <Info size={14} className="shrink-0 mt-0.5 sm:mt-0" />
+                <span>
+                  You cannot add comments to past versions. Switch to the latest
+                  version.
+                </span>
               </p>
             )}
-            <div className="ml-auto">
-              <span className="text-sm text-gray-500 font-medium">
+            <div className="sm:ml-auto w-full sm:w-auto text-right">
+              <span className="text-sm text-gray-500 font-medium bg-gray-50 px-3 py-1 rounded-full">
                 {comments.length} comment{comments.length !== 1 ? "s" : ""}
               </span>
             </div>
@@ -264,15 +261,15 @@ const ProposalReview = () => {
       </main>
 
       {/* Footer Actions */}
-      <footer className="bg-[#F3F4F6] p-6 flex justify-center gap-4">
+      <footer className="bg-[#F3F4F6] p-4 md:p-6 flex flex-col sm:flex-row justify-center gap-3 md:gap-4 border-t border-gray-200">
         <button
           onClick={() => handleSubmitDecision("send")}
           // Disabled if no comments OR if cannot interact
           disabled={comments.length === 0 || !canInteract}
-          className={`px-10 py-3 font-semibold rounded-full transition-all uppercase tracking-wide text-sm ${
+          className={`w-full sm:w-auto px-6 md:px-10 py-3 md:py-3.5 font-semibold rounded-full transition-all uppercase tracking-wide text-xs md:text-sm ${
             comments.length > 0 && canInteract
-              ? "bg-gray-200 text-gray-700 hover:bg-gray-300 cursor-pointer"
-              : "bg-gray-100 text-gray-400 cursor-not-allowed"
+              ? "bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 shadow-sm cursor-pointer"
+              : "bg-gray-200 text-gray-400 cursor-not-allowed"
           }`}
         >
           Send Comments
@@ -280,7 +277,7 @@ const ProposalReview = () => {
         <button
           onClick={() => setShowDecisionModal(true)}
           disabled={!canInteract}
-          className={`px-10 py-3 font-semibold rounded-full transition-all uppercase tracking-wide text-sm ${
+          className={`w-full sm:w-auto px-6 md:px-10 py-3 md:py-3.5 font-semibold rounded-full transition-all uppercase tracking-wide text-xs md:text-sm shadow-sm ${
             canInteract
               ? "bg-[#003B95] text-white hover:bg-blue-900 cursor-pointer"
               : "bg-gray-300 text-gray-500 cursor-not-allowed"
@@ -360,35 +357,38 @@ const ProposalReview = () => {
 
       {/* Final Decision Reason Modal (Approve/Reject) */}
       {decisionType && (
-        <div className="fixed inset-0 bg-white z-60 flex flex-col items-center justify-center p-6 text-center">
+        <div className="fixed inset-0 bg-white z-60 flex flex-col items-center justify-center p-4 md:p-6 text-center overflow-y-auto">
           <button
             onClick={() => setDecisionType(null)}
-            className="absolute cursor-pointer left-10 top-10 text-gray-800"
+            className="absolute cursor-pointer right-4 top-4 md:right-8 md:top-8 text-gray-500 hover:text-gray-800 p-2 hover:bg-gray-100 rounded-full transition-colors"
           >
-            <X size={32} />
+            <X size={28} />
           </button>
-          <div className="max-w-2xl w-full">
-            <h2 className="text-2xl font-medium mb-1">
+
+          <div className="max-w-2xl w-full my-auto py-10">
+            <h2 className="text-xl md:text-2xl font-medium mb-2 text-gray-600">
               You are about to {decisionType}:
             </h2>
-            <h1 className="text-2xl font-bold mb-8 uppercase">
+            <h1 className="text-2xl md:text-3xl font-black mb-8 text-gray-900 uppercase tracking-tight leading-snug">
               {data?.proposal?.title}
             </h1>
 
             <textarea
-              className="w-full h-64 cursor-pointer p-6 bg-gray-100 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none mb-8 text-lg"
-              placeholder="Add Comment (Optional)"
+              className="w-full h-48 md:h-64 p-4 md:p-6 bg-gray-50 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none mb-8 text-base md:text-lg text-gray-700 resize-none shadow-inner"
+              placeholder="Add final comments or reasons (Optional)"
               value={decisionReason}
               onChange={(e) => setDecisionReason(e.target.value)}
             />
 
             <button
               onClick={() => handleSubmitDecision(decisionType)}
-              className={`px-12 py-3 cursor-pointer rounded-full text-white font-bold text-lg uppercase tracking-widest ${decisionType === "approve" ? "bg-[#003B95]" : "bg-[#C1121F]"}`}
+              className={`w-full sm:w-auto px-8 md:px-12 py-3.5 md:py-4 cursor-pointer rounded-full text-white font-bold text-sm md:text-lg uppercase tracking-widest shadow-lg transition-transform active:scale-95 ${
+                decisionType === "approve"
+                  ? "bg-[#003B95] hover:bg-blue-900 shadow-blue-900/20"
+                  : "bg-[#C1121F] hover:bg-red-900 shadow-red-900/20"
+              }`}
             >
-              {decisionType === "approve"
-                ? "Approve Proposal"
-                : "Reject Proposal"}
+              Confirm & {decisionType}
             </button>
           </div>
         </div>
@@ -396,16 +396,19 @@ const ProposalReview = () => {
 
       {/* 4. Version History Modal */}
       {showVersionModal && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center">
-          <div className="bg-white rounded-xl w-full max-w-sm overflow-hidden">
-            <div className="p-4 border-b flex justify-between items-center bg-gray-50">
-              <h3 className="font-bold">Available Versions</h3>
-              <X
-                className="cursor-pointer"
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl w-full max-w-sm overflow-hidden shadow-2xl">
+            <div className="p-5 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+              <h3 className="font-bold text-gray-900">Version History</h3>
+              <button
+                className="p-1.5 hover:bg-gray-200 rounded-full transition-colors cursor-pointer text-gray-500"
                 onClick={() => setShowVersionModal(false)}
-              />
+              >
+                <X size={18} />
+              </button>
             </div>
-            <div className="max-h-60 overflow-y-auto">
+
+            <div className="max-h-[60vh] overflow-y-auto p-2">
               {versions.map((v, idx) => (
                 <div
                   key={v._id}
@@ -415,18 +418,35 @@ const ProposalReview = () => {
                     );
                     setShowVersionModal(false);
                   }}
-                  className={`p-4 border-b hover:bg-blue-50 cursor-pointer flex justify-between items-center ${v._id === data?.version?._id ? "bg-blue-50 border-l-4 border-l-blue-600" : ""}`}
+                  className={`p-4 m-2 rounded-xl cursor-pointer flex justify-between items-center transition-colors border border-transparent ${
+                    v._id === data?.version?._id
+                      ? "bg-blue-50 border-blue-200"
+                      : "hover:bg-gray-50 hover:border-gray-200"
+                  }`}
                 >
                   <div>
-                    <p className="font-semibold text-gray-800">
-                      Version {v.versionNumber} {idx === 0 && "(Latest)"}
+                    <p
+                      className={`font-bold ${v._id === data?.version?._id ? "text-blue-800" : "text-gray-800"}`}
+                    >
+                      Version {v.versionNumber}{" "}
+                      {idx === 0 && (
+                        <span className="text-xs font-semibold ml-1 text-gray-500">
+                          (Latest)
+                        </span>
+                      )}
                     </p>
-                    <p className="text-xs text-gray-500">
-                      {new Date(v.createdAt).toLocaleDateString()}
+                    <p className="text-[11px] text-gray-500 mt-0.5 font-medium">
+                      {new Date(v.createdAt).toLocaleDateString(undefined, {
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </p>
                   </div>
                   {v.kind === "submitted" && (
-                    <span className="text-[10px] bg-green-100 text-green-700 px-2 py-1 rounded uppercase font-bold">
+                    <span className="text-[10px] bg-green-100 text-green-800 px-2.5 py-1 rounded-full uppercase font-bold tracking-wider">
                       Submitted
                     </span>
                   )}
