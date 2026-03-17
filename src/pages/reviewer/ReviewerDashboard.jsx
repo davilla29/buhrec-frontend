@@ -322,10 +322,10 @@ const ReviewerDashboard = () => {
                 <div className="flex flex-row w-full md:w-auto gap-3 shrink-0">
                   <button
                     onClick={() => handleAccept(assignment._id)}
-                    disabled={processingId === assignment.id}
+                    disabled={processingId === assignment._id}
                     className="flex-1 md:flex-none bg-[#d4af37] hover:bg-[#b5952f] disabled:bg-gray-400 text-white px-6 sm:px-8 py-2.5 sm:py-2 rounded-full text-sm font-bold transition-colors cursor-pointer"
                   >
-                    {processingId === assignment.id ? "Accepting..." : "Accept"}
+                    {processingId === assignment._id ? "Accepting..." : "Accept"}
                   </button>
 
                   <button
@@ -333,7 +333,7 @@ const ReviewerDashboard = () => {
                     disabled={processingId === assignment.id}
                     className="flex-1 md:flex-none bg-[#8b0000] hover:bg-[#6b0000] disabled:bg-gray-400 text-white px-6 py-2.5 sm:py-2 rounded-full text-sm font-bold transition-colors cursor-pointer shadow-sm"
                   >
-                    {processingId === assignment.id
+                    {processingId === assignment._id
                       ? "Declining..."
                       : "Decline"}
                   </button>
