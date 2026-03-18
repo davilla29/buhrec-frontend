@@ -220,7 +220,6 @@ const ProposalReview = () => {
               </span>
             ) : null}
 
-            {/* --- NEW SEARCH TOGGLE ICON --- */}
             <button
               onClick={() => setShowSearch(!showSearch)}
               className="ml-auto p-1.5 md:p-2 bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-full transition-colors cursor-pointer border border-gray-200"
@@ -260,7 +259,7 @@ const ProposalReview = () => {
           )}
           {/* Google Docs Iframe */}
           <div className="relative w-full h-[65vh] md:h-[80vh] bg-gray-50 flex-1">
-            <SmartDocumentViewer url={docUrl} />
+            <SmartDocumentViewer url={docUrl} searchText={searchText} />
 
             {/* Floating Add Comment Button */}
             <button
@@ -494,6 +493,6 @@ const ProposalReview = () => {
       )}
     </div>
   );
-};;
+};
 
 export default ProposalReview;
