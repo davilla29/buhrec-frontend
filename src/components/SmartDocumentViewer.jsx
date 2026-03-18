@@ -179,15 +179,21 @@ function SmartDocumentViewer({ url, searchText = "" }) {
     (textItem) => {
       if (!searchText || !searchText.trim()) return textItem.str;
 
-      const regex = new RegExp(`(${searchText})`, "gi");
+      // Safely escape special characters so regex doesn't crash
+      const escapedSearchText = searchText.replace(
+        /[.*+?^${}()|[\]\\]/g,
+        "\\$&",
+      );
+      const regex = new RegExp(`(${escapedSearchText})`, "gi");
+
       const parts = textItem.str.split(regex);
 
       return parts.map((part, index) =>
         part.toLowerCase() === searchText.toLowerCase() ? (
-          // We make the text transparent so it aligns with the canvas, but give it a yellow background
+          // Use inline styles to guarantee the background color applies over the PDF canvas
           <mark
             key={index}
-            className="bg-yellow-300 text-transparent bg-opacity-60"
+            style={{ backgroundColor: "#fde047", color: "transparent" }} // Tailwind yellow-300
           >
             {part}
           </mark>
