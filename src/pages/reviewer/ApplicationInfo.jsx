@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "../../utils/axios";
 import { ChevronLeft } from "lucide-react";
+import toast from "react-hot-toast";
 
 const ApplicationInfo = () => {
   const { assignmentId } = useParams();
   const navigate = useNavigate();
   const [data, setData] = useState(null);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   useEffect(() => {
     axios
@@ -18,6 +20,46 @@ const ApplicationInfo = () => {
   if (!data) return null;
 
   const info = data.version.formData;
+
+  const handleDownload = async () => {
+
+    const fileUrl = data.version.documents.applicationLetter;
+
+    if (!fileUrl) {
+      toast.error("Application letter not available for download.");
+      return;
+    }
+
+    try {
+      setIsDownloading(true);
+
+      // Fetch the file as a blob to force the browser to download it
+      // instead of just opening it (especially for PDFs/Images)
+      const response = await fetch(fileUrl);
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.setAttribute(
+        "download",
+        `Ethical_Clearance_${data.proposal.applicationId}.pdf`,
+      ); // Sets default file name
+
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error("Error downloading file:", error);
+      // Fallback: If CORS blocks the fetch, just open the link in a new tab
+      window.open(fileUrl, "_blank");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8 relative font-sans">
@@ -44,7 +86,7 @@ const ApplicationInfo = () => {
               Researcher name(s) (Surname first, first name, middle name, matric
               number)
             </p>
-            {info.researchers.map((name, i) => (
+            {info.researchers?.map((name, i) => (
               <p key={i} className="text-xl font-semibold text-gray-800">
                 {name}
               </p>
@@ -100,8 +142,18 @@ const ApplicationInfo = () => {
         </section>
 
         <footer className="pt-8">
-          <button className="text-blue-600 font-bold underline text-lg hover:text-blue-800 transition-colors">
-            Application letter for ethical clearance
+          <button
+            onClick={handleDownload}
+            disabled={isDownloading}
+            className={`font-bold underline text-lg transition-colors ${
+              isDownloading
+                ? "text-gray-400 cursor-not-allowed"
+                : "text-blue-600 hover:text-blue-800"
+            }`}
+          >
+            {isDownloading
+              ? "Downloading..."
+              : "Application letter for ethical clearance"}
           </button>
         </footer>
       </div>
