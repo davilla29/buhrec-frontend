@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "../../utils/axios";
 import toast from "react-hot-toast";
-import { Plus, X, ChevronDown, Info } from "lucide-react";
+import { Plus, X, ChevronDown, Search, Info } from "lucide-react";
 import SmartDocumentViewer from "../../components/SmartDocumentViewer";
 
 const ProposalReview = () => {
@@ -14,6 +14,10 @@ const ProposalReview = () => {
   const [data, setData] = useState(null); // Assignment, Proposal, Version
   const [versions, setVersions] = useState([]);
   const [comments, setComments] = useState([]);
+
+  // Search State
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   // Modal States
   const [showCommentModal, setShowCommentModal] = useState(false);
@@ -215,6 +219,15 @@ const ProposalReview = () => {
                 Read Only: {data?.assignment?.status?.replace("_", " ")}
               </span>
             ) : null}
+
+            {/* --- NEW SEARCH TOGGLE ICON --- */}
+            <button
+              onClick={() => setShowSearch(!showSearch)}
+              className="ml-auto p-1.5 md:p-2 bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-full transition-colors cursor-pointer border border-gray-200"
+              title="Search Document"
+            >
+              <Search size={16} className="md:w-5 md:h-5" />
+            </button>
           </div>
         </div>
       </header>
@@ -222,6 +235,29 @@ const ProposalReview = () => {
       {/* Main Content Area */}
       <main className="flex-1 flex justify-center p-3 md:p-6 relative">
         <div className="w-full max-w-5xl bg-white shadow-sm rounded-lg overflow-hidden relative border border-gray-200">
+          {/* --- NEW SEARCH INPUT BAR --- */}
+          {showSearch && (
+            <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3 animate-in slide-in-from-top-2">
+              <Search size={18} className="text-gray-400" />
+              <input
+                autoFocus
+                type="text"
+                placeholder="Search within PDF document..."
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                className="flex-1 outline-none text-sm text-gray-700 bg-transparent"
+              />
+              <button
+                onClick={() => {
+                  setShowSearch(false);
+                  setSearchText("");
+                }}
+                className="text-gray-400 hover:text-gray-600 p-1 bg-gray-50 rounded-md cursor-pointer"
+              >
+                <X size={16} />
+              </button>
+            </div>
+          )}
           {/* Google Docs Iframe */}
           <div className="relative w-full h-[65vh] md:h-[80vh] bg-gray-50 flex-1">
             <SmartDocumentViewer url={docUrl} />
@@ -458,6 +494,6 @@ const ProposalReview = () => {
       )}
     </div>
   );
-};
+};;
 
 export default ProposalReview;
