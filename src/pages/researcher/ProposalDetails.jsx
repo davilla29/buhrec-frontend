@@ -332,7 +332,7 @@ const ProposalDetails = () => {
 
   if (loadingBaseInfo) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#FAFAFA]">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="animate-pulse text-gray-500 font-medium">
           Loading proposal details...
         </div>
@@ -342,7 +342,7 @@ const ProposalDetails = () => {
 
   if (!proposalData) {
     return (
-      <div className="min-h-screen flex items-center justify-center p-10 text-center text-red-600 font-medium bg-[#FAFAFA]">
+      <div className="min-h-screen flex items-center justify-center p-10 text-center text-red-600 font-medium">
         Proposal not found.
       </div>
     );

@@ -336,7 +336,7 @@ function AdminProposalDetails() {
 
   if (loading)
     return (
-      <div className="h-screen flex items-center justify-center bg-gray-50">
+      <div className="h-screen flex items-center justify-center">
         <div className="animate-pulse text-gray-500 font-medium">
           Loading Proposal...
         </div>
