@@ -21,11 +21,12 @@ const ApplicationInfo = () => {
 
   const info = data.version.formData;
 
+  // Find the specific application letter document from your schema's documents array
+  const documents = data.version.documents || [];
+  const appLetter = documents.find((doc) => doc.type === "applicationLetter");
+
   const handleDownload = async () => {
-
-    const fileUrl = data.version.documents.applicationLetter;
-
-    if (!fileUrl) {
+    if (!appLetter || !appLetter.url) {
       toast.error("Application letter not available for download.");
       return;
     }
@@ -33,18 +34,19 @@ const ApplicationInfo = () => {
     try {
       setIsDownloading(true);
 
-      // Fetch the file as a blob to force the browser to download it
-      // instead of just opening it (especially for PDFs/Images)
-      const response = await fetch(fileUrl);
+      // Fetch the file as a blob to force download
+      const response = await fetch(appLetter.url);
       const blob = await response.blob();
       const blobUrl = window.URL.createObjectURL(blob);
 
       const link = document.createElement("a");
       link.href = blobUrl;
+      // Use the filename saved in your database, or fallback to a default
       link.setAttribute(
         "download",
-        `Ethical_Clearance_${data.proposal.applicationId}.pdf`,
-      ); // Sets default file name
+        appLetter.filename ||
+          `Application_Letter_${data.proposal.applicationId}`,
+      );
 
       document.body.appendChild(link);
       link.click();
@@ -54,8 +56,8 @@ const ApplicationInfo = () => {
       window.URL.revokeObjectURL(blobUrl);
     } catch (error) {
       console.error("Error downloading file:", error);
-      // Fallback: If CORS blocks the fetch, just open the link in a new tab
-      window.open(fileUrl, "_blank");
+      // Fallback: If CORS blocks the fetch (common with Cloudinary/S3), just open it in a new tab
+      window.open(appLetter.url, "_blank");
     } finally {
       setIsDownloading(false);
     }
@@ -159,6 +161,6 @@ const ApplicationInfo = () => {
       </div>
     </div>
   );
-};
+};;
 
 export default ApplicationInfo;
