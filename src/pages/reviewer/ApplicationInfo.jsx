@@ -56,7 +56,6 @@ const ApplicationInfo = () => {
       window.URL.revokeObjectURL(blobUrl);
     } catch (error) {
       console.error("Error downloading file:", error);
-      // Fallback: If CORS blocks the fetch (common with Cloudinary/S3), just open it in a new tab
       window.open(appLetter.url, "_blank");
     } finally {
       setIsDownloading(false);
@@ -147,7 +146,7 @@ const ApplicationInfo = () => {
           <button
             onClick={handleDownload}
             disabled={isDownloading}
-            className={`font-bold underline text-lg transition-colors ${
+            className={`font-bold cursor-pointer underline text-lg transition-colors ${
               isDownloading
                 ? "text-gray-400 cursor-not-allowed"
                 : "text-blue-600 hover:text-blue-800"
@@ -161,6 +160,6 @@ const ApplicationInfo = () => {
       </div>
     </div>
   );
-};;
+};
 
 export default ApplicationInfo;

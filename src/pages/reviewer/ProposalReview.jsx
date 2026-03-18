@@ -234,16 +234,23 @@ const ProposalReview = () => {
       {/* Main Content Area */}
       <main className="flex-1 flex justify-center p-3 md:p-6 relative">
         <div className="w-full max-w-5xl bg-white shadow-sm rounded-lg overflow-hidden relative border border-gray-200">
-          {/* --- NEW SEARCH INPUT BAR --- */}
           {showSearch && (
             <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3 animate-in slide-in-from-top-2">
               <Search size={18} className="text-gray-400" />
               <input
                 autoFocus
                 type="text"
-                placeholder="Search within PDF document..."
+                placeholder="Type to highlight, press Enter to jump to matches..."
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
+                onKeyDown={(e) => {
+                  // When the user presses Enter, natively scroll to the match!
+                  if (e.key === "Enter" && searchText) {
+                    e.preventDefault();
+                    // window.find(text, caseSensitive, backwards, wrapAround)
+                    window.find(searchText, false, false, true);
+                  }
+                }}
                 className="flex-1 outline-none text-sm text-gray-700 bg-transparent"
               />
               <button
@@ -251,7 +258,7 @@ const ProposalReview = () => {
                   setShowSearch(false);
                   setSearchText("");
                 }}
-                className="text-gray-400 hover:text-gray-600 p-1 bg-gray-50 rounded-md cursor-pointer"
+                className="text-gray-400 hover:text-gray-600 p-1 bg-gray-50 rounded-md cursor-pointer transition-colors"
               >
                 <X size={16} />
               </button>
