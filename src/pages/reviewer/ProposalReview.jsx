@@ -8,7 +8,7 @@ import SmartDocumentViewer from "../../components/SmartDocumentViewer";
 const ProposalReview = () => {
   const { assignmentId, version: versionParam } = useParams();
   const navigate = useNavigate();
-
+  const viewerRef = React.useRef(null);
   // State Management
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null); // Assignment, Proposal, Version
@@ -235,43 +235,29 @@ const ProposalReview = () => {
       <main className="flex-1 flex justify-center p-3 md:p-6 relative">
         <div className="w-full max-w-5xl bg-white shadow-sm rounded-lg overflow-hidden relative border border-gray-200">
           {showSearch && (
-            <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3 animate-in slide-in-from-top-2">
+            <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3">
               <Search size={18} className="text-gray-400" />
+
               <input
                 autoFocus
                 type="text"
-                placeholder="Search in document... (Enter → jump to first match)"
+                placeholder="Search document... (Enter = jump to first match)"
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && searchText.trim()) {
                     e.preventDefault();
-
-                    // Find first <mark> and scroll to it
-                    const firstMark = document.querySelector("mark");
-                    if (firstMark) {
-                      firstMark.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center",
-                      });
-
-                      // Optional pulse effect
-                      firstMark.classList.add("pulse-highlight");
-                      setTimeout(
-                        () => firstMark.classList.remove("pulse-highlight"),
-                        1400,
-                      );
-                    }
+                    viewerRef.current?.jumpToFirstMatch();
                   }
                 }}
                 className="flex-1 outline-none text-sm text-gray-700 bg-transparent"
               />
+
               <button
                 onClick={() => {
                   setShowSearch(false);
                   setSearchText("");
                 }}
-                className="text-gray-400 hover:text-gray-600 p-1 bg-gray-50 rounded-md"
               >
                 <X size={16} />
               </button>
@@ -279,7 +265,11 @@ const ProposalReview = () => {
           )}
 
           <div className="relative w-full h-[65vh] md:h-[80vh] bg-gray-50 flex-1">
-            <SmartDocumentViewer url={docUrl} searchText={searchText} />
+            <SmartDocumentViewer
+              ref={viewerRef}
+              url={docUrl}
+              searchText={searchText}
+            />
 
             {/* Floating Add Comment Button */}
             <button
