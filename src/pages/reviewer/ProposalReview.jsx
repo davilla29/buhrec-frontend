@@ -2,18 +2,22 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "../../utils/axios";
 import toast from "react-hot-toast";
-import { Plus, X, ChevronDown, Info } from "lucide-react";
+import { Plus, X, ChevronDown, Search, Info } from "lucide-react";
 import SmartDocumentViewer from "../../components/SmartDocumentViewer";
 
 const ProposalReview = () => {
   const { assignmentId, version: versionParam } = useParams();
   const navigate = useNavigate();
-
+  const viewerRef = React.useRef(null);
   // State Management
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null); // Assignment, Proposal, Version
   const [versions, setVersions] = useState([]);
   const [comments, setComments] = useState([]);
+
+  // Search State
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchText, setSearchText] = useState("");
 
   // Modal States
   const [showCommentModal, setShowCommentModal] = useState(false);
@@ -178,9 +182,9 @@ const ProposalReview = () => {
   )?.url;
 
   return (
-    <div className="min-h-screen bg-[#F3F4F6] flex flex-col font-sans">
+    <div className="min-h-screen flex flex-col font-sans">
       {/* Header */}
-      <header className="bg-white border-b px-4 md:px-8 py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 sticky top-0 z-10">
+      <header className="bg-white border-b px-4 md:px-8 py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 top-0 z-10">
         <div className="flex flex-col w-full">
           <h1 className="text-lg md:text-xl font-bold text-gray-800 uppercase tracking-tight line-clamp-2 md:line-clamp-1">
             {data?.proposal?.title}
@@ -215,6 +219,14 @@ const ProposalReview = () => {
                 Read Only: {data?.assignment?.status?.replace("_", " ")}
               </span>
             ) : null}
+
+            <button
+              onClick={() => setShowSearch(!showSearch)}
+              className="ml-auto p-1.5 md:p-2 bg-gray-50 hover:bg-gray-100 text-gray-600 rounded-full transition-colors cursor-pointer border border-gray-200"
+              title="Search Document"
+            >
+              <Search size={16} className="md:w-5 md:h-5" />
+            </button>
           </div>
         </div>
       </header>
@@ -222,9 +234,42 @@ const ProposalReview = () => {
       {/* Main Content Area */}
       <main className="flex-1 flex justify-center p-3 md:p-6 relative">
         <div className="w-full max-w-5xl bg-white shadow-sm rounded-lg overflow-hidden relative border border-gray-200">
-          {/* Google Docs Iframe */}
+          {showSearch && (
+            <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center gap-3">
+              <Search size={18} className="text-gray-400" />
+
+              <input
+                autoFocus
+                type="text"
+                placeholder="Search document... (Enter = jump to first match)"
+                value={searchText}
+                onChange={(e) => setSearchText(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && searchText.trim()) {
+                    e.preventDefault();
+                    viewerRef.current?.jumpToFirstMatch();
+                  }
+                }}
+                className="flex-1 outline-none text-sm text-gray-700 bg-transparent"
+              />
+
+              <button
+                onClick={() => {
+                  setShowSearch(false);
+                  setSearchText("");
+                }}
+              >
+                <X size={16} />
+              </button>
+            </div>
+          )}
+
           <div className="relative w-full h-[65vh] md:h-[80vh] bg-gray-50 flex-1">
-            <SmartDocumentViewer url={docUrl} />
+            <SmartDocumentViewer
+              ref={viewerRef}
+              url={docUrl}
+              searchText={searchText}
+            />
 
             {/* Floating Add Comment Button */}
             <button
