@@ -240,15 +240,28 @@ const ProposalReview = () => {
               <input
                 autoFocus
                 type="text"
-                placeholder="Type to highlight, press Enter to jump to matches..."
+                placeholder="Search in document... (Enter → jump to first match)"
                 value={searchText}
                 onChange={(e) => setSearchText(e.target.value)}
                 onKeyDown={(e) => {
-                  // When the user presses Enter, natively scroll to the match!
-                  if (e.key === "Enter" && searchText) {
+                  if (e.key === "Enter" && searchText.trim()) {
                     e.preventDefault();
-                    // window.find(text, caseSensitive, backwards, wrapAround)
-                    window.find(searchText, false, false, true);
+
+                    // Find first <mark> and scroll to it
+                    const firstMark = document.querySelector("mark");
+                    if (firstMark) {
+                      firstMark.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center",
+                      });
+
+                      // Optional pulse effect
+                      firstMark.classList.add("pulse-highlight");
+                      setTimeout(
+                        () => firstMark.classList.remove("pulse-highlight"),
+                        1400,
+                      );
+                    }
                   }
                 }}
                 className="flex-1 outline-none text-sm text-gray-700 bg-transparent"
@@ -258,13 +271,13 @@ const ProposalReview = () => {
                   setShowSearch(false);
                   setSearchText("");
                 }}
-                className="text-gray-400 hover:text-gray-600 p-1 bg-gray-50 rounded-md cursor-pointer transition-colors"
+                className="text-gray-400 hover:text-gray-600 p-1 bg-gray-50 rounded-md"
               >
                 <X size={16} />
               </button>
             </div>
           )}
-          {/* Google Docs Iframe */}
+
           <div className="relative w-full h-[65vh] md:h-[80vh] bg-gray-50 flex-1">
             <SmartDocumentViewer url={docUrl} searchText={searchText} />
 

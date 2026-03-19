@@ -191,10 +191,7 @@ function SmartDocumentViewer({ url, searchText = "" }) {
       return parts.map((part, index) =>
         part.toLowerCase() === searchText.toLowerCase() ? (
           // Use inline styles to guarantee the background color applies over the PDF canvas
-          <mark
-            key={index}
-            style={{ backgroundColor: "#fde047", color: "transparent" }} // Tailwind yellow-300
-          >
+          <mark key={index} style={{ backgroundColor: "#fde047" }}>
             {part}
           </mark>
         ) : (
