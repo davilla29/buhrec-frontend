@@ -336,7 +336,7 @@ const ReviewerAssignments = () => {
   const filtered = filterAssignments();
 
   return (
-    <div className="min-h-screen p-4 sm:p-6 lg:p-8 bg-[#FAFAFA]">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-2">
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="mb-6 sm:mb-8">
