@@ -49,24 +49,26 @@ const ConfirmModal = ({ onClose, onConfirm }) => (
 );
 
 const SuccessScreen = ({ title, date, onBack }) => (
-  <div className="min-h-screen ] flex flex-col">
+  <div className="min-h-screen flex flex-col">
     <button
       onClick={onBack}
       className="p-4 hover:bg-gray-200 cursor-pointer rounded-full self-start m-4 transition-colors"
     >
       <ArrowLeft size={22} className="text-gray-800" />
     </button>
-    <div className="flex-1 flex flex-col items-center justify-center px-8 text-left max-w-xl mx-auto w-full">
-      <p className="text-[#003B95] font-bold text-sm mb-2">
+    <div className="flex-1 flex flex-col items-center justify-center px-8 text-center max-w-2xl mx-auto w-full">
+      <p className="text-[#003B95] font-bold text-base sm:text-lg uppercase tracking-wider mb-3">
         You have successfully assigned
       </p>
-      <h2 className="text-xl font-bold text-gray-900 leading-snug mb-2">
+      <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-4">
         {title}
       </h2>
-      <p className="text-sm text-gray-500 mb-10">{date}</p>
+      <p className="text-base sm:text-lg text-gray-500 font-medium mb-10">
+        {date}
+      </p>
       <button
         onClick={onBack}
-        className="bg-[#003B95] cursor-pointer text-white px-8 py-3 rounded-full font-bold text-sm hover:bg-blue-900 transition-colors"
+        className="bg-[#003B95] cursor-pointer text-white px-10 py-3.5 rounded-full font-bold text-base hover:bg-blue-900 transition-colors shadow-md hover:shadow-lg active:scale-95"
       >
         Back to Assignments
       </button>
@@ -123,22 +125,40 @@ const AssignProposal = () => {
     if (!selectedReviewerId) return;
 
     try {
-      await axios.post(`/admin/proposals/${proposalId}/assign-reviewer`, {
-        reviewerId: selectedReviewerId,
-      });
+      const res = await axios.post(
+        `/admin/proposals/${proposalId}/assign-reviewer`,
+        {
+          reviewerId: selectedReviewerId,
+        },
+      );
+
+      // Update proposal state with the new assigned date from the backend
+      if (res.data.success && res.data.data?.proposal?.assignedAt) {
+        setProposal((prev) => ({
+          ...prev,
+          assignedAt: res.data.data.proposal.assignedAt,
+        }));
+      } else {
+        // Fallback to current time if backend doesn't return it
+        setProposal((prev) => ({
+          ...prev,
+          assignedAt: new Date().toISOString(),
+        }));
+      }
       setShowConfirm(false);
       setDone(true);
     } catch (err) {
       console.error("Error assigning reviewer:", err);
-     toast.error(err.response?.data?.message || "Assignment failed");
+      toast.error(err.response?.data?.message || "Assignment failed");
     }
   };
 
   if (!proposal) return <div className="p-10 text-center">Loading...</div>;
 
   const title = proposal.title || "Untitled Proposal";
+
   const date = proposal.assignedAt
-    ? new Date(proposal.date).toLocaleDateString("en-GB", {
+    ? new Date(proposal.assignedAt).toLocaleDateString("en-GB", {
         day: "numeric",
         month: "numeric",
         year: "numeric",
