@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "../../utils/axios";
 import toast from "react-hot-toast";
 import { getInitials } from "../../utils/initialsHelper";
+import { Search, ChevronDown } from "lucide-react";
 
 function ReviewersList() {
   const [reviewers, setReviewers] = useState([]);
@@ -10,6 +11,13 @@ function ReviewersList() {
   const [showModal, setShowModal] = useState(false);
   const [showDotMenu, setShowDotMenu] = useState(false);
   const [loadingDetails, setLoadingDetails] = useState(false);
+
+  // Search and Filter States
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterTitle, setFilterTitle] = useState("");
+  const [filterSpecialization, setFilterSpecialization] = useState("");
+  const [filterExperience, setFilterExperience] = useState("");
+  const [filterInstitution, setFilterInstitution] = useState(""); // NEW: Institution Filter
 
   const navigate = useNavigate();
 
@@ -26,6 +34,70 @@ function ReviewersList() {
       console.error(err);
     }
   };
+
+  // --- 1. Generate Dynamic Dropdown Options from Database ---
+  const availableTitles = useMemo(() => {
+    const titles = reviewers.map((r) => r.title).filter(Boolean);
+    return [...new Set(titles)].sort();
+  }, [reviewers]);
+
+  const availableSpecializations = useMemo(() => {
+    const specs = reviewers.map((r) => r.specialization).filter(Boolean);
+    return [...new Set(specs)].sort();
+  }, [reviewers]);
+
+  const availableInstitutions = useMemo(() => {
+    const insts = reviewers.map((r) => r.institution).filter(Boolean);
+    return [...new Set(insts)].sort();
+  }, [reviewers]);
+
+  // --- 2. Filter Logic (Search + Dropdowns) ---
+  const filteredReviewers = useMemo(() => {
+    return reviewers.filter((r) => {
+      // Search check (Name or Specialization)
+      const searchLower = searchQuery.toLowerCase();
+      const matchesSearch =
+        (r.name || r.fullName || "").toLowerCase().includes(searchLower) ||
+        (r.specialization || "").toLowerCase().includes(searchLower);
+
+      // Dropdown checks
+      const matchesTitle = filterTitle === "" || r.title === filterTitle;
+      const matchesSpecialization =
+        filterSpecialization === "" ||
+        r.specialization === filterSpecialization;
+      const matchesInstitution =
+        filterInstitution === "" || r.institution === filterInstitution;
+
+      // Experience check
+      let matchesExperience = true;
+      if (filterExperience) {
+        const yrs = Number(r.yearsOfExperience) || 0;
+        if (filterExperience === "0-5")
+          matchesExperience = yrs >= 0 && yrs <= 5;
+        else if (filterExperience === "6-10")
+          matchesExperience = yrs >= 6 && yrs <= 10;
+        else if (filterExperience === "11-15")
+          matchesExperience = yrs >= 11 && yrs <= 15;
+        else if (filterExperience === "16+") matchesExperience = yrs >= 16;
+      }
+
+      // Must pass all applied filters to show up
+      return (
+        matchesSearch &&
+        matchesTitle &&
+        matchesSpecialization &&
+        matchesExperience &&
+        matchesInstitution
+      );
+    });
+  }, [
+    reviewers,
+    searchQuery,
+    filterTitle,
+    filterSpecialization,
+    filterExperience,
+    filterInstitution,
+  ]);
 
   // Fetch FULL reviewer details
   const handleOpenModal = async (id) => {
@@ -65,10 +137,10 @@ function ReviewersList() {
   };
 
   return (
-    <div className="min-h-screen">
-      <main className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto">
+    <div className="min-h-screen font-sans">
+      <main className="p-2 md:p-3 lg:p-4 md:mt-0 mt-10 max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex flex-row justify-between items-center mb-6 md:mb-8 gap-4">
+        <div className="mt:10 flex flex-row justify-between items-center mb-6 md:mb-8 gap-4">
           <div>
             <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800">
               Registered Reviewers
@@ -86,41 +158,131 @@ function ReviewersList() {
           </button>
         </div>
 
+        {/* Toolbar: Filters and Search */}
+        <div className="flex flex-col-reverse lg:flex-row justify-between items-stretch lg:items-center gap-4 mb-8">
+          {/* Dropdown Filters */}
+          <div className="flex gap-2 p-2 overflow-x-auto w-full lg:w-auto no-scrollbar whitespace-nowrap">
+            {/* Title Dropdown */}
+            <div className="relative shrink-0">
+              <select
+                value={filterTitle}
+                onChange={(e) => setFilterTitle(e.target.value)}
+                className="appearance-none pl-5 pr-10 py-2 md:py-1.5 bg-gray-100 text-gray-600 text-xs font-semibold rounded-full cursor-pointer hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Title</option>
+                {availableTitles.map((title) => (
+                  <option key={title} value={title}>
+                    {title}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" />
+            </div>
+
+            {/* Experience Dropdown */}
+            <div className="relative shrink-0">
+              <select
+                value={filterExperience}
+                onChange={(e) => setFilterExperience(e.target.value)}
+                className="appearance-none pl-5 pr-10 py-2 md:py-1.5 bg-gray-100 text-gray-600 text-xs font-semibold rounded-full cursor-pointer hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Years in practice</option>
+                <option value="0-5">0 - 5 Years</option>
+                <option value="6-10">6 - 10 Years</option>
+                <option value="11-15">11 - 15 Years</option>
+                <option value="16+">16+ Years</option>
+              </select>
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" />
+            </div>
+
+            {/* Specialization Dropdown */}
+            <div className="relative shrink-0">
+              <select
+                value={filterSpecialization}
+                onChange={(e) => setFilterSpecialization(e.target.value)}
+                className="appearance-none pl-5 pr-10 py-2 md:py-1.5 bg-gray-100 text-gray-600 text-xs font-semibold rounded-full cursor-pointer hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Specialization</option>
+                {availableSpecializations.map((spec) => (
+                  <option key={spec} value={spec}>
+                    {spec}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" />
+            </div>
+
+            {/* Institution Dropdown */}
+            <div className="relative shrink-0">
+              <select
+                value={filterInstitution}
+                onChange={(e) => setFilterInstitution(e.target.value)}
+                className="appearance-none pl-5 pr-10 py-2 md:py-1.5 bg-gray-100 text-gray-600 text-xs font-semibold rounded-full cursor-pointer hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 max-w-50 truncate"
+              >
+                <option value="">Institution</option>
+                {availableInstitutions.map((inst) => (
+                  <option key={inst} value={inst}>
+                    {inst}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" />
+            </div>
+          </div>
+
+          {/* Search Bar */}
+          <div className="relative w-full lg:w-auto shrink-0">
+            <Search className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder="Search name or specialization..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full lg:w-72 pl-10 pr-4 py-3 md:py-2.5 bg-gray-100 rounded-xl md:rounded-full text-sm focus:outline-none border border-transparent focus:bg-white focus:border-blue-500 transition-all shadow-sm"
+            />
+          </div>
+        </div>
+
         {/* Reviewer Cards List */}
         <div className="space-y-4 md:space-y-5">
-          {reviewers.length === 0 ? (
+          {filteredReviewers.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-20 px-4 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 text-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-16 w-16 text-gray-300 mb-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
+              <Search className="h-12 w-12 text-gray-300 mb-4" />
               <h2 className="text-lg md:text-xl font-semibold text-gray-700 mb-2">
-                No reviewers added yet
+                No reviewers found
               </h2>
               <p className="text-gray-500 text-sm">
-                Once you add reviewers, they will appear here.
+                Try adjusting your search or filters.
               </p>
+              {(searchQuery ||
+                filterTitle ||
+                filterSpecialization ||
+                filterExperience ||
+                filterInstitution) && (
+                <button
+                  onClick={() => {
+                    setSearchQuery("");
+                    setFilterTitle("");
+                    setFilterSpecialization("");
+                    setFilterExperience("");
+                    setFilterInstitution("");
+                  }}
+                  className="mt-4 text-sm font-medium text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                >
+                  Clear all filters
+                </button>
+              )}
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-5">
-              {reviewers.map((reviewer) => (
+              {filteredReviewers.map((reviewer) => (
                 <div
                   key={reviewer._id}
                   onClick={() => handleOpenModal(reviewer._id)}
                   className="bg-white p-4 md:p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between cursor-pointer hover:shadow-md hover:border-blue-100 transition-all active:scale-[0.98] gap-4"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="w-15 h-15 md:w-20 md:h-20 sm:w-24 sm:h-24 rounded-full bg-blue-50 text-blue-600 font-bold flex items-center justify-center text-xl sm:text-3xl overflow-hidden shrink-0 ">
+                  <div className="flex items-center gap-4 min-w-0">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-blue-50 text-blue-600 font-bold flex items-center justify-center text-xl sm:text-3xl overflow-hidden shrink-0">
                       {reviewer.photoUrl ? (
                         <img
                           src={reviewer.photoUrl}
@@ -132,17 +294,22 @@ function ReviewersList() {
                       )}
                     </div>
 
-                    <div>
-                      <h3 className="font-semibold text-gray-800 text-md md:text-base leading-tight">
+                    <div className="min-w-0">
+                      <h3 className="font-semibold text-gray-800 text-md md:text-base leading-tight truncate">
                         {reviewer.title} {reviewer.fullName}
                       </h3>
-                      <p className="text-sm md:text-sm text-gray-500 mt-1 line-clamp-1">
+                      <p className="text-sm text-gray-500 mt-1 line-clamp-1">
                         {reviewer.specialization}
                       </p>
+                      {reviewer.institution && (
+                        <p className="text-xs text-gray-400 mt-1 line-clamp-1">
+                          {reviewer.institution}
+                        </p>
+                      )}
                     </div>
                   </div>
 
-                  <div className="text-[#002B7F] text-sm md:text-sm font-semibold sm:text-right bg-blue-50 sm:bg-transparent px-3 py-1.5 sm:px-0 sm:py-0 rounded-full self-start sm:self-auto">
+                  <div className="text-[#002B7F] text-xs sm:text-sm font-semibold sm:text-right bg-blue-50 sm:bg-transparent px-3 py-1.5 sm:px-0 sm:py-0 rounded-full self-start sm:self-auto shrink-0 whitespace-nowrap">
                     {reviewer.ongoingAssignments || 0} ongoing
                   </div>
                 </div>
@@ -256,7 +423,7 @@ function ReviewersList() {
               </div>
             </div>
 
-            {/* Info Grid - 1 col on mobile, 3 cols on tablet/desktop */}
+            {/* Info Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-8 mb-8 sm:mb-10 text-center bg-gray-50 sm:bg-transparent p-5 sm:p-0 rounded-2xl">
               <div className="py-2 border-b border-gray-200 sm:border-0 sm:py-0">
                 <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-gray-400 mb-1 sm:mb-2">
@@ -292,7 +459,7 @@ function ReviewersList() {
               </div>
             </div>
 
-            {/* Statistics - 2 cols on mobile, 4 cols on desktop */}
+            {/* Statistics */}
             <div className="mb-8 sm:mb-10">
               <h3 className="font-bold text-base sm:text-lg mb-4 text-gray-900">
                 Assignment Statistics
