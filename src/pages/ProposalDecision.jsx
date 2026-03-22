@@ -50,8 +50,10 @@ const ProposalDecision = () => {
   }, [proposalId]);
 
   const handleDownload = async () => {
+    
     try {
       setDownloading(true);
+      await document.fonts.ready;
       const element = document.getElementById("certificate-content");
 
       if (!element) {

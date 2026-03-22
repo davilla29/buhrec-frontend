@@ -46,8 +46,9 @@ const ApprovalCertificate = ({ proposal, dateStr }) => {
         id="certificate-content"
         className="bg-[#FFFAF0] w-200 h-262.5 p-12 shrink-0 flex flex-col items-center text-center relative border-12 border-white shadow-[0_0_15px_rgba(0,0,0,0.1)]"
         style={{
-          // Subtle paper texture background color
           backgroundColor: "#FCFBF9",
+          fontFamily: "Arial, Helvetica, sans-serif",
+          textRendering: "geometricPrecision",
         }}
       >
         {/* LOGO */}
