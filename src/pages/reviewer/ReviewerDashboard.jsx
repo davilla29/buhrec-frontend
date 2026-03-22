@@ -222,8 +222,7 @@ const ReviewerDashboard = () => {
               Decline Assignment
             </h3>
             <p className="text-sm text-gray-500 mb-5">
-              Please provide a brief reason for declining this assignment. This
-              helps the admin team appropriately reassign the proposal.
+              Please provide a brief reason for declining this assignment.
             </p>
 
             <textarea
