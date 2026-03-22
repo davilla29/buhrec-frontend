@@ -3,7 +3,6 @@ import BabcockLogo from "../assets/images/babcock_logo.png";
 import ChairmanSignature from "../assets/images/chairman_signature.png";
 
 const ApprovalCertificate = ({ proposal, dateStr }) => {
-  // 1. Extract and filter valid researchers
   const researchersArray =
     proposal?.currentVersion?.formData?.researchers || [];
   const validResearchers = researchersArray.filter(
