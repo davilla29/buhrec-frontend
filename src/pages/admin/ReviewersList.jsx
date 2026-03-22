@@ -570,7 +570,7 @@ function ReviewersList() {
         {/* Toolbar: Filters and Search */}
         <div className="flex flex-col-reverse lg:flex-row justify-between items-stretch lg:items-center gap-4 mb-8">
           {/* Dropdown Filters */}
-          <div className="flex gap-2 pt-2 overflow-x-auto pb-2 md:pb-0 w-full lg:w-auto no-scrollbar whitespace-nowrap">
+          <div className="flex gap-2 p-2 overflow-x-auto w-full lg:w-auto no-scrollbar whitespace-nowrap">
             {/* Title Dropdown */}
             <div className="relative shrink-0">
               <select
@@ -626,7 +626,7 @@ function ReviewersList() {
               <select
                 value={filterInstitution}
                 onChange={(e) => setFilterInstitution(e.target.value)}
-                className="appearance-none pl-5 pr-10 py-2 md:py-1.5 bg-gray-100 text-gray-600 text-xs font-semibold rounded-full cursor-pointer hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 max-w-[200px] truncate"
+                className="appearance-none pl-5 pr-10 py-2 md:py-1.5 bg-gray-100 text-gray-600 text-xs font-semibold rounded-full cursor-pointer hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 max-w-50 truncate"
               >
                 <option value="">Institution</option>
                 {availableInstitutions.map((inst) => (
