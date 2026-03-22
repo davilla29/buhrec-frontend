@@ -63,13 +63,16 @@ const ApprovalCertificate = ({ proposal, dateStr }) => {
         <h1 className="text-2xl font-bold text-gray-800 mb-2">
           Ethical Approval Certificate
         </h1>
-        <p className="text-sm text-gray-500 italic mb-8">for</p>
+        <p className="text-md text-gray-500 italic mb-8">for</p>
 
         <h2 className="text-xl font-black text-gray-900 uppercase tracking-wide leading-relaxed max-w-2xl mb-8">
           {proposal?.title || "Untitled Proposal"}
         </h2>
 
-        <div className="space-y-2 mb-16 flex flex-col items-center w-full">
+        <div
+          className="flex flex-col items-center w-full"
+          style={{ marginBottom: "64px", gap: "8px" }}
+        >
           <p className="text-sm text-gray-600 font-semibold">
             ID: <span className="font-bold text-gray-900">{appId}</span>
           </p>
@@ -78,7 +81,10 @@ const ApprovalCertificate = ({ proposal, dateStr }) => {
           </p>
 
           {/* UPDATED: Map through researchers to display them stacked vertically */}
-          <div className="text-lg font-bold text-gray-900 max-w-2xl px-8 flex flex-col items-center gap-1.5 mt-1">
+          <div
+            className="text-lg font-bold flex flex-col items-center mt-1"
+            style={{ gap: "6px" }}
+          >
             {validResearchers.length > 0 ? (
               validResearchers.map((name, index) => (
                 <span key={index} className="leading-snug">
