@@ -1,9 +1,8 @@
 // import React from "react";
-import BabcockLogo from "../assets/images/babcock_logo.png";
-import ChairmanSignature from "../assets/images/chairman_signature.png";
+import BabcockLogo from "../assets/images/babcockLogo.png";
+import ChairmanSignature from "../assets/images/chairmanSignature.png";
 
 const ApprovalCertificate = ({ proposal, dateStr }) => {
-  // 1. Extract and filter valid researchers
   const researchersArray =
     proposal?.currentVersion?.formData?.researchers || [];
   const validResearchers = researchersArray.filter(
