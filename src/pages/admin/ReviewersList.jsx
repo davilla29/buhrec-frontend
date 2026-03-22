@@ -71,7 +71,7 @@ function ReviewersList() {
       let matchesExperience = true;
 
       if (filterExperience) {
-        const yrs = r.yearsOfExperience ?? 0;
+        const yrs = Number(r.yearsOfExperience);
 
         if (filterExperience === "0-5")
           matchesExperience = yrs >= 0 && yrs <= 5;
@@ -81,6 +81,13 @@ function ReviewersList() {
           matchesExperience = yrs >= 11 && yrs <= 15;
         else if (filterExperience === "16+") matchesExperience = yrs >= 16;
       }
+
+      console.log({
+        name: r.fullName,
+        yrs: r.yearsOfExperience,
+        converted: Number(r.yearsOfExperience),
+        filter: filterExperience,
+      });
 
       // Must pass all applied filters to show up
       return (
