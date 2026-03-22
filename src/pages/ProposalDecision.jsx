@@ -2,12 +2,17 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "../utils/axios";
 import toast from "react-hot-toast";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import ApprovalCertificate from "../components/ApprovalCertificate";
+import { Loader2 } from "lucide-react";
 
 const ProposalDecision = () => {
-  const { proposalId } = useParams(); // Proposal id
+  const { proposalId } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
+  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
     const fetchDecisionDetails = async () => {
@@ -24,10 +29,49 @@ const ProposalDecision = () => {
     fetchDecisionDetails();
   }, [proposalId]);
 
+  const handleDownload = async () => {
+    try {
+      setDownloading(true);
+      const element = document.getElementById("certificate-content");
+
+      if (!element) {
+        toast.error("Certificate not found.");
+        return;
+      }
+
+      // Take a high-quality snapshot of the certificate div
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        useCORS: true, // Allows external images (like logos) to load
+        backgroundColor: "#ffffff",
+      });
+
+      const imgData = canvas.toDataURL("image/png");
+
+      // Initialize PDF (Portrait, millimeters, A4 size)
+      const pdf = new jsPDF("p", "mm", "a4");
+
+      // Calculate dimensions to fit A4 page
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+      // Add image to PDF and save
+      pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`${data.applicationId || "BUHREC"}_Certificate.pdf`);
+
+      toast.success("Certificate downloaded!");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      toast.error("Failed to generate PDF. Please try again.");
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#F9F9F9] flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#003B95]"></div>
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="animate-spin text-[#003B95] w-10 h-10" />
       </div>
     );
   }
@@ -80,6 +124,14 @@ const ProposalDecision = () => {
           </p>
         </div>
 
+        {/* Conditional Certificate Rendering */}
+        {isApproved && (
+          <div className="mb-10 scale-50 sm:scale-75 md:scale-90 origin-top transform transition-all">
+            {/* The actual certificate component */}
+            <ApprovalCertificate proposal={data} dateStr={dateStr} />
+          </div>
+        )}
+
         {/* Action Button */}
         <div className="flex justify-center">
           <button
@@ -88,6 +140,23 @@ const ProposalDecision = () => {
           >
             Back to proposals
           </button>
+
+          {isApproved && (
+            <button
+              onClick={handleDownload}
+              disabled={downloading}
+              className="w-full sm:w-auto px-10 py-3 rounded-full bg-[#003B95] hover:bg-blue-900 text-white font-bold transition-all cursor-pointer text-sm shadow-md disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+            >
+              {downloading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Generating PDF...
+                </>
+              ) : (
+                "Download"
+              )}
+            </button>
+          )}
         </div>
       </div>
     </div>
