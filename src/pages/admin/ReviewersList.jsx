@@ -71,9 +71,12 @@ function ReviewersList() {
       // Experience check
       let matchesExperience = true;
       if (filterExperience) {
-        const yrs = Number(r.yearsOfExperience) || 0;
+        // Safely extract the number, even if the DB returns "10 Years" instead of just 10
+        const yrs =
+          parseInt(String(r.yearsOfExperience).replace(/\D/g, ""), 10) || 0;
+
         if (filterExperience === "0-5")
-          matchesExperience = yrs >= 0 && yrs <= 5;
+          matchesExperience = yrs >= 1 && yrs <= 5;
         else if (filterExperience === "6-10")
           matchesExperience = yrs >= 6 && yrs <= 10;
         else if (filterExperience === "11-15")
@@ -81,7 +84,6 @@ function ReviewersList() {
         else if (filterExperience === "16+") matchesExperience = yrs >= 16;
       }
 
-      // Must pass all applied filters to show up
       return (
         matchesSearch &&
         matchesTitle &&
