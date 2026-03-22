@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { MoreHorizontal, ChevronRight, X, Search } from "lucide-react";
+import {
+  MoreHorizontal,
+  ChevronRight,
+  X,
+  Search,
+  ChevronDown,
+} from "lucide-react";
 import axios from "../../utils/axios";
 import toast from "react-hot-toast";
 import { getInitials } from "../../utils/initialsHelper";
@@ -96,9 +102,6 @@ const ResearcherModal = ({ researcher, onClose }) => {
                   {researcher.ongoingStatus || "None"}
                 </p>
               </div>
-              {/* <div className="sm:absolute sm:right-5 sm:top-1/2 sm:-translate-y-1/2 w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                <ChevronRight size={18} className="text-[#003B95]" />
-              </div> */}
             </div>
           </div>
         </div>
@@ -107,7 +110,9 @@ const ResearcherModal = ({ researcher, onClose }) => {
           <button
             onClick={() => {
               onClose();
-              navigate(`/admin/dashboard/researchers/${researcher.id}/proposals`);
+              navigate(
+                `/admin/dashboard/researchers/${researcher.id}/proposals`,
+              );
             }}
             className="w-full sm:w-auto cursor-pointer bg-[#003B95] text-white px-12 py-4 rounded-full font-black text-xs uppercase tracking-[0.2em] hover:bg-blue-900 transition-all shadow-lg active:scale-95"
           >
@@ -123,7 +128,12 @@ function AllResearchers() {
   const [researchers, setResearchers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedResearcher, setSelectedResearcher] = useState(null);
+
+  // Search and Filter States
   const [searchQuery, setSearchQuery] = useState("");
+  const [filterSpecialization, setFilterSpecialization] = useState("");
+  const [filterLevel, setFilterLevel] = useState("");
+  const [filterInstitution, setFilterInstitution] = useState("");
 
   useEffect(() => {
     const fetchResearchers = async () => {
@@ -141,17 +151,53 @@ function AllResearchers() {
     fetchResearchers();
   }, []);
 
+  // --- Generate Dynamic Options from Database ---
+  const availableSpecializations = useMemo(() => {
+    const specs = researchers
+      .map((r) => r.specialization || r.department)
+      .filter(Boolean);
+    return [...new Set(specs)].sort();
+  }, [researchers]);
+
+  const availableLevels = useMemo(() => {
+    const levels = researchers.map((r) => r.level).filter(Boolean);
+    return [...new Set(levels)].sort();
+  }, [researchers]);
+
+  const availableInstitutions = useMemo(() => {
+    const insts = researchers.map((r) => r.institution).filter(Boolean);
+    return [...new Set(insts)].sort();
+  }, [researchers]);
+
+  // --- Filtering Logic ---
   const filteredResearchers = useMemo(() => {
-    if (!searchQuery) return researchers;
-    return researchers.filter(
-      (r) =>
+    return researchers.filter((r) => {
+      // 1. Search Check
+      const matchesSearch =
+        !searchQuery ||
         r.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        r.department?.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
-  }, [researchers, searchQuery]);
+        r.department?.toLowerCase().includes(searchQuery.toLowerCase());
+
+      // 2. Dropdown Checks
+      const spec = r.specialization || r.department; // Fallback in case it's saved as department
+      const matchesSpec =
+        filterSpecialization === "" || spec === filterSpecialization;
+      const matchesLevel = filterLevel === "" || r.level === filterLevel;
+      const matchesInst =
+        filterInstitution === "" || r.institution === filterInstitution;
+
+      return matchesSearch && matchesSpec && matchesLevel && matchesInst;
+    });
+  }, [
+    researchers,
+    searchQuery,
+    filterSpecialization,
+    filterLevel,
+    filterInstitution,
+  ]);
 
   return (
-    <div className="p-4 md:p-8 min-h-screen max-w-5xl mx-auto">
+    <div className="p-4 md:p-8 min-h-screen max-w-5xl mx-auto font-sans">
       <header className="mb-6 md:mb-8">
         <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
           Registered Researchers
@@ -164,15 +210,57 @@ function AllResearchers() {
       {/* Toolbar: Filters and Search */}
       <div className="flex flex-col-reverse md:flex-row justify-between items-stretch md:items-center gap-4 mb-8">
         {/* Horizontal Scrollable Filters */}
-        <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 w-full md:w-auto no-scrollbar whitespace-nowrap">
-          {["Specialization", "Level", "Institution"].map((filter) => (
-            <span
-              key={filter}
-              className="px-5 py-2 md:py-1.5 bg-gray-100 text-gray-600 text-xs font-semibold rounded-full cursor-pointer hover:bg-gray-200 transition-colors"
+        <div className="flex gap-2 overflow-x-auto p-2  w-full md:w-auto no-scrollbar whitespace-nowrap">
+          {/* Specialization Dropdown */}
+          <div className="relative shrink-0">
+            <select
+              value={filterSpecialization}
+              onChange={(e) => setFilterSpecialization(e.target.value)}
+              className="appearance-none pl-5 pr-10 py-2 md:py-1.5 bg-gray-100 text-gray-600 text-xs font-semibold rounded-full cursor-pointer hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              {filter}
-            </span>
-          ))}
+              <option value="">Specialization</option>
+              {availableSpecializations.map((spec) => (
+                <option key={spec} value={spec}>
+                  {spec}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" />
+          </div>
+
+          {/* Level Dropdown */}
+          <div className="relative shrink-0">
+            <select
+              value={filterLevel}
+              onChange={(e) => setFilterLevel(e.target.value)}
+              className="appearance-none pl-5 pr-10 py-2 md:py-1.5 bg-gray-100 text-gray-600 text-xs font-semibold rounded-full cursor-pointer hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Level</option>
+              {availableLevels.map((level) => (
+                <option key={level} value={level}>
+                  {level}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" />
+          </div>
+
+          {/* Institution Dropdown */}
+          <div className="relative shrink-0">
+            <select
+              value={filterInstitution}
+              onChange={(e) => setFilterInstitution(e.target.value)}
+              className="appearance-none pl-5 pr-10 py-2 md:py-1.5 bg-gray-100 text-gray-600 text-xs font-semibold rounded-full cursor-pointer hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Institution</option>
+              {availableInstitutions.map((inst) => (
+                <option key={inst} value={inst}>
+                  {inst}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-500 pointer-events-none" />
+          </div>
         </div>
 
         <div className="relative w-full md:w-auto shrink-0">
@@ -224,17 +312,34 @@ function AllResearchers() {
                   {researcher.department}
                 </p>
               </div>
-              <div className="text-gray-300">
+              <div className="text-gray-300 shrink-0">
                 <ChevronRight size={20} />
               </div>
             </button>
           ))}
+
           {filteredResearchers.length === 0 && (
             <div className="col-span-full text-center bg-gray-50 border-2 border-dashed border-gray-200 rounded-3xl py-16">
               <p className="text-gray-500 font-medium">No researchers found.</p>
               <p className="text-gray-400 text-sm mt-1">
-                Try adjusting your search query.
+                Try adjusting your search query or filters.
               </p>
+              {(searchQuery ||
+                filterSpecialization ||
+                filterLevel ||
+                filterInstitution) && (
+                <button
+                  onClick={() => {
+                    setSearchQuery("");
+                    setFilterSpecialization("");
+                    setFilterLevel("");
+                    setFilterInstitution("");
+                  }}
+                  className="mt-4 text-sm font-medium text-blue-600 hover:text-blue-800 underline cursor-pointer"
+                >
+                  Clear all filters
+                </button>
+              )}
             </div>
           )}
         </div>
