@@ -32,7 +32,7 @@ const ApprovalCertificate = ({ proposal, dateStr }) => {
     <div className="flex justify-center w-full overflow-x-auto py-4 hide-scrollbar">
       <div
         id="certificate-content"
-        className="bg-[#FFFAF0] w-[800px] h-[1050px] p-12 shrink-0 flex flex-col items-center text-center relative border-[12px] border-white shadow-[0_0_15px_rgba(0,0,0,0.1)]"
+        className="bg-[#FFFAF0] w-200 h-262.5 p-12 shrink-0 flex flex-col items-center text-center relative border-12 border-white shadow-[0_0_15px_rgba(0,0,0,0.1)]"
         style={{
           // Subtle paper texture background color
           backgroundColor: "#FCFBF9",

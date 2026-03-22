@@ -17,9 +17,29 @@ const ProposalDecision = () => {
   useEffect(() => {
     const fetchDecisionDetails = async () => {
       try {
-        const res = await axios.get(`/researcher/proposals/${proposalId}`);
-        setData(res.data.proposal);
+        // Fetch BOTH the decision status AND the draft form data at the same time
+        const [decisionRes, draftRes] = await Promise.all([
+          axios.get(`/researcher/proposals/${proposalId}`),
+          axios.get(`/researcher/proposals/${proposalId}/draft`),
+        ]);
+
+        let proposalData = decisionRes.data.proposal;
+
+        // Force-inject the dynamic formData from the draft into the proposal object
+        // so the Certificate component can read the Department, College, and Researchers
+        if (draftRes.data.success && draftRes.data.draft?.formData) {
+          proposalData = {
+            ...proposalData,
+            currentVersion: {
+              ...(proposalData.currentVersion || {}),
+              formData: draftRes.data.draft.formData,
+            },
+          };
+        }
+
+        setData(proposalData);
       } catch (err) {
+        console.error("Error fetching details:", err);
         toast.error("Failed to load decision details");
       } finally {
         setLoading(false);
@@ -90,24 +110,21 @@ const ProposalDecision = () => {
     ? "Your proposal was approved"
     : "Your proposal was rejected";
 
-  // Format the date explicitly to match the "D/M/YYYY" mockup style (e.g., 4/2/2026)
+  // Format the date explicitly to match the "D/M/YYYY" mockup style
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
     const d = new Date(dateString);
     return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
   };
 
-  // Uses the newly added assignedAt field from the backend, falls back to createdAt
   const dateStr = formatDate(data.assignedAt || data.createdAt);
-
-  // The reason from the reviewer
   const reasonText = data.decisionReason || "No additional comment provided";
 
   return (
-    <div className="min-h-screen  flex flex-col items-center justify-center p-2 font-sans">
+    <div className="min-h-screen flex flex-col items-center justify-center p-2 font-sans">
       <div className="w-full max-w-4xl">
         {/* Header Section */}
-        <div className="mb-24">
+        <div className="mb-24 mt-12 sm:mt-0 px-4">
           <h2 className={`text-xl font-bold ${themeColor} mb-2`}>
             {headerText}
           </h2>
@@ -118,7 +135,7 @@ const ProposalDecision = () => {
         </div>
 
         {/* Reason Section */}
-        <div className="flex justify-center mb-24">
+        <div className="flex justify-center mb-24 px-4">
           <p className="text-gray-500 font-medium text-center max-w-2xl text-lg">
             {reasonText}
           </p>
@@ -133,10 +150,10 @@ const ProposalDecision = () => {
         )}
 
         {/* Action Button */}
-        <div className="flex justify-center">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center px-4 pb-12">
           <button
             onClick={() => navigate("/researcher/dashboard/my-proposals")}
-            className={`px-8 py-3 rounded-full text-white font-medium transition-all cursor-pointer ${buttonBg}`}
+            className={`w-full sm:w-auto px-8 py-3 rounded-full text-white font-medium transition-all cursor-pointer ${buttonBg}`}
           >
             Back to proposals
           </button>
@@ -145,7 +162,7 @@ const ProposalDecision = () => {
             <button
               onClick={handleDownload}
               disabled={downloading}
-              className="w-full sm:w-auto px-10 py-3 rounded-full bg-[#003B95] hover:bg-blue-900 text-white font-bold transition-all cursor-pointer text-sm shadow-md disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center gap-2"
+              className="w-full sm:w-auto px-10 py-3 rounded-full bg-[#003B95] hover:bg-blue-900 text-white font-bold transition-all cursor-pointer shadow-md disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center gap-2"
             >
               {downloading ? (
                 <>
