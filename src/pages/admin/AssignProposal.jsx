@@ -5,10 +5,8 @@ import axios from "../../utils/axios";
 import toast from "react-hot-toast";
 
 const CATEGORIES = [
-  "Public Health, Nursing, G...",
-  " Public Health & Epidemiology",
+  "Public Health & Epidemiology",
   "Clinical Psychology",
-  "Anatomy & Cell Biology",
   "Biomedical Sciences",
   "Other",
 ];
@@ -101,7 +99,7 @@ const AssignProposal = () => {
           setProposal(proposalData);
 
           // Set level from currentVersion.formData.category
-          const cat = proposalData.currentVersion?.formData?.category || "G";
+          const cat = proposalData.currentVersion?.formData?.category || "UG";
 
           // Map DB category to your PROPOSAL_LEVELS display
           let displayLevel = cat;
