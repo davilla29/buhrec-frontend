@@ -126,6 +126,7 @@ const Sidebar = () => {
   );
 
   const handleLogout = () => {
+    localStorage.removeItem("token");
     dispatch(logout());
     dispatch(clearAssignments());
     navigate(`/login/${user.role}`);
