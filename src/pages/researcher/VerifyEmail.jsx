@@ -152,7 +152,7 @@ const VerifyEmail = () => {
           </button>
         </form>
 
-        {/* ✅ Resend Section */}
+        {/* Resend Section */}
         <div className="text-center mt-6">
           <button
             onClick={handleResend}

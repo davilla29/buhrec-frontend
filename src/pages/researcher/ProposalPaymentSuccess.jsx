@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom"; // <-- Back to useParams
+import { useNavigate, useParams } from "react-router-dom"; 
 import axios from "../../utils/axios";
 import toast from "react-hot-toast";
 
 const ProposalPaymentSuccess = () => {
   const navigate = useNavigate();
-  const { proposalId } = useParams(); // <-- Grab ID directly from the URL path defined in your <Route />
+  const { proposalId } = useParams(); 
 
   const [submitting, setSubmitting] = useState(false);
 
