@@ -150,26 +150,6 @@ const ProposalReview = () => {
     });
   };
 
-  // const handleSubmitDecision = async (decision) => {
-  //   try {
-  //     // If it's "Send Comments", we use 'changes_requested' as per your logic
-  //     const finalDecision =
-  //       decision === "send" ? "changes_requested" : decision;
-
-  //     await axios.post(`/reviewer/assignments/${assignmentId}/decision`, {
-  //       decision: finalDecision,
-  //       reason: decisionReason,
-  //     });
-
-  //     toast.success(
-  //       decision === "send" ? "Comments sent successfully" : "Review completed",
-  //     );
-  //     navigate("/reviewer/dashboard");
-  //   } catch (err) {
-  //     toast.error("Submission failed");
-  //   }
-  // };
-
   if (loading)
     return (
       <div className="flex h-screen items-center justify-center">
