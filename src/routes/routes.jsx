@@ -16,7 +16,6 @@ const ObjectivesPage = lazy(() => import("../pages/Objectives"));
 const SopsGuidelinesPage = lazy(() => import("../pages/SopsGuidelines"));
 const AboutUsPage = lazy(() => import("../pages/AboutUs"));
 const NhrecMissionPage = lazy(() => import("../pages/NhrecMission"));
-const LandingPage = lazy(() => import("../pages/LandingPage"));
 const UnifiedLoginPage = lazy(() => import("../pages/UnifiedLoginPage"));
 const ResearcherSignUpPage = lazy(() => import("../pages/researcher/SignUp"));
 const VerifyEmailPage = lazy(() => import("../pages/researcher/VerifyEmail"));
