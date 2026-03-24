@@ -1,17 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../../utils/axios";
 
-// ASYNC THUNK: Fetch assignments based on the active tab (filter)
 export const fetchAssignments = createAsyncThunk(
   "assignments/fetchList",
   async (filter, { rejectWithValue }) => {
     try {
-      // Assuming your API base URL is configured or using a proxy
       const response = await axios.get(
         `/admin/assignments/list?filter=${filter}`,
       );
 
-      // Your backend returns { success: true, data: [...] }
       return response.data.data;
     } catch (error) {
       return rejectWithValue(

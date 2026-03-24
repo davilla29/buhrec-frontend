@@ -1,7 +1,6 @@
 import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import { Route, createRoutesFromElements } from "react-router-dom";
-// import Notfound from "../pages/Notfound";
 import ProtectedRoute from "../routes/ProtectedRoute";
 import Unauthorized from "../pages/Unauthorized";
 import NotFound from "../pages/NotFound";
@@ -16,7 +15,6 @@ const ObjectivesPage = lazy(() => import("../pages/Objectives"));
 const SopsGuidelinesPage = lazy(() => import("../pages/SopsGuidelines"));
 const AboutUsPage = lazy(() => import("../pages/AboutUs"));
 const NhrecMissionPage = lazy(() => import("../pages/NhrecMission"));
-const LandingPage = lazy(() => import("../pages/LandingPage"));
 const UnifiedLoginPage = lazy(() => import("../pages/UnifiedLoginPage"));
 const ResearcherSignUpPage = lazy(() => import("../pages/researcher/SignUp"));
 const VerifyEmailPage = lazy(() => import("../pages/researcher/VerifyEmail"));

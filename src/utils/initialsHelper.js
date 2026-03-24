@@ -1,5 +1,3 @@
-// e.g., utils/helpers.js
-
 export const getInitials = (name) => {
   // Fallback if no name is provided (returns "U" for Unknown/User)
   if (!name || typeof name !== "string") return "U";
