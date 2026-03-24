@@ -105,7 +105,7 @@ const SmartDocumentViewer = forwardRef(({ url, searchText }, ref) => {
     </div>
   );
 
-  // --- PDF VIEW ---
+  // PDF VIEW
   if (extension === "pdf") {
     return (
       <div

@@ -1,4 +1,4 @@
-// import React from "react";
+import React from "react";
 import BabcockLogo from "../assets/images/babcockLogo.png";
 import ChairmanSignature from "../assets/images/chairmanSignature.png";
 
@@ -19,14 +19,14 @@ const ApprovalCertificate = ({ proposal, dateStr }) => {
     "School of Computing";
   const appId = proposal?.applicationId || "BUH-XXXXXX";
 
-  // Dynamically get the version number, defaulting to 1 if not found, and formatting to 1.0 style
+  // Dynamically getting the version number, defaulting to 1 if not found, and formatting to 1.0 style
   const rawVersion =
     proposal?.currentVersion?.versionNumber || proposal?.versionCount || 1;
   const versionDisplay = Number.isInteger(rawVersion)
     ? `${rawVersion}.0`
     : rawVersion;
 
-  // Expiration date (usually 1 year from approval)
+  // Expiration date
   const approvalDate = new Date(
     proposal?.assignedAt || proposal?.createdAt || new Date(),
   );
@@ -39,7 +39,6 @@ const ApprovalCertificate = ({ proposal, dateStr }) => {
   };
 
   return (
-    // We wrap this in a container with a fixed aspect ratio for a clean PDF render
     <div className="flex justify-center w-full overflow-x-auto py-4 hide-scrollbar">
       <div
         id="certificate-content"
@@ -103,7 +102,7 @@ const ApprovalCertificate = ({ proposal, dateStr }) => {
           guarantee that it complies with relevant ethical guidelines.
         </p>
 
-        {/* Footer / Signatures Area */}
+        {/* Footer and Signatures Area */}
         <div className="absolute bottom-20 left-0 w-full px-16 flex justify-between items-end">
           <div className="text-left">
             <p className="text-[13px] font-bold text-gray-800">
