@@ -57,6 +57,10 @@ const UnifiedLoginPage = () => {
       });
 
       if (res.data.success) {
+        // STORE TOKEN
+        if (res.data.token) {
+          localStorage.setItem("token", res.data.token);
+        }
         const user = res.data.data;
 
         // Update Redux state
