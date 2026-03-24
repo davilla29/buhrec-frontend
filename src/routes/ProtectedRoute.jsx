@@ -11,12 +11,12 @@ const ProtectedRoute = ({ allowedRoles }) => {
     return <Navigate to="/" replace />;
   }
 
-  //   // 📩 Not verified
-  //   if (user && user.isVerified === false) {
-  //     return <Navigate to="/verify-email" replace />;
-  //   }
+    // 📩 Not verified
+    if (user && user.isVerified === false) {
+      return <Navigate to="/verify-email" replace />;
+    }
 
-  // 🚫 Role not allowed
+  // Role not allowed
   if (allowedRoles && !allowedRoles.includes(user.role)) {
     return <Navigate to="/unauthorized" replace />;
   }
