@@ -281,7 +281,7 @@ const ProposalDecision = () => {
   const status = data.status?.toLowerCase();
   const isApproved = status === "approved";
   const isRejected = status === "rejected";
-  const isChangesRequested = status === "changes_requested";
+  const isChangesRequested = status === "Awaiting Modifications";
   const isPending = !isApproved && !isRejected && !isChangesRequested;
 
   // Dynamic Header Config
