@@ -97,6 +97,7 @@ const ProposalDecision = () => {
   if (!data) return null;
 
   const isApproved = data.status?.toLowerCase() === "approved";
+  const isRejected = data.status?.toLowerCase() === "rejected";
 
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
@@ -110,15 +111,25 @@ const ProposalDecision = () => {
     <div className="min-h-screen flex flex-col items-center justify-center p-2 font-sans">
       <div className="w-full max-w-4xl">
         {/* HEADER */}
-        <div className="mb-24 mt-12 px-4">
-          <h2 className="text-xl font-bold text-[#003B95] mb-2">
-            Your proposal was approved
+        <div className="mb-20 mt-12 px-4">
+          <h2
+            className={`text-xl font-bold mb-2 ${isApproved ? "text-[#003B95]" : "text-red-700"}`}
+          >
+            Your proposal was {isApproved ? "approved" : "rejected"}
           </h2>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             {data.title}
           </h1>
           <p className="text-gray-500">Assigned {dateStr}</p>
         </div>
+
+        {!isApproved && data.decisionReason && (
+          <div className="mb-24 px-4">
+            <p className="text-gray-600 text-lg leading-relaxed">
+              {data.decisionReason}
+            </p>
+          </div>
+        )}
 
         {isApproved && (
           <>
@@ -139,9 +150,13 @@ const ProposalDecision = () => {
         <div className="cursor-pointer flex gap-4 justify-center pb-12">
           <button
             onClick={() => navigate("/researcher/dashboard/my-proposals")}
-            className="px-8 py-3 rounded-full bg-gray-600 text-white"
+            className={`px-8 py-3 rounded-full cursor-pointer text-white transition-colors ${
+              isApproved
+                ? "bg-gray-600 hover:bg-gray-700"
+                : "bg-red-700 hover:bg-red-800"
+            }`}
           >
-            Back
+            {isApproved ? "Back" : "Back to proposals"}
           </button>
 
           {isApproved && (
